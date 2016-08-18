@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 
 import butterknife.BindView;
@@ -53,6 +54,9 @@ public class MainActivity extends LoggedInActivity {
 
     @BindView(R.id.tab2)
     ImageView tab2;
+
+    @BindView(R.id.tabLayout)
+    View tabLayout;
 
     private ImageView[] tabs;
     private int[] defaultSelectIcons;
@@ -134,6 +138,16 @@ public class MainActivity extends LoggedInActivity {
 
             }
         });
+
+        for (int i = 0; i < tabs.length; i++) {
+            final int position = i;
+            tabs[position].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mViewPager.setCurrentItem(position);
+                }
+            });
+        }
 
     }
 
