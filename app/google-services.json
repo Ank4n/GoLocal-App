@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1009356672044",
+    "firebase_url": "https://golocal-a404f.firebaseio.com",
+    "project_id": "golocal-a404f",
+    "storage_bucket": "golocal-a404f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009356672044:android:64fec59c8592a8f5",
+        "android_client_info": {
+          "package_name": "space.ankan.golocal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009356672044-6d0n6mao4f1642a4adcj9vu08oo9vri8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT75j9Wt9SjqKQlkl-gD8SebHuANjQFMo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

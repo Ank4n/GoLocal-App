@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">GoLocal</string>
+    <string name="facebook_application_id">187809048306167</string>
+    <string name="title_activity_kitchen_list">Kitchens near you</string>
+    <string name="title_activity_kitchen_detail">Kitchen Detail</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_my_kitchen">My Kitchen</string>
+
+    <string name="no_internet_title">Are you connected to internet?</string>
+    <string name="no_internet_message">App could not connect to internet. You need to be connected to internet to sign in.</string>
+</resources>
