@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.BaseActivity;
 import space.ankan.golocal.model.kitchens.Kitchen;
 
 /**
@@ -39,7 +40,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
     public KitchenListItemViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View view = LayoutInflater.from(mActivity)
                 .inflate(R.layout.list_item_kitchen, parent, false);
-
+        BaseActivity.log("here " + i);
         return new KitchenListItemViewHolder(view);
     }
 

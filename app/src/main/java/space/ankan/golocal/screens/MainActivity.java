@@ -1,6 +1,7 @@
 package space.ankan.golocal.screens;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.LoggedInActivity;
+import space.ankan.golocal.screens.nearbykitchens.KitchenListFragment;
 
 public class MainActivity extends LoggedInActivity {
 
@@ -29,6 +31,12 @@ public class MainActivity extends LoggedInActivity {
     private int manageKitchenDeselect;
     private int manageKitchenSelect;
 
+    private Fragment chatFragment;
+    private Fragment setupKitchenFragment;
+    private Fragment manageKitchenFragment;
+    private Fragment kitchensNearbyFragment;
+
+
     private static final String PAGER_STATE = "state";
 
     @BindView(R.id.viewpager)
@@ -46,27 +54,46 @@ public class MainActivity extends LoggedInActivity {
     @BindView(R.id.tab2)
     ImageView tab2;
 
-    private ImageView[] tabs = new ImageView[]{tab0, tab1, tab2};
-    private int[] defaultSelectIcons = new int[]{setupKitchenSelect, kitchenNearbySelect, chatSelect};
-    private int[] defaultDeselectIcons = new int[]{setupKitchenDeselect, kitchenNearbyDeselect, chatDeselect};
-    private int[] ownerSelectIcons = new int[]{kitchenNearbySelect, manageKitchenSelect, chatSelect};
-    private int[] ownerDeselectIcons = new int[]{kitchenNearbyDeselect, manageKitchenDeselect, chatDeselect};
-
+    private ImageView[] tabs;
+    private int[] defaultSelectIcons;
+    private int[] defaultDeselectIcons;
+    private int[] ownerSelectIcons;
+    private int[] ownerDeselectIcons;
+    private int[] defaultTitle;
+    private int[] ownerTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initImageResources();
         setupToolbar();
         setupViewPager(savedInstanceState);
 
         //FIXME add two pane mode
     }
 
+    private void initImageResources() {
+        setupKitchenSelect = R.drawable.setup_kitchen_filled;
+        setupKitchenDeselect = R.drawable.setup_kitchen_black;
+        kitchenNearbySelect = R.drawable.kitchens_nearby_white;
+        kitchenNearbyDeselect = R.drawable.kitchens_nearby_black;
+        chatDeselect = R.drawable.chat_black;
+        chatSelect = R.drawable.chat_white;
+        manageKitchenDeselect = R.drawable.manage_black;
+        manageKitchenSelect = R.drawable.manage_white;
+        tabs = new ImageView[]{tab0, tab1, tab2};
+        defaultSelectIcons = new int[]{setupKitchenSelect, kitchenNearbySelect, chatSelect};
+        defaultDeselectIcons = new int[]{setupKitchenDeselect, kitchenNearbyDeselect, chatDeselect};
+        ownerSelectIcons = new int[]{kitchenNearbySelect, manageKitchenSelect, chatSelect};
+        ownerDeselectIcons = new int[]{kitchenNearbyDeselect, manageKitchenDeselect, chatDeselect};
+        defaultTitle = new int[]{R.string.setup_kitchen_title, R.string.kitchen_nearby_title, R.string.chat_title};
+        ownerTitle = new int[]{R.string.kitchen_nearby_title, R.string.manage_title, R.string.chat_title};
+    }
+
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         toolbar.setTitle(getResources().getString(R.string.app_name));
 
@@ -75,9 +102,13 @@ public class MainActivity extends LoggedInActivity {
     private void setupViewPager(Bundle savedInstanceState) {
 
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        /*adapter.addFragment();
-        adapter.addFragment();
-        adapter.addFragment()*/
+        //FIXME fix order dependency using indexes
+        chatFragment = new KitchenListFragment();
+        setupKitchenFragment = new KitchenListFragment();
+        kitchensNearbyFragment = new KitchenListFragment();
+        adapter.addFragment(setupKitchenFragment);
+        adapter.addFragment(kitchensNearbyFragment);
+        adapter.addFragment(chatFragment);
         mViewPager.setAdapter(adapter);
 
         mViewPager.setSaveEnabled(true);
@@ -85,6 +116,7 @@ public class MainActivity extends LoggedInActivity {
         if (savedInstanceState != null) {
             mViewPager.setCurrentItem(savedInstanceState.getInt(PAGER_STATE));
         }
+        mViewPager.setCurrentItem(1); //middle page
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -112,6 +144,10 @@ public class MainActivity extends LoggedInActivity {
             else
                 deselectTab(i);
         }
+        if (isUserKitchenOwner())
+            getSupportActionBar().setTitle(ownerTitle[position]);
+        else
+            getSupportActionBar().setTitle(defaultTitle[position]);
 
     }
 

@@ -8,4 +8,12 @@
 
     <string name="no_internet_title">Are you connected to internet?</string>
     <string name="no_internet_message">App could not connect to internet. You need to be connected to internet to sign in.</string>
+
+    //titles
+    <string name="chat_title">Your chats</string>
+    <string name="manage_title">My Kitchen</string>
+    <string name="setup_kitchen_title">Setup Your Kitchen</string>
+    <string name="kitchen_nearby_title">Kitchens near you</string>
+
+
 </resources>

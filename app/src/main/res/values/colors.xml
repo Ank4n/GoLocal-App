@@ -11,5 +11,8 @@
 
     <color name="tab_select">@color/primary_dark</color>
     <color name="tab_deselect">#EEEEEE</color>
+    <color name="background_list">#EEEEEE</color>
+    <color name="rating_card_view">#DDDDDD</color>
+    <color name="border">#CCCCCC</color>
 
 </resources>
