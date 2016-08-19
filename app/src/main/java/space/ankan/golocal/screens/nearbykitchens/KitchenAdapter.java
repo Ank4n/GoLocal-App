@@ -1,10 +1,12 @@
 package space.ankan.golocal.screens.nearbykitchens;
 
-import android.app.Activity;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -12,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import space.ankan.golocal.R;
-import space.ankan.golocal.core.BaseActivity;
 import space.ankan.golocal.model.kitchens.Kitchen;
 
 /**
@@ -20,11 +21,11 @@ import space.ankan.golocal.model.kitchens.Kitchen;
  */
 public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHolder> {
 
-    private Activity mActivity;
+    private Context mContext;
     private ArrayList<Kitchen> kitchens;
 
-    public KitchenAdapter(Activity activity, ArrayList<Kitchen> list) {
-        this.mActivity = activity;
+    public KitchenAdapter(Context context, ArrayList<Kitchen> list) {
+        this.mContext = context;
         this.kitchens = list;
     }
 
@@ -38,15 +39,38 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
     @Override
     public KitchenListItemViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View view = LayoutInflater.from(mActivity)
+        View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.list_item_kitchen, parent, false);
-        BaseActivity.log("here " + i);
         return new KitchenListItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final KitchenListItemViewHolder holder, int i) {
+        Kitchen kitchen = kitchens.get(i);
+        holder.mView.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "Open detail view", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        Picasso.with(mContext).load(kitchen.imageUrl).into(holder.mKitchenImage);
+        if (kitchen.isFavourite)
+            holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_red_300_18dp));
+        else
+            holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_light));
+
+        holder.mfavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "This has not been implemented yet.", Toast.LENGTH_LONG).show();
+
+            }
+        });
+        holder.mTitle.setText(kitchen.name);
+        holder.mDesc.setText(kitchen.description);
+        holder.rating.setText(String.valueOf(kitchen.rating));
 
     }
 

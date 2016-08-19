@@ -36,13 +36,26 @@ import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
  * Base Activity that all activities in the app should extend from
  */
 
-public class BaseActivity extends AppCompatActivity implements AppConstants {
+public abstract class BaseActivity extends AppCompatActivity implements AppConstants {
     private static final String SHARED_PREF_FILE_NAME = "GoLocal";
     private static SharedPreferences sharedPreferences;
     private FirebaseHelper firebaseHelper;
     private Boolean isUserKitchenOwner;
+    private User user;
+
+
+    protected User getUser() {
+        return user;
+    }
+
+    protected void setUser(User user) {
+        this.user = user;
+    }
 
     protected FirebaseHelper getFirebaseHelper() {
+
+        if (firebaseHelper == null)
+            firebaseHelper = new FirebaseHelper();
         return firebaseHelper;
     }
 
@@ -159,7 +172,7 @@ public class BaseActivity extends AppCompatActivity implements AppConstants {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void saveUserType(boolean isKitchenOwner) {
+    protected void saveUserType(boolean isKitchenOwner) {
         getSharedPref().edit().putInt(USER_TYPE, isKitchenOwner ? USER_TYPE_KITCHEN_OWNER : USER_TYPE_CUSTOMER).commit();
 
     }

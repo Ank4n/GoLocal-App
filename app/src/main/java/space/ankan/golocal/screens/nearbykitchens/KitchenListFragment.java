@@ -35,8 +35,8 @@ public class KitchenListFragment extends Fragment {
 
     private void setupRecycler() {
         ArrayList<Kitchen> kitchens = new ArrayList<>();
-        kitchens.add(new Kitchen("Arti", "desc", null));
-        kitchens.add(new Kitchen("Arti", "desc", null));
+        kitchens.add(new Kitchen("Arti", "desc", "http://www.ikea.com/ms/media/cho_room/20153/kitchen/20153_cosk30a/20153_cosk30a_01_thumb_PH124155.jpg", 3.5f, true));
+        kitchens.add(new Kitchen("Mukesh", "NorthIndian", "http://www.ikea.com/ms/media/cho_room/20161/kitchen/20161_cosk01a/20161_cosk01a_01_thumb_PH128782.jpg", 3.2f, false));
 
         adapter = new KitchenAdapter(getActivity(), kitchens);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

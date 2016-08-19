@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import space.ankan.golocal.screens.mykitchen.MyKitchenActivity;
 import space.ankan.golocal.screens.MainActivity;
 
 /**
@@ -19,7 +18,4 @@ public class ActivityUtils {
         context.startActivity(new Intent(context, MainActivity.class));
     }
 
-    public static void startMyKitchenActivity(Context context) {
-        context.startActivity(new Intent(context, MyKitchenActivity.class));
-    }
 }

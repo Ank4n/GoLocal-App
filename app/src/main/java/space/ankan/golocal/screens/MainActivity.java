@@ -1,6 +1,8 @@
 package space.ankan.golocal.screens;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -12,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.LoggedInActivity;
+import space.ankan.golocal.screens.mykitchen.adddish.AddDishActivity;
 import space.ankan.golocal.screens.nearbykitchens.KitchenListFragment;
 
 public class MainActivity extends LoggedInActivity {
@@ -36,6 +39,9 @@ public class MainActivity extends LoggedInActivity {
     private Fragment setupKitchenFragment;
     private Fragment manageKitchenFragment;
     private Fragment kitchensNearbyFragment;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
 
     private static final String PAGER_STATE = "state";
@@ -74,9 +80,11 @@ public class MainActivity extends LoggedInActivity {
         initImageResources();
         setupToolbar();
         setupViewPager(savedInstanceState);
+        setupFab();
 
         //FIXME add two pane mode
     }
+
 
     private void initImageResources() {
         setupKitchenSelect = R.drawable.setup_kitchen_filled;
@@ -120,7 +128,6 @@ public class MainActivity extends LoggedInActivity {
         if (savedInstanceState != null) {
             mViewPager.setCurrentItem(savedInstanceState.getInt(PAGER_STATE));
         }
-        mViewPager.setCurrentItem(1); //middle page
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -139,6 +146,8 @@ public class MainActivity extends LoggedInActivity {
             }
         });
 
+        mViewPager.setCurrentItem(1); //middle page
+
         for (int i = 0; i < tabs.length; i++) {
             final int position = i;
             tabs[position].setOnClickListener(new View.OnClickListener() {
@@ -151,6 +160,13 @@ public class MainActivity extends LoggedInActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
     private void formatTabs(int position) {
         for (int i = 0; i < TAB_COUNT; i++) {
             if (i == position)
@@ -158,9 +174,11 @@ public class MainActivity extends LoggedInActivity {
             else
                 deselectTab(i);
         }
-        if (isUserKitchenOwner())
+        if (isUserKitchenOwner()) {
             getSupportActionBar().setTitle(ownerTitle[position]);
-        else
+            if (position == MANAGE_KITCHEN_TAB)
+                fab.show();
+        } else
             getSupportActionBar().setTitle(defaultTitle[position]);
 
     }
@@ -194,10 +212,26 @@ public class MainActivity extends LoggedInActivity {
             tab.setImageDrawable(ContextCompat.getDrawable(this, defaultDeselectIcons[position]));
     }
 
+    private void setupFab() {
+        //fab.hide();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddDishActivity.createIntent(MainActivity.this);
+            }
+        });
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         int state = mViewPager.getCurrentItem();
         outState.putInt(PAGER_STATE, state);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mViewPager.setCurrentItem(savedInstanceState.getInt(PAGER_STATE));
     }
 }

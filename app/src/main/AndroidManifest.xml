@@ -23,7 +23,7 @@
         <activity
             android:name=".screens.MainActivity"
             android:label="@string/title_activity_kitchen_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".screens.nearbykitchens.KitchenDetailActivity"
             android:label="@string/title_activity_kitchen_detail"
@@ -36,8 +36,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screens.mykitchen.MyKitchenActivity"
-            android:label="@string/title_activity_my_kitchen"
+            android:name=".screens.mykitchen.adddish.AddDishActivity"
+            android:label="@string/title_activity_add_dish"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

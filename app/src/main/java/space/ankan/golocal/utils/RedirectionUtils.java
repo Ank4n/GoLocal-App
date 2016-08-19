@@ -11,9 +11,7 @@ import android.content.Intent;
 public class RedirectionUtils {
 
     public static void redirectFromSplash(Context c, boolean kitchenOwner) {
-        if (kitchenOwner)
-            ActivityUtils.startMyKitchenActivity(c);
-        else
+
             ActivityUtils.startKitchenListActivity(c);
 
     }

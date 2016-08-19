@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.model.users.User;
 
 /**
@@ -90,5 +91,14 @@ public class FirebaseHelper {
 
     public void enrollNewUser() {
         getCurrentUserReference().setValue(new User(null, auth.getCurrentUser().getDisplayName(), null));
+    }
+
+    public String getCurrentUserUid() {
+        return auth.getCurrentUser().getUid();
+    }
+
+    public void push(Dish dish, String kitchenId) {
+        getKitchenReference(kitchenId).child("dishes").push().setValue(dish);
+
     }
 }
