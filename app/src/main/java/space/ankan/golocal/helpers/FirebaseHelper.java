@@ -1,5 +1,8 @@
 package space.ankan.golocal.helpers;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +32,8 @@ public class FirebaseHelper {
     private DatabaseReference usersRef;
     private DatabaseReference channelsRef;
     private DatabaseReference kitchensRef;
+    private DatabaseReference geoFireRef;
+    private GeoFire geoFire;
 
     private StorageReference dishImagesRef;
     private StorageReference chatImagesRef;
@@ -42,6 +47,8 @@ public class FirebaseHelper {
         usersRef = database.getReference("users");
         channelsRef = database.getReference("channels");
         kitchensRef = database.getReference("kitchens");
+        geoFireRef = database.getReference("geoFire");
+        geoFire = new GeoFire(geoFireRef);
 
         dishImagesRef = storage.getReference("dishes");
         chatImagesRef = storage.getReference("chatPhotos");
@@ -112,7 +119,13 @@ public class FirebaseHelper {
         Map<String, Object> map = new HashMap<>();
         map.put("kitchen", kitchenRef.getKey());
         getCurrentUserReference().updateChildren(map);
-        return kitchenRef.getKey();
+        String key = kitchenRef.getKey();
+        geoFire.setLocation(key, new GeoLocation(kitchen.latitude, kitchen.longitude));
+        return key;
+    }
+
+    public GeoQuery buildQueryForKitchens(GeoLocation geo, double rangeInKms) {
+        return geoFire.queryAtLocation(geo, rangeInKms);
     }
 
     public DatabaseReference getDishesReference(String kitchenId) {
@@ -126,4 +139,5 @@ public class FirebaseHelper {
     public DatabaseReference getUserChannels(String userId) {
         return getUserReference(userId).child("channels");
     }
+
 }

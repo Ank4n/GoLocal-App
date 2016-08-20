@@ -110,7 +110,10 @@ public class KitchenDetailActivity extends LoggedInActivity {
 
     @OnClick(R.id.start_chat)
     void startChat() {
-        ChatActivity.createIntent(this, null, mKitchen.name, mKitchen.userId);
+        if (getCurrentUser().getUid().equals(mKitchen.userId))
+            Toast.makeText(this, "Hey, this kitchen is yours only.", Toast.LENGTH_LONG).show();
+        else
+            ChatActivity.createIntent(this, getSharedPref().getString(mKitchen.userId, null), mKitchen.name, mKitchen.userId);
     }
 
     private void formatFAB() {

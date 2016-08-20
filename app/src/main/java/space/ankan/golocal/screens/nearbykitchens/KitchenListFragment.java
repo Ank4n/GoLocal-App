@@ -1,31 +1,54 @@
 package space.ankan.golocal.screens.nearbykitchens;
 
-import android.support.v4.app.Fragment;
+import android.content.DialogInterface;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
+import space.ankan.golocal.screens.MainActivity;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class KitchenListFragment extends BaseFragment {
+public class KitchenListFragment extends BaseFragment implements GeoQueryEventListener {
 
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.content_kitchen_list)
+    RecyclerView mRecyclerView;
+
+    private final Integer[] rangeList = new Integer[]{1, 2, 5, 10, 20, 50, 100, 200, 500, 2000};
+    private View mRootView;
     private KitchenAdapter adapter;
+    private double range = 10; //default
+    private Location location;
+    private GeoQuery mQuery;
+    private AlertDialog rangePicker;
+    private EditText rangeInput;
 
     public KitchenListFragment() {
     }
@@ -33,41 +56,119 @@ public class KitchenListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_kitchen_list, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_kitchen_list, container, false);
+        ButterKnife.bind(this, mRootView);
         setupRecycler();
         syncWithFirebase();
-        return mRecyclerView;
+        setHasOptionsMenu(true);
+        return mRootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_kitchen_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.range_set:
+                pickRange();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void pickRange() {
+
+        if (rangePicker == null) {
+            rangeInput = new EditText(getActivity());
+            rangeInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            rangeInput.setLayoutParams(lp);
+
+            rangePicker = new AlertDialog.Builder(getActivity())
+                    .setMessage("Enter range in Kms")
+                    .setView(rangeInput)
+                    .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            double r;
+                            try {
+                                r = Double.parseDouble(rangeInput.getText().toString());
+                            } catch (Exception e) {
+                                return;
+                            }
+
+                            if (r <= 0) {
+                                Toast.makeText(getActivity(), "Please set a range greater than zero", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if (r == range) return;
+                            range = r;
+                            syncWithFirebase();
+
+                        }
+                    }).create();
+        }
+
+        rangeInput.setText(String.valueOf((int) range));
+        rangeInput.setSelection(rangeInput.getText().length());
+        rangePicker.show();
+
     }
 
     private void setupRecycler() {
-        adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
+        if (adapter == null)
+            adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
+        location = ((MainActivity) getActivity()).getLocation();
     }
 
+    public void updateLocation(Location location) {
+
+        if (this.location != null && location.getLatitude() == this.location.getLatitude() && location.getLongitude() == this.location.getLongitude())
+            return;
+        this.location = location;
+        syncWithFirebase();
+    }
+
+
     private void syncWithFirebase() {
-        getFirebaseHelper().getKitchensReference().addChildEventListener(new ChildEventListener() {
+        log("syncing with firebase");
+        if (adapter == null)
+            adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
+
+        if (mQuery != null)
+            mQuery.removeAllListeners();
+
+        adapter.clear();
+
+        if (location == null)
+            Toast.makeText(getActivity(), "Please enable gps to get kitchens near your area", Toast.LENGTH_LONG);
+
+        else {
+            mQuery = getFirebaseHelper().buildQueryForKitchens(new GeoLocation(location.getLatitude(), location.getLongitude()),
+                    range);
+            mQuery.addGeoQueryEventListener(this);
+        }
+
+
+    }
+
+    @Override
+    public void onKeyEntered(String key, GeoLocation location) {
+        getFirebaseHelper().getKitchenReference(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 Kitchen kitchen = dataSnapshot.getValue(Kitchen.class);
                 kitchen.key = dataSnapshot.getKey();
                 adapter.add(kitchen);
                 log("kitchen key: " + kitchen.key);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -77,4 +178,23 @@ public class KitchenListFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onKeyExited(String key) {
+
+    }
+
+    @Override
+    public void onKeyMoved(String key, GeoLocation location) {
+
+    }
+
+    @Override
+    public void onGeoQueryReady() {
+
+    }
+
+    @Override
+    public void onGeoQueryError(DatabaseError error) {
+
+    }
 }

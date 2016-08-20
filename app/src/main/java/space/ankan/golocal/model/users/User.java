@@ -9,6 +9,7 @@ public class User {
     public String kitchen;
     public String userName;
     //public UserChannel[] userChannels;
+    //kitchenids
 
     public User(String kitchen, String userName) {
         this.kitchen = kitchen;

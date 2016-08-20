@@ -27,6 +27,11 @@ public class Channel implements Comparable<Channel> {
         this.imageUrl = imageUrl;
     }
 
+    public String other(String userId) {
+        if (userId.equals(userId1)) return userId2;
+        return userId1;
+    }
+
     @Override
     public int compareTo(Channel that) {
         return Long.compare(that.timeStamp, this.timeStamp);

@@ -1,5 +1,7 @@
 package space.ankan.golocal.model.kitchens;
 
+import com.firebase.geofire.GeoLocation;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,8 @@ public class Kitchen implements Serializable {
     public String name;
     public String userId;
     public String description;
+    public double latitude;
+    public double longitude;
     //public List<Dish> dishes;
     public String imageUrl;
     public int ratedUserCount;

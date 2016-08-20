@@ -115,6 +115,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
             newChannel.name = getCurrentUser().getDisplayName();
             getFirebaseHelper().getUserChannels(userId).child(newUserChannelRef.getKey()).setValue(newChannel);
             syncWithFirebase();
+            getSharedPref().edit().putString(userId, channelId).commit();
 
         } else {
             getFirebaseHelper().getChannelReference(channelId).push().setValue(chatMessage);

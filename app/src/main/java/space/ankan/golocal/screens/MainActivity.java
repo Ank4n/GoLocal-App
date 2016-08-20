@@ -1,15 +1,37 @@
 package space.ankan.golocal.screens;
 
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import com.firebase.geofire.GeoLocation;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +43,7 @@ import space.ankan.golocal.screens.mykitchen.addDish.AddDishActivity;
 import space.ankan.golocal.screens.nearbykitchens.KitchenListFragment;
 import space.ankan.golocal.screens.setupkitchen.SetupKitchenFragment;
 
-public class MainActivity extends LoggedInActivity {
+public class MainActivity extends LoggedInActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     public static final int TAB_COUNT = 3;
     private static final int SETUP_KITCHEN_TAB = 0;
@@ -29,6 +51,9 @@ public class MainActivity extends LoggedInActivity {
     private static final int DEFAULT_KITCHENS_NEARBY_TAB = 1;
     private static final int MANAGE_KITCHEN_TAB = 1;
     private static final int CHAT_TAB = 2;
+
+    private static final int GPS_PERMISSION = 1;
+    private static final int REQUEST_CHECK_SETTINGS = 11;
 
     private int setupKitchenSelect;
     private int setupKitchenDeselect;
@@ -39,10 +64,14 @@ public class MainActivity extends LoggedInActivity {
     private int manageKitchenDeselect;
     private int manageKitchenSelect;
 
-    private Fragment chatFragment;
-    private Fragment setupKitchenFragment;
-    private Fragment manageKitchenFragment;
-    private Fragment kitchensNearbyFragment;
+    private ChannelsFragment channelsFragment;
+    private SetupKitchenFragment setupKitchenFragment;
+    private ManageKitchenFragment manageKitchenFragment;
+    private KitchenListFragment kitchenListFragment;
+
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Location mLastLocation;
 
     @BindView(R.id.fab)
     FloatingActionButton addDishFab;
@@ -85,6 +114,7 @@ public class MainActivity extends LoggedInActivity {
         setupToolbar();
         setupViewPager(savedInstanceState);
         setupFab();
+        createLocationRequest();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         //FIXME add two pane mode
@@ -118,7 +148,21 @@ public class MainActivity extends LoggedInActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.sign_out:
+                signOut();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupViewPager(Bundle savedInstanceState) {
@@ -168,20 +212,20 @@ public class MainActivity extends LoggedInActivity {
     private void initializeFragments(FragmentAdapter adapter) {
         adapter.clearFragments();
 
-        chatFragment = new ChannelsFragment();
-        kitchensNearbyFragment = new KitchenListFragment();
+        channelsFragment = new ChannelsFragment();
+        kitchenListFragment = new KitchenListFragment();
 
         if (isUserKitchenOwner()) {
             manageKitchenFragment = ManageKitchenFragment.newInstance();
-            adapter.addFragment(kitchensNearbyFragment);
+            adapter.addFragment(kitchenListFragment);
             adapter.addFragment(manageKitchenFragment);
-            adapter.addFragment(chatFragment);
+            adapter.addFragment(channelsFragment);
 
         } else {
             setupKitchenFragment = SetupKitchenFragment.newInstance();
             adapter.addFragment(setupKitchenFragment);
-            adapter.addFragment(kitchensNearbyFragment);
-            adapter.addFragment(chatFragment);
+            adapter.addFragment(kitchenListFragment);
+            adapter.addFragment(channelsFragment);
         }
 
     }
@@ -192,6 +236,7 @@ public class MainActivity extends LoggedInActivity {
 
 
     }
+
 
     private void formatTabs(int position) {
         for (int i = 0; i < TAB_COUNT; i++) {
@@ -261,5 +306,129 @@ public class MainActivity extends LoggedInActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mViewPager.setCurrentItem(savedInstanceState.getInt(PAGER_STATE));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GPS_PERMISSION);
+
+        checkLocationSettings();
+    }
+
+
+    private void checkLocationSettings() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
+                        builder.build());
+
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+
+            @Override
+            public void onResult(LocationSettingsResult result) {
+
+                final Status status = result.getStatus();
+                final LocationSettingsStates states = result.getLocationSettingsStates();
+
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+
+                        startLocationUpdates();
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(
+                                    MainActivity.this,
+                                    REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+
+                        break;
+                }
+            }
+        });
+    }
+
+    protected void startLocationUpdates() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED))
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case GPS_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    startLocationUpdates();
+
+                break;
+
+
+        }
+    }
+
+    private void createLocationRequest() {
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(60 * 60 * 1000);// 1 hour interval
+        mLocationRequest.setFastestInterval(5000); // 5 seconds
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        log("location changed:" + mLastLocation);
+        if (mLastLocation == null) return;
+        if (kitchenListFragment != null)
+            kitchenListFragment.updateLocation(mLastLocation);
+        showToast("Longitude:" + mLastLocation.getLongitude() + " | Latitude: " + mLastLocation.getLatitude());
+
+    }
+
+    public Location getLocation() {
+        return mLastLocation;
     }
 }

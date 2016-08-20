@@ -1,7 +1,7 @@
 package space.ankan.golocal.screens.setupkitchen;
 
 import android.content.Context;
-import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,13 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
-import space.ankan.golocal.screens.onboarding.SplashActivity;
+import space.ankan.golocal.screens.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,15 +99,21 @@ public class SetupKitchenFragment extends BaseFragment {
     }
 
     private void publishKitchen() {
+        Location location = ((MainActivity) getActivity()).getLocation();
+        if (location == null) {
+            Toast.makeText(getActivity(), R.string.location_error_message, Toast.LENGTH_LONG);
+            return;
+        }
         Kitchen kitchen = new Kitchen(editKitchenName.getText().toString(), editDescription.getText().toString(), imageUrl, editAddress.getText().toString());
         kitchen.userId = getCurrentUser().getUid();
+        kitchen.latitude = location.getLatitude();
+        kitchen.longitude = location.getLongitude();
         String kitchenId = getFirebaseHelper().push(kitchen);
         saveUserType(kitchenId);
         getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
         startActivity(getActivity().getIntent());
         getActivity().finish();
-        showToast("Congratulations. Your kitchen has been published.");
-
+        Toast.makeText(getActivity(), R.string.kitchen_published_message, Toast.LENGTH_LONG);
     }
 
     private String uploadImage() {
