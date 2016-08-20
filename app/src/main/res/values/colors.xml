@@ -17,5 +17,8 @@
     <color name="rating_card_view">#DDDDDD</color>
     <color name="border">#CCCCCC</color>
     <color name="transparent">#00000000 </color>
+    <color name="dish_detail_background">#fffacd </color>
+    <color name="detail_full_background">@color/background_list </color>
+    <color name="card_background">@color/white</color>
 
 </resources>

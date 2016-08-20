@@ -56,6 +56,7 @@ public class KitchenDetailActivity extends LoggedInActivity {
         if (mKitchen != null) {
 
             mCtl.setTitle(mKitchen.name);
+            //getSupportActionBar().setTitle(mKitchen.name);
             formatFAB();
 
             if (TextUtils.isEmpty(mKitchen.imageUrl))

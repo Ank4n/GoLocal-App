@@ -21,10 +21,16 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
 
     private Context mContext;
     private ArrayList<Dish> dishes;
+    private boolean horizontal; //for detail page
 
     public DishAdapter(Context context, ArrayList<Dish> list) {
+        this(context, list, false);
+    }
+
+    public DishAdapter(Context context, ArrayList<Dish> list, boolean horizontal) {
         this.mContext = context;
         this.dishes = list;
+        this.horizontal = horizontal;
     }
 
     public Dish getItem(int position) {
@@ -37,8 +43,12 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
 
     @Override
     public DishListItemViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View view = LayoutInflater.from(mContext)
+        View view;
+
+        if (!horizontal) view = LayoutInflater.from(mContext)
                 .inflate(R.layout.dish_list_item, parent, false);
+        else view = LayoutInflater.from(mContext)
+                .inflate(R.layout.dish_list_item_horizontal, parent, false);
         return new DishListItemViewHolder(view);
     }
 
