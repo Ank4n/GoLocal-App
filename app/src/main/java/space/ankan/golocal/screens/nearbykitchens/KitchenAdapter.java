@@ -3,6 +3,7 @@ package space.ankan.golocal.screens.nearbykitchens;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,16 +47,19 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
     @Override
     public void onBindViewHolder(final KitchenListItemViewHolder holder, int i) {
-        Kitchen kitchen = kitchens.get(i);
+        final Kitchen kitchen = kitchens.get(i);
         holder.mView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Open detail view", Toast.LENGTH_LONG).show();
+                KitchenDetailActivity.createIntent(mContext, kitchen);
             }
         });
 
-        Picasso.with(mContext).load(kitchen.imageUrl).into(holder.mKitchenImage);
+        if (!TextUtils.isEmpty(kitchen.imageUrl))
+            Picasso.with(mContext).load(kitchen.imageUrl).into(holder.mKitchenImage);
+        else holder.mKitchenImage.setAlpha(0.4f);
+
         if (kitchen.isFavourite)
             holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_red_300_18dp));
         else
@@ -85,8 +89,8 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         return getItemCount();
     }
 
-    public void add(Kitchen movie) {
-        this.kitchens.add(movie);
+    public void add(Kitchen kitchen) {
+        this.kitchens.add(kitchen);
         this.notifyDataSetChanged();
     }
 
@@ -94,10 +98,10 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         this.kitchens.clear();
     }
 
-    public void addAll(List<Kitchen> movies) {
+    public void addAll(List<Kitchen> kitchens) {
         if (!this.kitchens.isEmpty())
             return;
-        this.kitchens.addAll(movies);
+        this.kitchens.addAll(kitchens);
         this.notifyDataSetChanged();
     }
 

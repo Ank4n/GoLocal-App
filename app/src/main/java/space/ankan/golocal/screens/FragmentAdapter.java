@@ -16,15 +16,16 @@ import java.util.List;
 
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
-    private final List<Fragment> mFragments = new ArrayList<>();
+    private final List<Fragment> mFragments;
 
     @Override
     public Parcelable saveState() {
         return super.saveState();
     }
 
-    public FragmentAdapter(FragmentManager fm) {
+    public FragmentAdapter(FragmentManager fm, int tabCount) {
         super(fm);
+        mFragments = new ArrayList<>(tabCount);
     }
 
     public void addFragment(Fragment fragment) {
@@ -39,5 +40,9 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mFragments.size();
+    }
+
+    public void clearFragments() {
+        mFragments.clear();
     }
 }

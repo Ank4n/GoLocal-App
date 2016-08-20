@@ -30,7 +30,7 @@ public abstract class LoggedInActivity extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     setUser(dataSnapshot.getValue(User.class));
-                    saveUserType(getUser().kitchen != null);
+                    saveUserType(getUser().kitchen);
                 }
 
             }

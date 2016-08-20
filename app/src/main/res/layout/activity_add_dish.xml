@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="space.ankan.golocal.screens.mykitchen.adddish.AddDishActivity">
+    tools:context="space.ankan.golocal.screens.mykitchen.addDish.AddDishActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

@@ -61,8 +61,13 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
 
     protected boolean isUserKitchenOwner() {
         if (isUserKitchenOwner == null)
-            isUserKitchenOwner = getSharedPref().getInt(AppConstants.USER_TYPE, AppConstants.USER_TYPE_CUSTOMER) == AppConstants.USER_TYPE_KITCHEN_OWNER;
+            isUserKitchenOwner = getSharedPref().getString(AppConstants.KITCHEN_ID, null) != null;
         return isUserKitchenOwner;
+    }
+
+    protected String getUserKitchenId() {
+        return getSharedPref().getString(AppConstants.KITCHEN_ID, null);
+
     }
 
     protected SharedPreferences getSharedPref() {
@@ -127,9 +132,9 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            boolean isKitchenOwner = dataSnapshot.getValue(User.class).kitchen != null;
-                            RedirectionUtils.redirectFromSplash(BaseActivity.this, isKitchenOwner);
-                            saveUserType(isKitchenOwner);
+                            String kitchenId = dataSnapshot.getValue(User.class).kitchen;
+                            RedirectionUtils.redirectFromSplash(BaseActivity.this, kitchenId != null);
+                            saveUserType(kitchenId);
                         }
                         //new user
                         else getFirebaseHelper().enrollNewUser();
@@ -172,8 +177,9 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    protected void saveUserType(boolean isKitchenOwner) {
-        getSharedPref().edit().putInt(USER_TYPE, isKitchenOwner ? USER_TYPE_KITCHEN_OWNER : USER_TYPE_CUSTOMER).commit();
+    protected void saveUserType(String kitchenId) {
+        log("KitchenId: " + kitchenId);
+        getSharedPref().edit().putString(KITCHEN_ID, kitchenId).commit();
 
     }
 

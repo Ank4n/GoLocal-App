@@ -8,16 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class KitchenListFragment extends Fragment {
+public class KitchenListFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
     private KitchenAdapter adapter;
@@ -30,16 +35,46 @@ public class KitchenListFragment extends Fragment {
                              Bundle savedInstanceState) {
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_kitchen_list, container, false);
         setupRecycler();
+        syncWithFirebase();
         return mRecyclerView;
     }
 
     private void setupRecycler() {
-        ArrayList<Kitchen> kitchens = new ArrayList<>();
-        kitchens.add(new Kitchen("Arti", "desc", "http://www.ikea.com/ms/media/cho_room/20153/kitchen/20153_cosk30a/20153_cosk30a_01_thumb_PH124155.jpg", 3.5f, true));
-        kitchens.add(new Kitchen("Mukesh", "NorthIndian", "http://www.ikea.com/ms/media/cho_room/20161/kitchen/20161_cosk01a/20161_cosk01a_01_thumb_PH128782.jpg", 3.2f, false));
-
-        adapter = new KitchenAdapter(getActivity(), kitchens);
+        adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
     }
+
+    private void syncWithFirebase() {
+        getFirebaseHelper().getKitchensReference().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Kitchen kitchen = dataSnapshot.getValue(Kitchen.class);
+                kitchen.key = dataSnapshot.getKey();
+                adapter.add(kitchen);
+                log("kitchen key: " + kitchen.key);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }

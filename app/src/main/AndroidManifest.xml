@@ -23,11 +23,8 @@
         <activity
             android:name=".screens.MainActivity"
             android:label="@string/title_activity_kitchen_list"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".screens.nearbykitchens.KitchenDetailActivity"
-            android:label="@string/title_activity_kitchen_detail"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize|adjustPan" />
         <activity android:name=".screens.onboarding.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,9 +33,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screens.mykitchen.adddish.AddDishActivity"
+            android:name=".screens.mykitchen.addDish.AddDishActivity"
             android:label="@string/title_activity_add_dish"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".screens.chat.ChatActivity"
+            android:label="@string/title_activity_chat"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".screens.nearbykitchens.KitchenDetailActivity"
+            android:label="@string/title_activity_kitchen_detail"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".screens.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".screens.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

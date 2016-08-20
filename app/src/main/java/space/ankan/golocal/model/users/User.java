@@ -8,14 +8,14 @@ package space.ankan.golocal.model.users;
 public class User {
     public String kitchen;
     public String userName;
-    public UserChannel[] userChannels;
+    //public UserChannel[] userChannels;
 
-    public User(String kitchen, String userName, UserChannel[] userChannels) {
+    public User(String kitchen, String userName) {
         this.kitchen = kitchen;
         this.userName = userName;
-        this.userChannels = userChannels;
+        //  this.userChannels = userChannels;
     }
 
-    public  User() {
+    public User() {
     }
 }

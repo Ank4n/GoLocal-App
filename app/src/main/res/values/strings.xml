@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GoLocal</string>
     <string name="facebook_application_id">187809048306167</string>
-    <string name="title_activity_kitchen_list">Kitchens near you</string>
+    <string name="title_activity_kitchen_list">Kitchens near me</string>
     <string name="title_activity_kitchen_detail">Kitchen Detail</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_my_kitchen">My Kitchen</string>
@@ -10,16 +10,24 @@
     <string name="no_internet_message">App could not connect to internet. You need to be connected to internet to sign in.</string>
 
     //titles
-    <string name="chat_title">Your chats</string>
+    <string name="chat_title">My chats</string>
     <string name="manage_title">My Kitchen</string>
     <string name="setup_kitchen_title">Setup Your Kitchen</string>
-    <string name="kitchen_nearby_title">Kitchens near you</string>
+    <string name="kitchen_nearby_title">Kitchens near me</string>
     <string name="title_activity_add_dish">Add a Dish</string>
     <string name="add_dish_more_features">More options coming soon!</string>
     <string name="add_dish_action_button">DONE</string>
 
+    <string name="setup_kitchen_add_image">Upload an image for your Kitchen</string>
+    <string name="hint_kitchen_name">Give your kitchen a name</string>
+    <string name="hint_kitchen_address">Enter your address</string>
+    <string name="hint_kitchen_description">Add a description for your kitchen</string>
+    <string name="setup_kitchen_action_button">PUBLISH KITCHEN</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="type_your_message">Start typing</string>
 
 
 </resources>

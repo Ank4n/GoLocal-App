@@ -13,9 +13,6 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.BuildConfig;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import space.ankan.golocal.helpers.FirebaseHelper;
 import space.ankan.golocal.model.users.User;
@@ -48,8 +45,13 @@ public abstract class BaseFragment extends Fragment {
 
     protected boolean isUserKitchenOwner() {
         if (isUserKitchenOwner == null)
-            isUserKitchenOwner = getSharedPref().getInt(AppConstants.USER_TYPE, AppConstants.USER_TYPE_CUSTOMER) == AppConstants.USER_TYPE_KITCHEN_OWNER;
+            isUserKitchenOwner = getSharedPref().getString(AppConstants.KITCHEN_ID, null) != null;
         return isUserKitchenOwner;
+    }
+
+    protected String getUserKitchenId() {
+        return getSharedPref().getString(AppConstants.KITCHEN_ID, null);
+
     }
 
     protected SharedPreferences getSharedPref() {
@@ -79,4 +81,10 @@ public abstract class BaseFragment extends Fragment {
         if (BuildConfig.DEBUG) return;
         Log.wtf(AppConstants.TAG, log);
     }
+
+    protected void saveUserType(String kitchenId) {
+        if (getActivity() instanceof BaseActivity)
+            ((BaseActivity) getActivity()).saveUserType(kitchenId);
+    }
+
 }

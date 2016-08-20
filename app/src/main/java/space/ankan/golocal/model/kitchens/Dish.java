@@ -22,4 +22,10 @@ public class Dish {
         this.price = price;
         this.nonVeg = nonVeg;
     }
+
+    public Dish(String name, int price, boolean nonVeg) {
+        this.name = name;
+        this.price = price;
+        this.nonVeg = nonVeg;
+    }
 }

@@ -7,7 +7,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import space.ankan.golocal.model.kitchens.Dish;
+import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.model.users.User;
 
 /**
@@ -37,7 +41,7 @@ public class FirebaseHelper {
 
         usersRef = database.getReference("users");
         channelsRef = database.getReference("channels");
-        kitchensRef = database.getReference("storage");
+        kitchensRef = database.getReference("kitchens");
 
         dishImagesRef = storage.getReference("dishes");
         chatImagesRef = storage.getReference("chatPhotos");
@@ -90,7 +94,7 @@ public class FirebaseHelper {
     }
 
     public void enrollNewUser() {
-        getCurrentUserReference().setValue(new User(null, auth.getCurrentUser().getDisplayName(), null));
+        getCurrentUserReference().setValue(new User(null, auth.getCurrentUser().getDisplayName()));
     }
 
     public String getCurrentUserUid() {
@@ -100,5 +104,26 @@ public class FirebaseHelper {
     public void push(Dish dish, String kitchenId) {
         getKitchenReference(kitchenId).child("dishes").push().setValue(dish);
 
+    }
+
+    public String push(Kitchen kitchen) {
+        DatabaseReference kitchenRef = getKitchensReference().push();
+        kitchenRef.setValue(kitchen);
+        Map<String, Object> map = new HashMap<>();
+        map.put("kitchen", kitchenRef.getKey());
+        getCurrentUserReference().updateChildren(map);
+        return kitchenRef.getKey();
+    }
+
+    public DatabaseReference getDishesReference(String kitchenId) {
+        return getKitchenReference(kitchenId).child("dishes");
+    }
+
+    public DatabaseReference getUserChannels() {
+        return getCurrentUserReference().child("channels");
+    }
+
+    public DatabaseReference getUserChannels(String userId) {
+        return getUserReference(userId).child("channels");
     }
 }

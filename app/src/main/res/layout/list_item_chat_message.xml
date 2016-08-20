@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/message_sent_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/chat_icon"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/image_margin"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ic_black" />
+
+        <TextView
+            android:id="@+id/sender_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:layout_marginLeft="@dimen/text_margin"
+            android:gravity="center"
+            android:text="Me:"
+            android:textColor="@color/primary_dark" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_marginRight="@dimen/end_margin"
+            android:layout_toRightOf="@id/sender_name"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text="3.45PM"
+            android:textColor="@color/secondary_text" />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_marginTop="4dp"
+        android:text="this is an example of a message that I can send to you if I want, but I do not want so fuck off."
+        android:textColor="@color/primary_text" />
+
+</LinearLayout>

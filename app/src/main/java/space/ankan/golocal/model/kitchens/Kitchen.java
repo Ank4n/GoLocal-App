@@ -1,5 +1,9 @@
 package space.ankan.golocal.model.kitchens;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import space.ankan.golocal.model.kitchens.Dish;
 
 /**
@@ -7,14 +11,17 @@ import space.ankan.golocal.model.kitchens.Dish;
  * TODO: Add a class comment
  */
 
-public class Kitchen {
+public class Kitchen implements Serializable {
+    public String key;
     public String name;
+    public String userId;
     public String description;
-    public Dish[] dishes;
+    //public List<Dish> dishes;
     public String imageUrl;
     public int ratedUserCount;
     public float rating;
     public boolean isFavourite;
+    public String address;
 
     public Kitchen() {
     }
@@ -25,5 +32,12 @@ public class Kitchen {
         this.imageUrl = imageUrl;
         this.rating = rating;
         this.isFavourite = isFavourite;
+    }
+
+    public Kitchen(String name, String description, String imageUrl, String address) {
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.address = address;
     }
 }
