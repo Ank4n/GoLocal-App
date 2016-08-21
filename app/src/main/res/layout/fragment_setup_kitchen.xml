@@ -23,16 +23,28 @@
                 android:layout_height="100dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/kitchen_image"
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:alpha="0.4"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/manage_black" />
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/kitchen_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/manage_black" />
+
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/progress_bar"
+                        android:visibility="gone"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="0dp"

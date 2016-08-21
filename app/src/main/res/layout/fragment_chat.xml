@@ -20,7 +20,15 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="horizontal">
-
+        <ImageView
+            android:id="@+id/send_picture"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:src="@drawable/ic_add_a_photo_black" />
         <EditText
             android:id="@+id/entered_text"
             android:layout_width="0dp"

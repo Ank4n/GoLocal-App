@@ -1,5 +1,7 @@
 package space.ankan.golocal.screens.chat;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,10 +13,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +34,10 @@ import space.ankan.golocal.model.channels.Channel;
 import space.ankan.golocal.model.channels.ChatMessage;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.screens.mykitchen.DishAdapter;
+import space.ankan.golocal.utils.CommonUtils;
+
+import static android.app.Activity.RESULT_OK;
+import static space.ankan.golocal.core.AppConstants.RC_PHOTO_PICKER;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -43,12 +52,16 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     @BindView(R.id.send_message)
     ImageView sendButton;
 
+    @BindView(R.id.send_picture)
+    ImageView sendPicture;
+
     @BindView(R.id.entered_text)
     EditText enteredText;
 
     private String channelId;
     private String channelName;
     private String userId;
+
 
     public ChatActivityFragment() {
     }
@@ -98,6 +111,13 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
             }
         });
 
+        sendPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //CommonUtils.imagePickerForResult(ChatActivityFragment.this);
+            }
+        });
+
 
     }
 
@@ -126,6 +146,22 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
             getFirebaseHelper().getUserChannels(userId).child(channelId).updateChildren(map);
         }
 
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) return;
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            if (selectedImageUri == null) return;
+            getFirebaseHelper().pushImage(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    sendChat(taskSnapshot.getDownloadUrl().toString());
+                }
+            });
+
+        }
     }
 
     private void syncWithFirebase() {

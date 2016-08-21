@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
         View view;
 
         view = LayoutInflater.from(mContext)
-                .inflate(R.layout.chat_outgoing, parent, false);
+                .inflate(R.layout.chat_item, parent, false);
 
         return new ChatAdapter.ChatMessageListItemViewHolder(view);
     }
@@ -53,9 +56,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
     public void onBindViewHolder(final ChatAdapter.ChatMessageListItemViewHolder holder, int i) {
         ChatMessage item = chats.get(i);
 
+        //outgoing message
         if (userName.equalsIgnoreCase(item.name)) {
             holder.incomingView.setVisibility(View.GONE);
-            holder.mMessageOut.setText(item.message);
+            if (item.message.startsWith("https://firebasestorage.googleapis.com/")) {
+                holder.mMessageOut.setVisibility(View.GONE);
+                holder.mImageOut.setVisibility(View.VISIBLE);
+                Picasso.with(mContext).load(item.message).into(holder.mImageOut);
+            } else
+                holder.mMessageOut.setText(item.message);
 
             if (holder.mName != null)
                 holder.mName.setText(item.name);
@@ -63,7 +72,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
             holder.mTimeOut.setText(SIMPLE_DATE_FORMAT.format(item.timeStamp).toUpperCase());
         } else {
             holder.outgoingView.setVisibility(View.GONE);
-            holder.mMessageIn.setText(item.message);
+
+            if (item.message.startsWith("https://firebasestorage.googleapis.com/")) {
+                holder.mMessageIn.setVisibility(View.GONE);
+                holder.mImageIn.setVisibility(View.VISIBLE);
+                Picasso.with(mContext).load(item.message).into(holder.mImageIn);
+            } else
+                holder.mMessageIn.setText(item.message);
 
             if (holder.mName != null)
                 holder.mName.setText(item.name);
@@ -109,6 +124,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
         public final TextView mTimeIn;
         public final TextView mMessageOut;
         public final TextView mTimeOut;
+        public final ImageView mImageOut;
+        public final ImageView mImageIn;
 
 
         public ChatMessageListItemViewHolder(View view) {
@@ -118,9 +135,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
             outgoingView = view.findViewById(R.id.chat_outgoing);
             mName = (TextView) view.findViewById(R.id.sender_name);
             mMessageIn = (TextView) view.findViewById(R.id.message_in);
+            mImageIn = (ImageView) view.findViewById(R.id.image_in);
             mTimeIn = (TextView) view.findViewById(R.id.time_in);
             mMessageOut = (TextView) view.findViewById(R.id.message_out);
             mTimeOut = (TextView) view.findViewById(R.id.time_out);
+            mImageOut = (ImageView) view.findViewById(R.id.image_out);
 
         }
     }

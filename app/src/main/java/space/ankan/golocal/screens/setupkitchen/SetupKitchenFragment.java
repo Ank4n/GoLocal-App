@@ -1,7 +1,9 @@
 package space.ankan.golocal.screens.setupkitchen;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,7 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +25,10 @@ import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.screens.MainActivity;
+import space.ankan.golocal.utils.CommonUtils;
+
+import static android.app.Activity.RESULT_OK;
+import static space.ankan.golocal.core.AppConstants.RC_PHOTO_PICKER;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +40,12 @@ public class SetupKitchenFragment extends BaseFragment {
 
     @BindView(R.id.upload_kitchen_image)
     View uploadButton;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+
+    @BindView(R.id.kitchen_image)
+    ImageView kitchenImage;
 
     @BindView(R.id.edit_kitchen_name)
     EditText editKitchenName;
@@ -79,7 +97,9 @@ public class SetupKitchenFragment extends BaseFragment {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageUrl = uploadImage();
+                progressBar.setVisibility(View.VISIBLE);
+                CommonUtils.imagePickerForResult(SetupKitchenFragment.this);
+
             }
         });
 
@@ -92,6 +112,29 @@ public class SetupKitchenFragment extends BaseFragment {
         });
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) return;
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            if (selectedImageUri == null) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Could not upload image", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Picasso.with(getActivity()).load(selectedImageUri).into(kitchenImage);
+            progressBar.setVisibility(View.GONE);
+            getFirebaseHelper().pushProfileImage(selectedImageUri, imageUrl).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageUrl = taskSnapshot.getDownloadUrl().toString();
+
+                }
+            });
+
+        }
+    }
 
     private boolean validateInformation() {
         //FIXME Implement this
@@ -114,12 +157,6 @@ public class SetupKitchenFragment extends BaseFragment {
         startActivity(getActivity().getIntent());
         getActivity().finish();
         Toast.makeText(getActivity(), R.string.kitchen_published_message, Toast.LENGTH_LONG);
-    }
-
-    private String uploadImage() {
-        //FIXME Implement this
-        showToast("Not implemented yet");
-        return null;
     }
 
     @Override

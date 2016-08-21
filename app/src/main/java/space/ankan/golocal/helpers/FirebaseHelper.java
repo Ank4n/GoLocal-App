@@ -1,14 +1,18 @@
 package space.ankan.golocal.helpers;
 
+import android.net.Uri;
+
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +39,7 @@ public class FirebaseHelper {
     private DatabaseReference geoFireRef;
     private GeoFire geoFire;
 
-    private StorageReference dishImagesRef;
+    private StorageReference profileImagesRef;
     private StorageReference chatImagesRef;
 
     public FirebaseHelper() {
@@ -50,7 +54,7 @@ public class FirebaseHelper {
         geoFireRef = database.getReference("geoFire");
         geoFire = new GeoFire(geoFireRef);
 
-        dishImagesRef = storage.getReference("dishes");
+        profileImagesRef = storage.getReference("profile");
         chatImagesRef = storage.getReference("chatPhotos");
 
     }
@@ -68,7 +72,7 @@ public class FirebaseHelper {
     }
 
     public StorageReference getDishImagesReference() {
-        return dishImagesRef;
+        return profileImagesRef;
     }
 
     public StorageReference getChatImagesReference() {
@@ -140,4 +144,23 @@ public class FirebaseHelper {
         return getUserReference(userId).child("channels");
     }
 
+    public UploadTask pushImage(Uri imageUri) {
+        // Get a reference to the location where we'll store our photos
+        // Get a reference to store file at chat_photos/<FILENAME>
+        final StorageReference photoRef = chatImagesRef.child(imageUri.getLastPathSegment());
+        // Upload file to Firebase Storage
+        return photoRef.putFile(imageUri);
+
+
+    }
+
+    public UploadTask pushProfileImage(Uri imageUri, String oldImageUrl) {
+        // Get a reference to the location where we'll store our photos
+        // Get a reference to store file at chat_photos/<FILENAME>
+        final StorageReference photoRef = profileImagesRef.child(imageUri.getLastPathSegment());
+        // Upload file to Firebase Storage
+        return photoRef.putFile(imageUri);
+
+
+    }
 }
