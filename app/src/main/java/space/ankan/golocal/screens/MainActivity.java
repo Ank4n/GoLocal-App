@@ -1,17 +1,21 @@
 package space.ankan.golocal.screens;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,12 +40,14 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.core.LoggedInActivity;
 import space.ankan.golocal.screens.chat.ChannelsFragment;
 import space.ankan.golocal.screens.mykitchen.ManageKitchenFragment;
 import space.ankan.golocal.screens.mykitchen.addDish.AddDishActivity;
 import space.ankan.golocal.screens.nearbykitchens.KitchenListFragment;
 import space.ankan.golocal.screens.setupkitchen.SetupKitchenFragment;
+import space.ankan.golocal.services.FetchAddressIntentService;
 
 public class MainActivity extends LoggedInActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -72,6 +78,8 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
+    private String currentAddressText;
+    private AddressResultReceiver resultReceiver;
 
     @BindView(R.id.fab)
     FloatingActionButton addDishFab;
@@ -401,7 +409,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                 .build();
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(60 * 60 * 1000);// 1 hour interval
+        mLocationRequest.setInterval(60 * 1000);// 1 minute interval
         mLocationRequest.setFastestInterval(5000); // 5 seconds
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -424,11 +432,35 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         if (mLastLocation == null) return;
         if (kitchenListFragment != null)
             kitchenListFragment.updateLocation(mLastLocation);
-        showToast("Longitude:" + mLastLocation.getLongitude() + " | Latitude: " + mLastLocation.getLatitude());
+        resultReceiver = new AddressResultReceiver(new Handler());
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(RECEIVER, resultReceiver);
+        intent.putExtra(LOCATION_DATA_EXTRA, mLastLocation);
+        startService(intent);
 
     }
 
     public Location getLocation() {
         return mLastLocation;
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            currentAddressText = resultData.getString(AppConstants.RESULT_DATA_KEY);
+            if (kitchenListFragment != null && !TextUtils.isEmpty(currentAddressText))
+                kitchenListFragment.updateLocation(currentAddressText);
+
+            // Show a toast message if an address was found.
+
+
+        }
     }
 }

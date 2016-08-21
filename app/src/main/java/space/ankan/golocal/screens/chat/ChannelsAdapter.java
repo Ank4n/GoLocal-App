@@ -98,7 +98,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
             mView = view;
             mName = (TextView) view.findViewById(R.id.name);
             mLastMessage = (TextView) view.findViewById(R.id.last_message);
-            mTimeStamp = (TextView) view.findViewById(R.id.time);
+            mTimeStamp = (TextView) view.findViewById(R.id.time_in);
             mUserImage = (ImageView) view.findViewById(R.id.user_image);
         }
 

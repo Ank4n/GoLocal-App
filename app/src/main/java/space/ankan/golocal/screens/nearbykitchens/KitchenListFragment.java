@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoLocation;
@@ -41,7 +42,6 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     @BindView(R.id.content_kitchen_list)
     RecyclerView mRecyclerView;
 
-    private final Integer[] rangeList = new Integer[]{1, 2, 5, 10, 20, 50, 100, 200, 500, 2000};
     private View mRootView;
     private KitchenAdapter adapter;
     private double range = 10; //default
@@ -49,6 +49,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     private GeoQuery mQuery;
     private AlertDialog rangePicker;
     private EditText rangeInput;
+
+    @BindView(R.id.current_location)
+    TextView currentLocation;
 
     public KitchenListFragment() {
     }
@@ -196,5 +199,10 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     @Override
     public void onGeoQueryError(DatabaseError error) {
 
+    }
+
+    public void updateLocation(String currentAddressText) {
+        if (currentLocation==null) return;
+        currentLocation.setText(currentAddressText);
     }
 }

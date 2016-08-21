@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -21,7 +23,9 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        textView = (TextView) findViewById(R.id.splash_text);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        textView = (TextView) findViewById(R.id.message);
         Log.wtf("GoLocal", "Splash Activity");
     }
 
@@ -49,7 +53,8 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        textView.setText("Logging you in.");
+        textView.setText("Logging you in...");
+        textView.setVisibility(View.VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

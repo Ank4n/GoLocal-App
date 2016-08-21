@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/detail_full_background">
+    android:background="@color/detail_full_background"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -47,6 +47,7 @@
         android:backgroundTint="@color/primary_dark">
 
         <LinearLayout
+            android:id="@+id/dishes_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -104,4 +105,10 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center" />
 </LinearLayout>

@@ -19,13 +19,22 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDT75j9Wt9SjqKQlkl-gD8SebHuANjQFMo"/>
+
+        <service
+            android:name="services.FetchAddressIntentService"
+            android:exported="false" />
 
         <activity
             android:name=".screens.MainActivity"
             android:label="@string/title_activity_kitchen_list"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustResize|adjustPan" />
-        <activity android:name=".screens.onboarding.SplashActivity">
+        <activity
+            android:name=".screens.onboarding.SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,17 +48,20 @@
         <activity
             android:name=".screens.chat.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".screens.nearbykitchens.KitchenDetailActivity"
             android:label="@string/title_activity_kitchen_detail"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".screens.MainActivity">
+            android:parentActivityName=".screens.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".screens.MainActivity" />
         </activity>
+
+        <service
+            android:name=".services.FetchAddressIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

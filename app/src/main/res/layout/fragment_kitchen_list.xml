@@ -20,7 +20,7 @@
     android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/address"
+                android:id="@+id/current_location"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -31,7 +31,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:text="153, 8th Cross Road, 4th Main, Bangalore."
+                android:text="Searching for location..."
                 android:textColor="@color/accent"
                 android:textSize="16sp"
                 android:textStyle="bold" />

@@ -79,7 +79,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     }
 
     private void setupRecycler() {
-        adapter = new ChatAdapter(getActivity(), new ArrayList<ChatMessage>(), getFirebaseHelper().getFirebaseAuth().getCurrentUser().getDisplayName());
+        adapter = new ChatAdapter(getActivity(), new ArrayList<ChatMessage>(), getCurrentUser().getDisplayName());
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         //llm.setReverseLayout(true);
         //llm.setStackFromEnd(true);
@@ -102,7 +102,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     }
 
     private void sendChat(String message) {
-        ChatMessage chatMessage = new ChatMessage(getFirebaseHelper().getFirebaseAuth().getCurrentUser().getDisplayName(), message);
+        ChatMessage chatMessage = new ChatMessage(getCurrentUser().getDisplayName(), message);
         if (TextUtils.isEmpty(channelId)) {
             DatabaseReference newUserChannelRef = getFirebaseHelper().getUserChannels().push();
             Channel newChannel = new Channel(newUserChannelRef.getKey(), channelName, message, null);

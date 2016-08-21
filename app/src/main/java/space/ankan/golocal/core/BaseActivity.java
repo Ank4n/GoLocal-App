@@ -111,7 +111,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setTheme(R.style.AppTheme)
-                        .setLogo(R.mipmap.ic_launcher)
+                        .setLogo(R.drawable.ic_logo_color)
                         .setProviders(
                                 AuthUI.EMAIL_PROVIDER,
                                 AuthUI.GOOGLE_PROVIDER,
