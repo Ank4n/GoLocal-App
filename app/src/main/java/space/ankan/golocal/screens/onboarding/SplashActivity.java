@@ -37,13 +37,16 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 if (!getFirebaseHelper().isUserLoggedIn()) {
                     askToSignIn();
-                } else
+                } else {
                     RedirectionUtils.redirectFromSplash(
                             SplashActivity.this,
                             isUserKitchenOwner());
+                    finish();
+                }
 
             }
         }, 1000);
+
 
     }
 
@@ -56,5 +59,12 @@ public class SplashActivity extends BaseActivity {
         textView.setText("Logging you in...");
         textView.setVisibility(View.VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 1000);
+
     }
 }

@@ -13,9 +13,5 @@ import space.ankan.golocal.screens.MainActivity;
 
 public class ActivityUtils {
 
-    public static void startKitchenListActivity(Context context) {
-        Log.wtf("GoLocal", "Starting kitchen list activity");
-        context.startActivity(new Intent(context, MainActivity.class));
-    }
 
 }

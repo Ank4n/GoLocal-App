@@ -40,39 +40,14 @@
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dish_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/image_margin"
-        android:backgroundTint="@color/primary_dark">
-
-        <LinearLayout
-            android:id="@+id/dishes_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/end_margin"
-                android:layout_marginRight="@dimen/end_margin"
-                android:layout_marginTop="@dimen/end_margin"
-
-                android:text="Menu"
-                android:textColor="@color/primary_text"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/dish_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/end_margin"
-                android:layout_marginTop="@dimen/image_margin"
-                android:textColor="@color/primary_text" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/end_margin"
+        android:layout_marginTop="@dimen/image_margin"
+        android:textColor="@color/primary_text" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

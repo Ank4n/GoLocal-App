@@ -1,12 +1,14 @@
 package space.ankan.golocal.screens.mykitchen.addDish;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +45,11 @@ public class AddDishFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if (getUser() == null) {
-                    showToast("Some error occured, try again");
+                    Toast.makeText(getActivity(), "Some error occured, try again", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(dishName.getText()) || TextUtils.isEmpty(dishPrice.getText())) {
+                    Toast.makeText(getActivity(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Dish dish = new Dish(dishName.getText().toString(), null, null, Integer.valueOf(dishPrice.getText().toString()), isNonveg.isChecked());

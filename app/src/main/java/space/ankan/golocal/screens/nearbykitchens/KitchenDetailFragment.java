@@ -61,9 +61,6 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
     @BindView(R.id.kitchen_address)
     TextView kitchenAddress;
 
-    @BindView(R.id.dishes_card)
-    View dishesCard;
-
     private GoogleMap mMap;
     private Marker mMarker;
 
@@ -118,7 +115,6 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
         adapter = new DishAdapter(getActivity(), new ArrayList<Dish>(), true);
         mDishesRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mDishesRecycler.setAdapter(adapter);
-        dishesCard.setVisibility(View.INVISIBLE);
         syncWithFirebase();
     }
 
@@ -127,7 +123,6 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Dish dish = dataSnapshot.getValue(Dish.class);
-                dishesCard.setVisibility(View.VISIBLE);
                 adapter.add(dish);
             }
 

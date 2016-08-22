@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:maxLines="1"
+                android:textSize="12sp"
                 android:text="3.24PM"
                 android:textAppearance="?attr/textAppearanceListItemSmall"
                 android:textColor="@color/secondary_text" />

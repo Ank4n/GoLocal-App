@@ -1,11 +1,11 @@
 package space.ankan.golocal.helpers;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -39,7 +39,7 @@ public class FirebaseHelper {
     private DatabaseReference geoFireRef;
     private GeoFire geoFire;
 
-    private StorageReference profileImagesRef;
+    private StorageReference kitchenImagesRef;
     private StorageReference chatImagesRef;
 
     public FirebaseHelper() {
@@ -54,7 +54,7 @@ public class FirebaseHelper {
         geoFireRef = database.getReference("geoFire");
         geoFire = new GeoFire(geoFireRef);
 
-        profileImagesRef = storage.getReference("profile");
+        kitchenImagesRef = storage.getReference("kitchen");
         chatImagesRef = storage.getReference("chatPhotos");
 
     }
@@ -72,7 +72,7 @@ public class FirebaseHelper {
     }
 
     public StorageReference getDishImagesReference() {
-        return profileImagesRef;
+        return kitchenImagesRef;
     }
 
     public StorageReference getChatImagesReference() {
@@ -154,13 +154,15 @@ public class FirebaseHelper {
 
     }
 
-    public UploadTask pushProfileImage(Uri imageUri, String oldImageUrl) {
+    public UploadTask pushProfileImage(Uri imageUri, String userId) {
         // Get a reference to the location where we'll store our photos
         // Get a reference to store file at chat_photos/<FILENAME>
-        final StorageReference photoRef = profileImagesRef.child(imageUri.getLastPathSegment());
+        final StorageReference photoRef = kitchenImagesRef.child(userId);
         // Upload file to Firebase Storage
         return photoRef.putFile(imageUri);
 
 
     }
+
+
 }

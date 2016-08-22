@@ -33,6 +33,7 @@ import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.screens.MainActivity;
+import space.ankan.golocal.utils.CommonUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -96,6 +97,12 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             rangePicker = new AlertDialog.Builder(getActivity())
                     .setMessage("Enter range in Kms")
                     .setView(rangeInput)
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            CommonUtils.closeKeyBoard(getActivity());
+                        }
+                    })
                     .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -112,6 +119,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
                             }
                             if (r == range) return;
                             range = r;
+                            CommonUtils.closeKeyBoard(getActivity());
                             syncWithFirebase();
 
                         }
@@ -136,6 +144,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
         if (this.location != null && location.getLatitude() == this.location.getLatitude() && location.getLongitude() == this.location.getLongitude())
             return;
+        if (this.location != null) return; //FIXME do not refresh too often
         this.location = location;
         syncWithFirebase();
     }
@@ -143,6 +152,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
     private void syncWithFirebase() {
         log("syncing with firebase");
+
         if (adapter == null)
             adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
 
@@ -159,7 +169,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
                     range);
             mQuery.addGeoQueryEventListener(this);
         }
-
+        CommonUtils.closeKeyBoard(getActivity());
 
     }
 
@@ -202,7 +212,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     }
 
     public void updateLocation(String currentAddressText) {
-        if (currentLocation==null) return;
+        if (currentLocation == null) return;
         currentLocation.setText(currentAddressText);
     }
 }

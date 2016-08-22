@@ -1,5 +1,6 @@
 package space.ankan.golocal.screens;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.support.v4.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,6 +50,7 @@ import space.ankan.golocal.screens.mykitchen.addDish.AddDishActivity;
 import space.ankan.golocal.screens.nearbykitchens.KitchenListFragment;
 import space.ankan.golocal.screens.setupkitchen.SetupKitchenFragment;
 import space.ankan.golocal.services.FetchAddressIntentService;
+import space.ankan.golocal.utils.CommonUtils;
 
 public class MainActivity extends LoggedInActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -247,6 +250,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
 
     private void formatTabs(int position) {
+        CommonUtils.closeKeyBoard(this);
         for (int i = 0; i < TAB_COUNT; i++) {
             if (i == position)
                 selectTab(i);
@@ -409,7 +413,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                 .build();
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(60 * 1000);// 1 minute interval
+        mLocationRequest.setInterval(10 * 1000);// 1 minute interval
         mLocationRequest.setFastestInterval(5000); // 5 seconds
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -462,5 +466,9 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
 
         }
+    }
+
+    public static void createIntent(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
     }
 }

@@ -59,7 +59,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Open detail view", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "The editor is not implemented yet.", Toast.LENGTH_LONG).show();
             }
         });
 

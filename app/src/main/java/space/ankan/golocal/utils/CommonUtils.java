@@ -8,6 +8,8 @@ import android.location.LocationManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.firebase.ui.auth.BuildConfig;
 
@@ -26,10 +28,23 @@ public class CommonUtils implements AppConstants {
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         activity.startActivityForResult(Intent.createChooser(intent, "Complete action using"), AppConstants.RC_PHOTO_PICKER);
     }
+
     public static void imagePickerForResult(Fragment fragment) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         fragment.startActivityForResult(Intent.createChooser(intent, "Complete action using"), AppConstants.RC_PHOTO_PICKER);
+    }
+
+    public static void closeKeyBoard(Activity activity) {
+
+        if (activity == null) return;
+        View view = activity.getCurrentFocus();
+        if (view != null)
+
+        {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

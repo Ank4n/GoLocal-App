@@ -2,10 +2,13 @@ package space.ankan.golocal.screens.setupkitchen;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +68,7 @@ public class SetupKitchenFragment extends BaseFragment {
 
     private View rootView;
     private String imageUrl;
+    private Uri selectedImageUri;
 
     public SetupKitchenFragment() {
         // Required empty public constructor
@@ -97,7 +105,6 @@ public class SetupKitchenFragment extends BaseFragment {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
                 CommonUtils.imagePickerForResult(SetupKitchenFragment.this);
 
             }
@@ -117,27 +124,30 @@ public class SetupKitchenFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) return;
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            Uri selectedImageUri = data.getData();
+            selectedImageUri = data.getData();
+
             if (selectedImageUri == null) {
-                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), "Could not upload image", Toast.LENGTH_SHORT).show();
                 return;
             }
             Picasso.with(getActivity()).load(selectedImageUri).into(kitchenImage);
-            progressBar.setVisibility(View.GONE);
-            getFirebaseHelper().pushProfileImage(selectedImageUri, imageUrl).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+            getFirebaseHelper().pushProfileImage(selectedImageUri, getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     imageUrl = taskSnapshot.getDownloadUrl().toString();
-
                 }
             });
 
         }
     }
 
+
     private boolean validateInformation() {
-        //FIXME Implement this
+        if (TextUtils.isEmpty(editKitchenName.getText()) || TextUtils.isEmpty(editDescription.getText()) || TextUtils.isEmpty(editAddress.getText())) {
+            Toast.makeText(getActivity(), "Please fill all the boxes", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
