@@ -27,7 +27,7 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:layout_weight="3"
             android:orientation="vertical"
-            android:paddingTop="16dp">
+            android:paddingTop="@dimen/end_margin">
 
             <TextView
                 android:id="@+id/name"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:maxLines="1"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_small"
                 android:text="3.24PM"
                 android:textAppearance="?attr/textAppearanceListItemSmall"
                 android:textColor="@color/secondary_text" />

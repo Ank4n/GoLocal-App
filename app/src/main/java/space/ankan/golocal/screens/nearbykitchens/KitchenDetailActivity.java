@@ -100,6 +100,7 @@ public class KitchenDetailActivity extends LoggedInActivity {
     public void saveFavourite(View v) {
 
         if (mKitchen.isFavourite) {
+            //TODO Implement this
             Toast.makeText(this, mKitchen.name + " deleted from favourites.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, mKitchen.name + " saved to favourites.", Toast.LENGTH_SHORT).show();
@@ -112,7 +113,7 @@ public class KitchenDetailActivity extends LoggedInActivity {
     @OnClick(R.id.start_chat)
     void startChat() {
         if (getCurrentUser().getUid().equals(mKitchen.userId))
-            Toast.makeText(this, "Hey, this kitchen is yours only.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.chat_with_own_kitchen, Toast.LENGTH_LONG).show();
         else
             ChatActivity.createIntent(this, getSharedPref().getString(mKitchen.userId, null), mKitchen.name, mKitchen.userId);
     }

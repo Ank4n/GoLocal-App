@@ -12,7 +12,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
+        android:layout_height="@dimen/collapsing_bar_height"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -76,8 +76,8 @@
         android:layout_margin="@dimen/fab_margin"
         android:background="@drawable/round_button"
         android:drawableLeft="@drawable/ic_chat_fab"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="@dimen/end_margin"
+        android:paddingRight="@dimen/end_margin"
         android:text="CHAT"
         android:textColor="@color/white"
         app:layout_anchor="@id/scroll_view"

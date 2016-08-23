@@ -6,7 +6,11 @@ package space.ankan.golocal.model.users;
  */
 
 public class User {
+
+    public static final String KITCHEN = "kitchen";
     public String kitchen;
+
+    public static final String USERNAME = "username";
     public String userName;
     //public UserChannel[] userChannels;
     //kitchenids

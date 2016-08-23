@@ -68,6 +68,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         holder.mfavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO Implement persisting favourites and notifying for menu changes
                 Toast.makeText(mContext, "This has not been implemented yet.", Toast.LENGTH_LONG).show();
 
             }

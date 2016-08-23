@@ -1,7 +1,6 @@
 package space.ankan.golocal.helpers;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -17,6 +16,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.Map;
 
+import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.model.users.User;
@@ -26,7 +26,7 @@ import space.ankan.golocal.model.users.User;
  * TODO: Add a class comment
  */
 
-public class FirebaseHelper {
+public class FirebaseHelper implements AppConstants {
 
     private FirebaseApp app;
     private FirebaseDatabase database;
@@ -48,14 +48,14 @@ public class FirebaseHelper {
         auth = FirebaseAuth.getInstance(app);
         storage = FirebaseStorage.getInstance(app);
 
-        usersRef = database.getReference("users");
-        channelsRef = database.getReference("channels");
-        kitchensRef = database.getReference("kitchens");
-        geoFireRef = database.getReference("geoFire");
+        usersRef = database.getReference(FIREBASE_DB_USERS);
+        channelsRef = database.getReference(FIREBASE_DB_CHANNELS);
+        kitchensRef = database.getReference(FIREBASE_DB_KITCHENS);
+        geoFireRef = database.getReference(FIREBASE_DB_GEOFIRE);
         geoFire = new GeoFire(geoFireRef);
 
-        kitchenImagesRef = storage.getReference("kitchen");
-        chatImagesRef = storage.getReference("chatPhotos");
+        kitchenImagesRef = storage.getReference(FIREBASE_STORAGE_KITCHEN_ROOT);
+        chatImagesRef = storage.getReference(FIREBASE_STORAGE_CHAT_IMAGES);
 
     }
 
@@ -80,20 +80,20 @@ public class FirebaseHelper {
     }
 
     public DatabaseReference getUserReference(String user) {
-        return database.getReference("users/" + user);
+        return database.getReference(FIREBASE_DB_USERS + FOLDER_SEPARATOR + user);
     }
 
     public DatabaseReference getCurrentUserReference() {
         String user = auth.getCurrentUser().getUid();
-        return database.getReference("users/" + user);
+        return database.getReference(FIREBASE_DB_USERS + FOLDER_SEPARATOR + user);
     }
 
     public DatabaseReference getChannelReference(String channel) {
-        return database.getReference("channels/" + channel);
+        return database.getReference(FIREBASE_DB_CHANNELS + FOLDER_SEPARATOR + channel);
     }
 
     public DatabaseReference getKitchenReference(String kitchen) {
-        return database.getReference("kitchens/" + kitchen);
+        return database.getReference(FIREBASE_DB_KITCHENS + FOLDER_SEPARATOR + kitchen);
     }
 
     public boolean isUserLoggedIn() {
@@ -113,7 +113,7 @@ public class FirebaseHelper {
     }
 
     public void push(Dish dish, String kitchenId) {
-        getKitchenReference(kitchenId).child("dishes").push().setValue(dish);
+        getKitchenReference(kitchenId).child(FIREBASE_DB_KITCHENS_DISHES).push().setValue(dish);
 
     }
 
@@ -121,7 +121,7 @@ public class FirebaseHelper {
         DatabaseReference kitchenRef = getKitchensReference().push();
         kitchenRef.setValue(kitchen);
         Map<String, Object> map = new HashMap<>();
-        map.put("kitchen", kitchenRef.getKey());
+        map.put(User.KITCHEN, kitchenRef.getKey());
         getCurrentUserReference().updateChildren(map);
         String key = kitchenRef.getKey();
         geoFire.setLocation(key, new GeoLocation(kitchen.latitude, kitchen.longitude));
@@ -133,15 +133,15 @@ public class FirebaseHelper {
     }
 
     public DatabaseReference getDishesReference(String kitchenId) {
-        return getKitchenReference(kitchenId).child("dishes");
+        return getKitchenReference(kitchenId).child(FIREBASE_DB_KITCHENS_DISHES);
     }
 
     public DatabaseReference getUserChannels() {
-        return getCurrentUserReference().child("channels");
+        return getCurrentUserReference().child(FIREBASE_DB_USERS_CHANNELS);
     }
 
     public DatabaseReference getUserChannels(String userId) {
-        return getUserReference(userId).child("channels");
+        return getUserReference(userId).child(FIREBASE_DB_USERS_CHANNELS);
     }
 
     public UploadTask pushImage(Uri imageUri) {

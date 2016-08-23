@@ -127,7 +127,7 @@ public class SetupKitchenFragment extends BaseFragment {
             selectedImageUri = data.getData();
 
             if (selectedImageUri == null) {
-                Toast.makeText(getActivity(), "Could not upload image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.upload_image_error, Toast.LENGTH_LONG).show();
                 return;
             }
             Picasso.with(getActivity()).load(selectedImageUri).into(kitchenImage);
@@ -145,7 +145,7 @@ public class SetupKitchenFragment extends BaseFragment {
 
     private boolean validateInformation() {
         if (TextUtils.isEmpty(editKitchenName.getText()) || TextUtils.isEmpty(editDescription.getText()) || TextUtils.isEmpty(editAddress.getText())) {
-            Toast.makeText(getActivity(), "Please fill all the boxes", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.error_fields_not_filled, Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

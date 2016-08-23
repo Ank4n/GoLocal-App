@@ -18,7 +18,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
@@ -27,14 +26,10 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.channels.Channel;
 import space.ankan.golocal.model.channels.ChatMessage;
-import space.ankan.golocal.model.kitchens.Dish;
-import space.ankan.golocal.screens.mykitchen.DishAdapter;
-import space.ankan.golocal.utils.CommonUtils;
 
 import static android.app.Activity.RESULT_OK;
 import static space.ankan.golocal.core.AppConstants.RC_PHOTO_PICKER;
@@ -87,7 +82,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
         setupRecycler();
         syncWithFirebase();
         setupListeners();
-        log("channelid:" + channelId);
+        dLog("channelid:" + channelId);
         return mRootView;
     }
 
@@ -121,6 +116,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
 
     }
 
+    //FIXME move this logic to firebase helper
     private void sendChat(String message) {
         ChatMessage chatMessage = new ChatMessage(getCurrentUser().getDisplayName(), message);
         if (TextUtils.isEmpty(channelId)) {
@@ -165,9 +161,9 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     }
 
     private void syncWithFirebase() {
-        log("Syncing with firebase");
+        dLog("Syncing with firebase");
         if (!TextUtils.isEmpty(channelId)) {
-            log("adding listener");
+            dLog("adding listener");
             getFirebaseHelper().getChannelReference(channelId).addChildEventListener(this);
         }
     }

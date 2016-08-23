@@ -37,7 +37,7 @@ import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements AppConstants {
-    private static final String SHARED_PREF_FILE_NAME = "GoLocal";
+
     private static SharedPreferences sharedPreferences;
     private FirebaseHelper firebaseHelper;
     private Boolean isUserKitchenOwner;
@@ -83,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
     }
 
     protected void askToSignIn() {
-        log("asking to sign in");
+        dLog("asking to sign in");
         if (!isNetworkAvailable()) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.no_internet_title)
@@ -124,7 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        log("received activity result");
+        dLog("received activity result");
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // user is signed in!
@@ -151,7 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
 
 
             } else {
-                Toast.makeText(this, "Not Signed in", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.not_signed_in, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -173,12 +173,13 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
         return getFirebaseHelper().getFirebaseAuth().getCurrentUser();
     }
 
-    protected void showToast(String message) {
+    // toast for only debug builds
+    protected void dToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     protected void saveUserType(String kitchenId) {
-        log("KitchenId: " + kitchenId);
+        dLog("KitchenId: " + kitchenId);
         getSharedPref().edit().putString(KITCHEN_ID, kitchenId).commit();
 
     }
@@ -190,8 +191,8 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    // logging for debugs
-    public static void log(String log) {
+    // logging for debug builds
+    public static void dLog(String log) {
         if (BuildConfig.DEBUG) return;
         Log.wtf(AppConstants.TAG, log);
     }

@@ -8,10 +8,10 @@
     android:background="@color/primary"
     android:fitsSystemWindows="true"
     app:theme="@style/AppTheme.PopupOverlay"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/small_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/small_margin"
 
     tools:context="space.ankan.golocal.screens.onboarding.SplashActivity">
 
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/end_margin"
         android:text="GoLocal Kitchens"
         android:visibility="gone"
         android:textColor="@color/white" />

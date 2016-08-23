@@ -59,12 +59,13 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
 
             @Override
             public void onClick(View v) {
+                //FIXME
                 Toast.makeText(mContext, "The editor is not implemented yet.", Toast.LENGTH_LONG).show();
             }
         });
 
         holder.mTitle.setText(item.name);
-        holder.mPrice.setText("Rs. " + String.valueOf(item.price));
+        holder.mPrice.setText(mContext.getString(R.string.price_with_rupees_currency, String.valueOf(item.price)));
         int foodTypeImage = item.nonVeg ? R.drawable.ic_non_vegetarian : R.drawable.ic_vegetarian;
         holder.foodType.setImageDrawable(ContextCompat.getDrawable(mContext, foodTypeImage));
 

@@ -40,16 +40,15 @@ public class AddDishFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_add_dish, container, false);
         ButterKnife.bind(this, mRootView);
-        //FIXME add corner checks
         addDishAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (getUser() == null) {
-                    Toast.makeText(getActivity(), "Some error occured, try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(dishName.getText()) || TextUtils.isEmpty(dishPrice.getText())) {
-                    Toast.makeText(getActivity(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.error_fields_not_filled, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Dish dish = new Dish(dishName.getText().toString(), null, null, Integer.valueOf(dishPrice.getText().toString()), isNonveg.isChecked());

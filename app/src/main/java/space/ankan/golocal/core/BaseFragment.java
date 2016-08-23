@@ -72,12 +72,12 @@ public abstract class BaseFragment extends Fragment {
         return getFirebaseHelper().getFirebaseAuth().getCurrentUser();
     }
 
-    protected void showToast(String message) {
+    protected void dToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
     // logging for debugs
-    public static void log(String log) {
+    public static void dLog(String log) {
         if (BuildConfig.DEBUG) return;
         Log.wtf(AppConstants.TAG, log);
     }

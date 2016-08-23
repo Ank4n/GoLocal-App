@@ -17,7 +17,6 @@ import android.support.v4.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -413,7 +411,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                 .build();
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10 * 1000);// 1 minute interval
+        mLocationRequest.setInterval(60 * 1000);// 10 second interval
         mLocationRequest.setFastestInterval(5000); // 5 seconds
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -432,7 +430,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        log("location changed:" + mLastLocation);
+        dLog("location changed:" + mLastLocation);
         if (mLastLocation == null) return;
         if (kitchenListFragment != null)
             kitchenListFragment.updateLocation(mLastLocation);
@@ -441,6 +439,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         intent.putExtra(RECEIVER, resultReceiver);
         intent.putExtra(LOCATION_DATA_EXTRA, mLastLocation);
         startService(intent);
+        startLocationUpdates();
 
     }
 

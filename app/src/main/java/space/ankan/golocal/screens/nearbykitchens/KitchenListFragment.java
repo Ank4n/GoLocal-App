@@ -114,7 +114,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
                             }
 
                             if (r <= 0) {
-                                Toast.makeText(getActivity(), "Please set a range greater than zero", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.range_less_than_zero, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             if (r == range) return;
@@ -151,7 +151,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
 
     private void syncWithFirebase() {
-        log("syncing with firebase");
+        dLog("syncing with firebase");
 
         if (adapter == null)
             adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
@@ -162,7 +162,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
         adapter.clear();
 
         if (location == null)
-            Toast.makeText(getActivity(), "Please enable gps to get kitchens near your area", Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), R.string.enable_gps, Toast.LENGTH_LONG);
 
         else {
             mQuery = getFirebaseHelper().buildQueryForKitchens(new GeoLocation(location.getLatitude(), location.getLongitude()),
@@ -179,9 +179,10 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Kitchen kitchen = dataSnapshot.getValue(Kitchen.class);
+                if (kitchen == null) return;
                 kitchen.key = dataSnapshot.getKey();
                 adapter.add(kitchen);
-                log("kitchen key: " + kitchen.key);
+                dLog("kitchen key: " + kitchen.key);
             }
 
             @Override
