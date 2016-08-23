@@ -1,5 +1,6 @@
 package space.ankan.golocal.screens;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -332,6 +334,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        dLog("google api connected");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GPS_PERMISSION);
 
@@ -356,6 +359,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
+                        dLog("got result for location settings: success");
 
                         startLocationUpdates();
                         break;
@@ -365,6 +369,8 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
+                            dLog("got result for location settings: resolution required");
+
                             status.startResolutionForResult(
                                     MainActivity.this,
                                     REQUEST_CHECK_SETTINGS);
@@ -382,9 +388,34 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // All required changes were successfully made
+                        startLocationUpdates();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // The user was asked to change settings, but chose not to
+                        Toast.makeText(this, R.string.enable_gps, Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
+
+    }
+
     protected void startLocationUpdates() {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED))
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            dLog("starting location updates");
+
+        } else dLog("permission not available");
 
     }
 
@@ -403,6 +434,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     }
 
     private void createLocationRequest() {
+        dLog("creating location request");
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -430,7 +462,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        dLog("location changed:" + mLastLocation);
+        dLog("location changed:[ " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
         if (mLastLocation == null) return;
         if (kitchenListFragment != null)
             kitchenListFragment.updateLocation(mLastLocation);
@@ -439,7 +471,6 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         intent.putExtra(RECEIVER, resultReceiver);
         intent.putExtra(LOCATION_DATA_EXTRA, mLastLocation);
         startService(intent);
-        startLocationUpdates();
 
     }
 
