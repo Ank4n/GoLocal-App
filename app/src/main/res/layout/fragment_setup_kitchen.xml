@@ -1,104 +1,97 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_weight="9"
+    android:overScrollMode="always"
     tools:context="space.ankan.golocal.screens.setupkitchen.SetupKitchenFragment">
 
-
-
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:overScrollMode="always">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/upload_kitchen_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:orientation="vertical">
+            android:layout_height="100dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/upload_kitchen_image"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal">
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-                <FrameLayout
-                    android:layout_width="0dp"
+                <ImageView
+                    android:id="@+id/kitchen_image"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/manage_black" />
 
-                    <ImageView
-                        android:id="@+id/kitchen_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_margin="8dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/manage_black" />
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
 
-                    <ProgressBar
-                        android:id="@+id/progress_bar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone" />
+            </FrameLayout>
 
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="@string/setup_kitchen_add_image" />
-
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/edit_kitchen_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:allowUndo="true"
-                android:hint="@string/hint_kitchen_name"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/edit_kitchen_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="top"
-                android:hint="@string/hint_kitchen_description"
-                android:maxLines="4" />
-
-            <EditText
-                android:id="@+id/edit_kitchen_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="top"
-                android:hint="@string/hint_kitchen_address"
-                android:maxLines="4" />
-
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="@string/setup_kitchen_add_image" />
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+        <EditText
+            android:id="@+id/edit_kitchen_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:allowUndo="true"
+            android:hint="@string/hint_kitchen_name"
+            android:inputType="text" />
 
-    <Button
-        android:id="@+id/setup_kitchen_action"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom"
-        android:layout_margin="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:background="@color/primary_light"
-        android:text="@string/setup_kitchen_action_button"
-        android:textColor="@color/primary_text"
-        android:textSize="20sp" />
-</LinearLayout>
+        <EditText
+            android:id="@+id/edit_kitchen_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="top"
+            android:hint="@string/hint_kitchen_description"
+            android:maxLines="4" />
+
+        <EditText
+            android:id="@+id/edit_kitchen_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="top"
+            android:hint="@string/hint_kitchen_address"
+            android:maxLines="4" />
+
+        <Button
+            android:id="@+id/setup_kitchen_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/end_margin"
+            android:layout_marginRight="@dimen/end_margin"
+            android:layout_marginTop="64dp"
+            android:layout_marginBottom="64dp"
+            android:background="@color/primary_light"
+            android:text="@string/setup_kitchen_action_button"
+            android:textColor="@color/primary_text"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
+

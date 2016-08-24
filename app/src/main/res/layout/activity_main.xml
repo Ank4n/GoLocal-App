@@ -32,4 +32,6 @@
         android:layout_marginBottom="@dimen/fab_margin_bottom_tab"
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/ic_add_white"/>
+
+
 </android.support.design.widget.CoordinatorLayout>
