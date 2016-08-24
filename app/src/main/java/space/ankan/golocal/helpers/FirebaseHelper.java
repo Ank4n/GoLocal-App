@@ -32,6 +32,7 @@ public class FirebaseHelper implements AppConstants {
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private FirebaseStorage storage;
+    private static boolean isPersistent;
 
     private DatabaseReference usersRef;
     private DatabaseReference channelsRef;
@@ -43,6 +44,10 @@ public class FirebaseHelper implements AppConstants {
     private StorageReference chatImagesRef;
 
     public FirebaseHelper() {
+        if (!isPersistent) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            isPersistent = true;
+        }
         app = FirebaseApp.getInstance();
         database = FirebaseDatabase.getInstance(app);
         auth = FirebaseAuth.getInstance(app);
@@ -56,6 +61,7 @@ public class FirebaseHelper implements AppConstants {
 
         kitchenImagesRef = storage.getReference(FIREBASE_STORAGE_KITCHEN_ROOT);
         chatImagesRef = storage.getReference(FIREBASE_STORAGE_CHAT_IMAGES);
+
 
     }
 

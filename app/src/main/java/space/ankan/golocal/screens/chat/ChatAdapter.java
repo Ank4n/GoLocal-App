@@ -59,6 +59,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
         //outgoing message
         if (userName.equalsIgnoreCase(item.name)) {
             holder.incomingView.setVisibility(View.GONE);
+            holder.outgoingView.setVisibility(View.VISIBLE);
+
             if (item.message.startsWith("https://firebasestorage.googleapis.com/")) {
                 holder.mMessageOut.setVisibility(View.GONE);
                 holder.mImageOut.setVisibility(View.VISIBLE);
@@ -72,6 +74,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
             holder.mTimeOut.setText(SIMPLE_DATE_FORMAT.format(item.timeStamp).toUpperCase());
         } else {
             holder.outgoingView.setVisibility(View.GONE);
+            holder.incomingView.setVisibility(View.VISIBLE);
 
             if (item.message.startsWith("https://firebasestorage.googleapis.com/")) {
                 holder.mMessageIn.setVisibility(View.GONE);
@@ -107,8 +110,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
     }
 
     public void addAll(List<ChatMessage> messages) {
-        if (!this.chats.isEmpty())
-            return;
         this.chats.addAll(messages);
         this.notifyDataSetChanged();
     }
