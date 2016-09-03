@@ -52,6 +52,12 @@ public class KitchenDetailActivity extends LoggedInActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mKitchen = (Kitchen) getIntent().getSerializableExtra("kitchen");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                supportFinishAfterTransition();
+            }
+        });
 
         if (mKitchen != null) {
 

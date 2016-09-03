@@ -21,6 +21,7 @@ public class Kitchen implements Serializable {
     public double latitude;
     public double longitude;
     //public List<Dish> dishes;
+    //public List<Review> reviews;
     public String imageUrl;
     public int ratedUserCount;
     public float rating;
