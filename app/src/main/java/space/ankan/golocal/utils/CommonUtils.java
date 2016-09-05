@@ -13,6 +13,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.firebase.ui.auth.BuildConfig;
 
+import java.text.DecimalFormat;
+
 import space.ankan.golocal.core.AppConstants;
 
 /**
@@ -46,5 +48,10 @@ public class CommonUtils implements AppConstants {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public static double roundTwoDecimals(double d) {
+        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        return Double.valueOf(twoDForm.format(d));
     }
 }

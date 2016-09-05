@@ -23,8 +23,12 @@ public class Kitchen implements Serializable {
     //public List<Dish> dishes;
     //public List<Review> reviews;
     public String imageUrl;
+
+    public static final String RATED_USER_COUNT = "ratedUserCount";
     public int ratedUserCount;
-    public float rating;
+
+    public static final String OVERALL_RATING = "overallRating";
+    public double overallRating;
     public boolean isFavourite;
     public String address;
 
@@ -35,7 +39,7 @@ public class Kitchen implements Serializable {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.rating = rating;
+        this.overallRating = rating;
         this.isFavourite = isFavourite;
     }
 
@@ -45,4 +49,6 @@ public class Kitchen implements Serializable {
         this.imageUrl = imageUrl;
         this.address = address;
     }
+
+
 }

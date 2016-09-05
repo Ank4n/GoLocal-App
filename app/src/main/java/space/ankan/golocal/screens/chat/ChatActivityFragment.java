@@ -32,6 +32,9 @@ import space.ankan.golocal.model.channels.Channel;
 import space.ankan.golocal.model.channels.ChatMessage;
 
 import static android.app.Activity.RESULT_OK;
+import static space.ankan.golocal.core.AppConstants.KEY_CHANNEL_ID;
+import static space.ankan.golocal.core.AppConstants.KEY_CHANNEL_NAME;
+import static space.ankan.golocal.core.AppConstants.KEY_USER_ID;
 import static space.ankan.golocal.core.AppConstants.RC_PHOTO_PICKER;
 
 /**
@@ -64,9 +67,9 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     public static Fragment createInstance(String channelId, String channelName, String userId) {
         Fragment fragment = new ChatActivityFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("channel_id", channelId);
-        bundle.putString("channel_name", channelName);
-        bundle.putString("user_id", userId);
+        bundle.putString(KEY_CHANNEL_ID, channelId);
+        bundle.putString(KEY_CHANNEL_NAME, channelName);
+        bundle.putString(KEY_USER_ID, userId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -76,9 +79,9 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_chat, container, false);
         ButterKnife.bind(this, mRootView);
-        channelId = getArguments().getString("channel_id");
-        channelName = getArguments().getString("channel_name");
-        userId = getArguments().getString("user_id");
+        channelId = getArguments().getString(KEY_CHANNEL_ID);
+        channelName = getArguments().getString(KEY_CHANNEL_NAME);
+        userId = getArguments().getString(KEY_USER_ID);
         setupRecycler();
         syncWithFirebase();
         setupListeners();

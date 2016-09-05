@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.channels.ChatMessage;
 
 /**
@@ -61,7 +62,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
             holder.incomingView.setVisibility(View.GONE);
             holder.outgoingView.setVisibility(View.VISIBLE);
 
-            if (item.message.startsWith("https://firebasestorage.googleapis.com/")) {
+            if (item.message.startsWith(AppConstants.FIREBASE_STORAGE_BASE_URL)) {
                 holder.mMessageOut.setVisibility(View.GONE);
                 holder.mImageOut.setVisibility(View.VISIBLE);
                 Picasso.with(mContext).load(item.message).into(holder.mImageOut);
@@ -76,7 +77,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
             holder.outgoingView.setVisibility(View.GONE);
             holder.incomingView.setVisibility(View.VISIBLE);
 
-            if (item.message.startsWith("https://firebasestorage.googleapis.com/")) {
+            if (item.message.startsWith(AppConstants.FIREBASE_STORAGE_BASE_URL)) {
                 holder.mMessageIn.setVisibility(View.GONE);
                 holder.mImageIn.setVisibility(View.VISIBLE);
                 Picasso.with(mContext).load(item.message).into(holder.mImageIn);

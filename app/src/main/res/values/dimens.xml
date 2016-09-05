@@ -14,4 +14,5 @@
     <dimen name="collapsing_bar_height">256dp</dimen>
     <dimen name="text_small">12sp</dimen>
     <dimen name="text_small_medium">14sp</dimen>
+    <dimen name="text_size_bold">16sp</dimen>
 </resources>

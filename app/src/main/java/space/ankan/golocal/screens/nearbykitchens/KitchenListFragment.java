@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.screens.MainActivity;
@@ -149,6 +152,12 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
         syncWithFirebase();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        syncWithFirebase();
+    }
+
 
     private void syncWithFirebase() {
         dLog("syncing with firebase");
@@ -178,11 +187,15 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
         getFirebaseHelper().getKitchenReference(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Kitchen kitchen = dataSnapshot.getValue(Kitchen.class);
-                if (kitchen == null) return;
-                kitchen.key = dataSnapshot.getKey();
-                adapter.add(kitchen);
-                dLog("kitchen key: " + kitchen.key);
+                try {
+                    Kitchen kitchen = dataSnapshot.getValue(Kitchen.class);
+                    if (kitchen == null) return;
+                    kitchen.key = dataSnapshot.getKey();
+                    adapter.add(kitchen);
+                    dLog("kitchen key: " + kitchen.key);
+                } catch (DatabaseException e) {
+                    Log.e(AppConstants.TAG, "Error retrieving item with key " + dataSnapshot.getKey() + ": " + e.getMessage());
+                }
             }
 
             @Override

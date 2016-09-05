@@ -9,8 +9,9 @@ public interface AppConstants {
 
 
     String TAG = "GoLocal";
-    // user-types
-    String KITCHEN_ID = "user-type";
+
+    //Shared Pref
+    String KITCHEN_ID = "kitchen_id";
 
     //for location fetching
     int SUCCESS_RESULT = 0;
@@ -22,7 +23,6 @@ public interface AppConstants {
 
     // pick picture from gallery requestCode
     int RC_PHOTO_PICKER = 2;
-
     String SHARED_PREF_FILE_NAME = "GoLocal";
 
     //Firebase DB Constants
@@ -33,11 +33,20 @@ public interface AppConstants {
 
     String FIREBASE_DB_KITCHENS_DISHES = "dishes"; // dishes list inside Kitchens
     String FIREBASE_DB_USERS_CHANNELS = "channels"; // channels list inside Users
+    String FIREBASE_DB_USER_REVIEWS = "reviews"; // reviews list inside users node
 
 
     //Firebase Storage Constants
     String FIREBASE_STORAGE_KITCHEN_ROOT = "kitchen";
     String FIREBASE_STORAGE_CHAT_IMAGES = "chatPhotos";
+    String FIREBASE_STORAGE_BASE_URL = "https://firebasestorage.googleapis.com/";
+
 
     String FOLDER_SEPARATOR = "/";
+
+    //KEYS
+    String KEY_CHANNEL_ID = "channel_id";
+    String KEY_CHANNEL_NAME = "channel_name";
+    String KEY_USER_ID = "user_id";
+
 }

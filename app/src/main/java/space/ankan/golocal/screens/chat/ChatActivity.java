@@ -20,6 +20,8 @@ public class ChatActivity extends BaseActivity {
     private String channelName;
     private String userId;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +29,9 @@ public class ChatActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        channelId = getIntent().getStringExtra("channel_id");
-        channelName = getIntent().getStringExtra("channel_name");
-        userId = getIntent().getStringExtra("user_id");
+        channelId = getIntent().getStringExtra(KEY_CHANNEL_ID);
+        channelName = getIntent().getStringExtra(KEY_CHANNEL_NAME);
+        userId = getIntent().getStringExtra(KEY_USER_ID);
         if (!TextUtils.isEmpty(channelName))
             getSupportActionBar().setTitle(channelName);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -44,9 +46,9 @@ public class ChatActivity extends BaseActivity {
 
     public static void createIntent(Context context, String channelId, String channelName, String userId) {
         Intent i = new Intent(context, ChatActivity.class);
-        i.putExtra("channel_id", channelId);
-        i.putExtra("channel_name", channelName);
-        i.putExtra("user_id", userId);
+        i.putExtra(KEY_CHANNEL_ID, channelId);
+        i.putExtra(KEY_CHANNEL_NAME, channelName);
+        i.putExtra(KEY_USER_ID, userId);
         context.startActivity(i);
     }
 }

@@ -463,7 +463,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        dLog("location changed:[ " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+        // dLog("location changed:[ " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
         if (mLastLocation == null) return;
         if (kitchenListFragment != null)
             kitchenListFragment.updateLocation(mLastLocation);

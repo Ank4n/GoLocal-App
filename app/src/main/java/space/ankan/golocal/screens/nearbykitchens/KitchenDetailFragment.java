@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.model.kitchens.Kitchen;
+import space.ankan.golocal.model.users.UserReview;
 import space.ankan.golocal.screens.mykitchen.DishAdapter;
 
 /**
@@ -45,7 +47,6 @@ import space.ankan.golocal.screens.mykitchen.DishAdapter;
 public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCallback {
 
     private static final String LOG_CAT = KitchenDetailFragment.class.getSimpleName();
-    public static final String MOVIE_INFO = "movie";
 
     private Kitchen mKitchen;
 
@@ -56,13 +57,27 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
 
     @BindView(R.id.dish_list)
     RecyclerView mDishesRecycler;
-    private DishAdapter adapter;
+    private DishAdapter dishAdapter;
 
     @BindView(R.id.kitchen_address)
     TextView kitchenAddress;
 
+    @BindView(R.id.user_rating_star)
+    RatingBar mUserRating;
+
+    private float oldUserRating;
+
+    @BindView(R.id.overall_rating_star)
+    RatingBar mOverallRating;
+
+    @BindView(R.id.rated_user_count)
+    TextView ratedUserCount;
+
     private GoogleMap mMap;
     private Marker mMarker;
+    private boolean alreadyRated;
+    private boolean selfRatingInit; //set this flag when user rating is fetched
+
 
     public KitchenDetailFragment() {
     }
@@ -76,7 +91,6 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
         fill();
         SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
         mapFragment.getMapAsync(this);
-
 
         return rootView;
     }
@@ -108,22 +122,26 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
         kitchenDescription.setText(mKitchen.description);
         kitchenAddress.setText(mKitchen.address);
         setupDishRecycler();
+        setupRatings();
 
     }
 
     private void setupDishRecycler() {
-        adapter = new DishAdapter(getActivity(), new ArrayList<Dish>(), true);
+        dishAdapter = new DishAdapter(getActivity(), new ArrayList<Dish>(), true);
         mDishesRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        mDishesRecycler.setAdapter(adapter);
-        syncWithFirebase();
+        mDishesRecycler.setAdapter(dishAdapter);
+        mDishesRecycler.setVisibility(View.GONE);
+        syncDishesWithFirebase();
     }
 
-    private void syncWithFirebase() {
+
+    private void syncDishesWithFirebase() {
         getFirebaseHelper().getDishesReference(mKitchen.key).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Dish dish = dataSnapshot.getValue(Dish.class);
-                adapter.add(dish);
+                mDishesRecycler.setVisibility(View.VISIBLE);
+                dishAdapter.add(dish);
             }
 
             @Override
@@ -148,6 +166,48 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
         });
     }
 
+    private void setupRatings() {
+        mOverallRating.setRating((float) mKitchen.overallRating);
+        mUserRating.setIsIndicator(true);
+        mOverallRating.setIsIndicator(true);
+        ratedUserCount.setText(getString(R.string.user_rating_count, String.valueOf(mKitchen.ratedUserCount)));
+        getFirebaseHelper().getUserRatingReferenceByKitchen(mKitchen.key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    mUserRating.setRating(dataSnapshot.getValue(UserReview.class).rating);
+                    oldUserRating = mUserRating.getRating();
+                    alreadyRated = true;
+                    mUserRating.setIsIndicator(false);
+                    selfRatingInit = true;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        mUserRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                if (!selfRatingInit) return;
+                if (v == oldUserRating) return;
+
+                float overallRating = (float) getFirebaseHelper().pushRating(mKitchen.key, v, oldUserRating, mKitchen.ratedUserCount, mKitchen.overallRating, alreadyRated);
+                mOverallRating.setRating(overallRating);
+                mKitchen.overallRating = overallRating;
+                if (!alreadyRated)
+                    ratedUserCount.setText(getString(R.string.user_rating_count, String.valueOf(++mKitchen.ratedUserCount)));
+                alreadyRated = true;
+                dLog("Old User Rating: " + oldUserRating);
+                oldUserRating = v;
+                dLog("User Rating: " + oldUserRating);
+
+            }
+        });
+    }
 
     private void setShareIntent() {
 

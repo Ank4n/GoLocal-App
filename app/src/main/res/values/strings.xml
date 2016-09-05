@@ -48,7 +48,11 @@
 
     <string name="upload_image_error">There was an error while trying to upload image</string>
 
-
+    <string name="kitchen_address_card_title">Address</string>
+    <string name="kitchen_rating_card_title">Kitchen Rating</string>
+  <string name="user_rating_count">
+       (<xliff:g example="35" id="startup">%1$s</xliff:g>)
+</string>
 
 
 </resources>

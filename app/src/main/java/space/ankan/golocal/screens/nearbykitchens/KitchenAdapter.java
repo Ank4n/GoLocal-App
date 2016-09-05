@@ -16,6 +16,7 @@ import java.util.List;
 
 import space.ankan.golocal.R;
 import space.ankan.golocal.model.kitchens.Kitchen;
+import space.ankan.golocal.utils.CommonUtils;
 
 /**
  * Created by anurag on 18-Dec-15.
@@ -75,7 +76,8 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         });
         holder.mTitle.setText(kitchen.name);
         holder.mDesc.setText(kitchen.description);
-        holder.rating.setText(String.valueOf(kitchen.rating));
+        holder.rating.setText(String.valueOf(CommonUtils.roundTwoDecimals(kitchen.overallRating)));
+
 
     }
 

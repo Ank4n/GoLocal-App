@@ -20,6 +20,7 @@ import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.model.users.User;
+import space.ankan.golocal.model.users.UserReview;
 
 /**
  * Created by ankan.
@@ -170,5 +171,26 @@ public class FirebaseHelper implements AppConstants {
 
     }
 
+    // returns 0 if rating does not exist
+    public DatabaseReference getUserRatingReferenceByKitchen(String kitchenId) {
+        return getCurrentUserReference().child(FIREBASE_DB_USER_REVIEWS).child(kitchenId);
+    }
+
+    // returns 0 if rating does not exist
+    public double pushRating(String kitchenId, float newRating, float oldRating, int ratedUserCount, double overallRating, boolean alreadyRated) {
+        UserReview review = new UserReview(kitchenId, newRating);
+        getUserRatingReferenceByKitchen(kitchenId).setValue(review);
+        if (!alreadyRated || ratedUserCount == 0) //bad fix
+            ratedUserCount++;
+
+        overallRating = (overallRating * ratedUserCount - oldRating + newRating) / ratedUserCount;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(Kitchen.OVERALL_RATING, overallRating);
+        map.put(Kitchen.RATED_USER_COUNT, ratedUserCount);
+
+        getKitchenReference(kitchenId).updateChildren(map);
+        return overallRating;
+    }
 
 }
