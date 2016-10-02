@@ -99,6 +99,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
     public void clear() {
         this.kitchens.clear();
+        this.notifyDataSetChanged();
     }
 
     public void addAll(List<Kitchen> kitchens) {

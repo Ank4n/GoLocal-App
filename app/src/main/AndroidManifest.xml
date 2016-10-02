@@ -62,6 +62,10 @@
         <service
             android:name=".services.FetchAddressIntentService"
             android:exported="false"></service>
+
+        <provider
+            android:name=".persistence.DBProvider"
+            android:authorities="space.ankan.golocal" />
     </application>
 
 </manifest>

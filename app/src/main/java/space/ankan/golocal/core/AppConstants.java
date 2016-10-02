@@ -12,6 +12,8 @@ public interface AppConstants {
 
     //Shared Pref
     String KITCHEN_ID = "kitchen_id";
+    String CACHED_LAST_LOCATION_LAT = "last_location_lat";
+    String CACHED_LAST_LOCATION_LON = "last_location_lon";
 
     //for location fetching
     int SUCCESS_RESULT = 0;

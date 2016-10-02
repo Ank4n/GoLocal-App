@@ -2,6 +2,7 @@ package space.ankan.golocal.screens.nearbykitchens;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -21,7 +22,9 @@ import butterknife.OnClick;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.LoggedInActivity;
 import space.ankan.golocal.model.kitchens.Kitchen;
+import space.ankan.golocal.persistence.DBContract;
 import space.ankan.golocal.screens.chat.ChatActivity;
+import space.ankan.golocal.utils.DBUtils;
 
 
 public class KitchenDetailActivity extends LoggedInActivity {
@@ -52,6 +55,9 @@ public class KitchenDetailActivity extends LoggedInActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mKitchen = (Kitchen) getIntent().getSerializableExtra("kitchen");
+        Kitchen c = DBUtils.queryKitchenById(getContentResolver(), mKitchen.key);
+        if (c != null && c.isFavourite) mKitchen.isFavourite = true;
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,13 +111,15 @@ public class KitchenDetailActivity extends LoggedInActivity {
     @OnClick(R.id.favourite_button)
     public void saveFavourite(View v) {
 
-        if (mKitchen.isFavourite) {
-            //TODO Implement this
+        mKitchen.isFavourite = (!mKitchen.isFavourite);
+
+        if (!mKitchen.isFavourite) {
+            DBUtils.deleteKitchen(getContentResolver(), mKitchen.key);
             Toast.makeText(this, mKitchen.name + " deleted from favourites.", Toast.LENGTH_SHORT).show();
         } else {
+            DBUtils.insertKitchen(getContentResolver(), mKitchen);
             Toast.makeText(this, mKitchen.name + " saved to favourites.", Toast.LENGTH_SHORT).show();
         }
-        mKitchen.isFavourite = (!mKitchen.isFavourite);
         formatFAB();
 
     }
@@ -125,7 +133,6 @@ public class KitchenDetailActivity extends LoggedInActivity {
     }
 
     private void formatFAB() {
-
         if (mKitchen.isFavourite)
             mFavouriteButton.setImageResource(R.drawable.ic_favorite_white_filled);
         else

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -53,5 +55,32 @@ public class CommonUtils implements AppConstants {
     public static double roundTwoDecimals(double d) {
         DecimalFormat twoDForm = new DecimalFormat("#.##");
         return Double.valueOf(twoDForm.format(d));
+    }
+
+    public static Double getLastLocationLatitude(SharedPreferences sharedPreferences) {
+        double lat;
+        try {
+            lat = Double.parseDouble(sharedPreferences.getString(CACHED_LAST_LOCATION_LAT, ""));
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+        return lat;
+    }
+
+    public static Double getLastLocationLongitude(SharedPreferences sharedPreferences) {
+        double lon;
+        try {
+            lon = Double.parseDouble(sharedPreferences.getString(CACHED_LAST_LOCATION_LON, ""));
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+        return lon;
+    }
+
+
+    public static void cacheLocation(SharedPreferences.Editor edit, Location location) {
+        edit.putString(CACHED_LAST_LOCATION_LAT, String.valueOf(location.getLatitude()));
+        edit.putString(CACHED_LAST_LOCATION_LON, String.valueOf(location.getLongitude()));
+        edit.commit();
     }
 }

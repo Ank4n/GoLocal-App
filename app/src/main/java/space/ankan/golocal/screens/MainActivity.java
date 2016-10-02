@@ -245,8 +245,6 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
 
@@ -343,7 +341,8 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     }
 
 
-    private void checkLocationSettings() {
+    public void checkLocationSettings() {
+        if (mLastLocation!=null) return;
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
         PendingResult<LocationSettingsResult> result =
@@ -402,6 +401,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
                         Toast.makeText(this, R.string.enable_gps, Toast.LENGTH_SHORT).show();
+                        kitchenListFragment.updateLocation(getResources().getString(R.string.enable_gps));
                         break;
                     default:
                         break;
@@ -465,6 +465,8 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         mLastLocation = location;
         // dLog("location changed:[ " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
         if (mLastLocation == null) return;
+        CommonUtils.cacheLocation(getSharedPref().edit(), mLastLocation);
+
         if (kitchenListFragment != null)
             kitchenListFragment.updateLocation(mLastLocation);
         resultReceiver = new AddressResultReceiver(new Handler());
@@ -502,4 +504,6 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     public static void createIntent(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
     }
+
+
 }

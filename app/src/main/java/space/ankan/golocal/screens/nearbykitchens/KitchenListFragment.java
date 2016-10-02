@@ -1,8 +1,10 @@
 package space.ankan.golocal.screens.nearbykitchens;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.firebase.geofire.core.GeoHashQuery;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -37,6 +41,7 @@ import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.screens.MainActivity;
 import space.ankan.golocal.utils.CommonUtils;
+import space.ankan.golocal.utils.DBUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -53,6 +58,11 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     private GeoQuery mQuery;
     private AlertDialog rangePicker;
     private EditText rangeInput;
+    private Double lon, lat;
+    private boolean showingFavourites;
+    private KitchenAdapter favouriteAdapter;
+    private MenuItem favouriteMenu;
+    private String currentAddressText;
 
     @BindView(R.id.current_location)
     TextView currentLocation;
@@ -65,10 +75,26 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_kitchen_list, container, false);
         ButterKnife.bind(this, mRootView);
+        init();
+        dLog(" lat " + lat + " lon " + lon);
         setupRecycler();
         syncWithFirebase();
         setHasOptionsMenu(true);
         return mRootView;
+    }
+
+    private void init() {
+        lat = CommonUtils.getLastLocationLatitude(getSharedPref());
+        lon = CommonUtils.getLastLocationLongitude(getSharedPref());
+        currentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (location != null) return;
+                if (getActivity() instanceof MainActivity)
+                    ((MainActivity) getActivity()).checkLocationSettings();
+            }
+        });
+
     }
 
     @Override
@@ -83,8 +109,27 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             case R.id.range_set:
                 pickRange();
                 return true;
+            case R.id.favourites:
+                favouriteMenu = item;
+                showHideFavourites();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showHideFavourites() {
+        showingFavourites = !showingFavourites;
+        if (showingFavourites) {
+            setupFavourites();
+            favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_red_300_18dp));
+            mRecyclerView.setAdapter(favouriteAdapter);
+            currentLocation.setText(R.string.showing_favourites);
+        } else {
+            favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_light));
+            mRecyclerView.setAdapter(adapter);
+            currentLocation.setText(currentAddressText);
+        }
     }
 
     private void pickRange() {
@@ -141,6 +186,21 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
         location = ((MainActivity) getActivity()).getLocation();
+
+
+    }
+
+    private void setupFavourites() {
+        if (favouriteAdapter == null)
+            favouriteAdapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
+        else
+            favouriteAdapter.clear();
+        Cursor c = DBUtils.queryFavouriteKitchens(getActivity().getContentResolver());
+        if (!c.moveToFirst()) return;
+
+        do {
+            favouriteAdapter.add(DBUtils.getKitchenFromCursor(c));
+        } while (c.moveToNext());
     }
 
     public void updateLocation(Location location) {
@@ -149,6 +209,8 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             return;
         if (this.location != null) return; //FIXME do not refresh too often
         this.location = location;
+        lon = location.getLongitude();
+        lat = location.getLatitude();
         syncWithFirebase();
     }
 
@@ -156,6 +218,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     public void onResume() {
         super.onResume();
         syncWithFirebase();
+        if (showingFavourites)
+            setupFavourites();
+
     }
 
 
@@ -170,11 +235,11 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
         adapter.clear();
 
-        if (location == null)
+        if (lon == null || lat == null)
             Toast.makeText(getActivity(), R.string.enable_gps, Toast.LENGTH_LONG);
 
         else {
-            mQuery = getFirebaseHelper().buildQueryForKitchens(new GeoLocation(location.getLatitude(), location.getLongitude()),
+            mQuery = getFirebaseHelper().buildQueryForKitchens(new GeoLocation(lat, lon),
                     range);
             mQuery.addGeoQueryEventListener(this);
         }
@@ -227,6 +292,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
     public void updateLocation(String currentAddressText) {
         if (currentLocation == null) return;
-        currentLocation.setText(currentAddressText);
+        this.currentAddressText = currentAddressText;
+        if (showingFavourites) return;
+        currentLocation.setText(this.currentAddressText);
+
     }
 }

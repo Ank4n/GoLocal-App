@@ -5,6 +5,7 @@
     <string name="title_activity_kitchen_detail">Kitchen Detail</string>
     <string name="action_settings">Settings</string>
     <string name="range_set">Set Range</string>
+    <string name="favourite_menu_option">Favourites</string>
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_my_kitchen">My Kitchen</string>
 
@@ -45,6 +46,7 @@
     <string name="range_less_than_zero">Please set a range greater than zero</string>
 
     <string name="enable_gps">Please enable gps to get kitchens near your area.</string>
+    <string name="showing_favourites">Showing your favourite kitchens</string>
 
     <string name="upload_image_error">There was an error while trying to upload image</string>
 

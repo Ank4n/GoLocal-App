@@ -50,5 +50,17 @@ public class Kitchen implements Serializable {
         this.address = address;
     }
 
-
+    public Kitchen(String key, String name, String userId, String description, double latitude, double longitude, String imageUrl, int ratedUserCount, double overallRating, int isFavourite, String address) {
+        this.key = key;
+        this.name = name;
+        this.userId = userId;
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.imageUrl = imageUrl;
+        this.ratedUserCount = ratedUserCount;
+        this.overallRating = overallRating;
+        this.isFavourite = isFavourite >= 1;
+        this.address = address;
+    }
 }
