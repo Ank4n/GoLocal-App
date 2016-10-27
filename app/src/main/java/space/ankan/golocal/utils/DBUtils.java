@@ -2,14 +2,19 @@ package space.ankan.golocal.utils;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.persistence.DBContract;
 import space.ankan.golocal.persistence.DBContract.*;
 import space.ankan.golocal.persistence.DBProvider;
+
+import static space.ankan.golocal.core.AppConstants.SHARED_PREF_FILE_NAME;
 
 /**
  * Created by ankan.
@@ -79,5 +84,15 @@ public class DBUtils {
         Cursor c = contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, null, KitchenEntry.COLUMN_IS_FAVOURITE + " = ?", new String[]{"1"}, null);
         Log.v("DBProvider", c.getCount() + " favorite kitchens found");
         return c;
+    }
+
+    public static void persistUserId(Context c, String userId) {
+        SharedPreferences sharedPreferences = c.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString(AppConstants.USER_ID, userId).commit();
+    }
+
+    public static String getUserId(Context c) {
+        SharedPreferences sharedPreferences = c.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(AppConstants.USER_ID, null);
     }
 }

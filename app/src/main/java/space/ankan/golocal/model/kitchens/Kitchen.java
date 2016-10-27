@@ -29,6 +29,7 @@ public class Kitchen implements Serializable {
 
     public static final String OVERALL_RATING = "overallRating";
     public double overallRating;
+    public static final String IS_FAVOURITE = "isFavourite";
     public boolean isFavourite;
     public String address;
 

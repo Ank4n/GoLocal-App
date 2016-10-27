@@ -8,8 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/small_margin"
-    tools:context="space.ankan.golocal.screens.mykitchen.MyKitchenActivityFragment"
-    tools:showIn="@layout/activity_my_kitchen">
+    tools:context="space.ankan.golocal.screens.mykitchen.MyKitchenActivityFragment">
 
 
 </RelativeLayout>

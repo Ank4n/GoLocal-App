@@ -168,6 +168,8 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
                         finish();
                     }
                 });
+
+        getFirebaseHelper().unsubscribe();
     }
 
     protected FirebaseUser getCurrentUser() {

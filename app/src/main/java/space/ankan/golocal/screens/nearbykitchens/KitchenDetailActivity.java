@@ -112,6 +112,7 @@ public class KitchenDetailActivity extends LoggedInActivity {
     public void saveFavourite(View v) {
 
         mKitchen.isFavourite = (!mKitchen.isFavourite);
+        getFirebaseHelper().updateFavourite(mKitchen);
 
         if (!mKitchen.isFavourite) {
             DBUtils.deleteKitchen(getContentResolver(), mKitchen.key);

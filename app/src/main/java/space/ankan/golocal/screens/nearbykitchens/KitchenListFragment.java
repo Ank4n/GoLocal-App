@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
-import com.firebase.geofire.core.GeoHashQuery;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -67,6 +66,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     @BindView(R.id.current_location)
     TextView currentLocation;
 
+    @BindView(R.id.address_card)
+    View addressCard;
+
     public KitchenListFragment() {
     }
 
@@ -101,6 +103,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_kitchen_list, menu);
+        favouriteMenu = menu.findItem(R.id.favourites);
+        setFavouriteIcon();
+
     }
 
     @Override
@@ -110,7 +115,6 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
                 pickRange();
                 return true;
             case R.id.favourites:
-                favouriteMenu = item;
                 showHideFavourites();
                 return true;
         }
@@ -118,17 +122,31 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
         return super.onOptionsItemSelected(item);
     }
 
+
     private void showHideFavourites() {
         showingFavourites = !showingFavourites;
+        setFavouriteIcon();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
+    public void setFavouriteIcon() {
+        if (favouriteMenu == null) return;
+
         if (showingFavourites) {
             setupFavourites();
             favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_red_300_18dp));
             mRecyclerView.setAdapter(favouriteAdapter);
-            currentLocation.setText(R.string.showing_favourites);
+            CommonUtils.setupTextRemoveIfEmpty(currentLocation, R.string.showing_favourites, addressCard);
         } else {
-            favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_light));
+            favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_white_18dp));
             mRecyclerView.setAdapter(adapter);
-            currentLocation.setText(currentAddressText);
+            if (TextUtils.isEmpty(this.currentAddressText))
+                this.currentAddressText = getSharedPref().getString(AppConstants.CACHED_LAST_ADDRESS, null);
+            CommonUtils.setupTextRemoveIfEmpty(currentLocation, currentAddressText, addressCard);
         }
     }
 
@@ -190,6 +208,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
     }
 
+
     private void setupFavourites() {
         if (favouriteAdapter == null)
             favouriteAdapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
@@ -201,6 +220,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
         do {
             favouriteAdapter.add(DBUtils.getKitchenFromCursor(c));
         } while (c.moveToNext());
+
     }
 
     public void updateLocation(Location location) {
@@ -293,8 +313,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     public void updateLocation(String currentAddressText) {
         if (currentLocation == null) return;
         this.currentAddressText = currentAddressText;
+        CommonUtils.cacheLocationAddress(getSharedPref().edit(), currentAddressText);
         if (showingFavourites) return;
-        currentLocation.setText(this.currentAddressText);
+        CommonUtils.setupTextRemoveIfEmpty(currentLocation, this.currentAddressText, addressCard);
 
     }
 }

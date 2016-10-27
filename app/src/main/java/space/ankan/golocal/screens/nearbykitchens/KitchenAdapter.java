@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import space.ankan.golocal.R;
+import space.ankan.golocal.helpers.FirebaseHelper;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.utils.CommonUtils;
+import space.ankan.golocal.utils.DBUtils;
 
 /**
  * Created by anurag on 18-Dec-15.
@@ -25,10 +27,12 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
     private Context mContext;
     private ArrayList<Kitchen> kitchens;
+    FirebaseHelper firebaseHelper;
 
     public KitchenAdapter(Context context, ArrayList<Kitchen> list) {
         this.mContext = context;
         this.kitchens = list;
+        firebaseHelper = new FirebaseHelper();
     }
 
     public Kitchen getItem(int position) {
@@ -61,23 +65,39 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
             Picasso.with(mContext).load(kitchen.imageUrl).into(holder.mKitchenImage);
         else holder.mKitchenImage.setAlpha(0.4f);
 
-        if (kitchen.isFavourite)
-            holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_red_300_18dp));
-        else
-            holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_light));
-
+        formatIcon(kitchen, holder);
         holder.mfavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO Implement persisting favourites and notifying for menu changes
-                Toast.makeText(mContext, "This has not been implemented yet.", Toast.LENGTH_LONG).show();
-
+                favouriteListenerAction(kitchen, holder);
             }
         });
         holder.mTitle.setText(kitchen.name);
         holder.mDesc.setText(kitchen.description);
         holder.rating.setText(String.valueOf(CommonUtils.roundTwoDecimals(kitchen.overallRating)));
 
+
+    }
+
+    private void favouriteListenerAction(Kitchen kitchen, KitchenListItemViewHolder holder) {
+        kitchen.isFavourite = (!kitchen.isFavourite);
+        firebaseHelper.updateFavourite(kitchen);
+
+        if (!kitchen.isFavourite) {
+            DBUtils.deleteKitchen(mContext.getContentResolver(), kitchen.key);
+            Toast.makeText(mContext, kitchen.name + " deleted from favourites.", Toast.LENGTH_SHORT).show();
+        } else {
+            DBUtils.insertKitchen(mContext.getContentResolver(), kitchen);
+            Toast.makeText(mContext, kitchen.name + " saved to favourites.", Toast.LENGTH_SHORT).show();
+        }
+        formatIcon(kitchen, holder);
+    }
+
+    private void formatIcon(Kitchen kitchen, KitchenListItemViewHolder holder) {
+        if (kitchen.isFavourite)
+            holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_red_300_18dp));
+        else
+            holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_light));
 
     }
 

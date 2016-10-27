@@ -43,6 +43,7 @@ public class SplashActivity extends BaseActivity {
                     RedirectionUtils.redirectFromSplash(
                             SplashActivity.this,
                             isUserKitchenOwner());
+                    getFirebaseHelper().subscribe();
                     finish();
                 }
 

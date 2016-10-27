@@ -9,6 +9,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -33,6 +34,7 @@ public class FirebaseHelper implements AppConstants {
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private FirebaseStorage storage;
+    private FirebaseMessaging messaging;
     private static boolean isPersistent;
 
     private DatabaseReference usersRef;
@@ -53,6 +55,7 @@ public class FirebaseHelper implements AppConstants {
         database = FirebaseDatabase.getInstance(app);
         auth = FirebaseAuth.getInstance(app);
         storage = FirebaseStorage.getInstance(app);
+        messaging = FirebaseMessaging.getInstance();
 
         usersRef = database.getReference(FIREBASE_DB_USERS);
         channelsRef = database.getReference(FIREBASE_DB_CHANNELS);
@@ -135,6 +138,12 @@ public class FirebaseHelper implements AppConstants {
         return key;
     }
 
+    public void updateFavourite(Kitchen kitchen) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(Kitchen.IS_FAVOURITE, kitchen.isFavourite);
+        getKitchenReference(kitchen.key).updateChildren(map);
+    }
+
     public GeoQuery buildQueryForKitchens(GeoLocation geo, double rangeInKms) {
         return geoFire.queryAtLocation(geo, rangeInKms);
     }
@@ -191,6 +200,14 @@ public class FirebaseHelper implements AppConstants {
 
         getKitchenReference(kitchenId).updateChildren(map);
         return overallRating;
+    }
+
+    public void subscribe() {
+        messaging.subscribeToTopic(getCurrentUserUid());
+    }
+
+    public void unsubscribe() {
+        messaging.unsubscribeFromTopic(getCurrentUserUid());
     }
 
 }

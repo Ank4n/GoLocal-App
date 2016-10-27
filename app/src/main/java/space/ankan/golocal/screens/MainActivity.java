@@ -38,9 +38,11 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.vision.text.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.internal.Utils;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.core.LoggedInActivity;
@@ -258,9 +260,10 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         }
         if (isUserKitchenOwner()) {
             getSupportActionBar().setTitle(ownerTitle[position]);
+            addDishFab.hide();
             if (position == MANAGE_KITCHEN_TAB)
                 addDishFab.show();
-            else addDishFab.hide();
+
 
         } else {
             getSupportActionBar().setTitle(defaultTitle[position]);
@@ -342,7 +345,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
 
     public void checkLocationSettings() {
-        if (mLastLocation!=null) return;
+        if (mLastLocation != null) return;
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
         PendingResult<LocationSettingsResult> result =
@@ -401,7 +404,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
                         Toast.makeText(this, R.string.enable_gps, Toast.LENGTH_SHORT).show();
-                        kitchenListFragment.updateLocation(getResources().getString(R.string.enable_gps));
+                        //kitchenListFragment.updateLocation(getResources().getString(R.string.enable_gps));
                         break;
                     default:
                         break;

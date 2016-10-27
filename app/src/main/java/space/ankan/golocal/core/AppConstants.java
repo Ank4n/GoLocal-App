@@ -14,6 +14,8 @@ public interface AppConstants {
     String KITCHEN_ID = "kitchen_id";
     String CACHED_LAST_LOCATION_LAT = "last_location_lat";
     String CACHED_LAST_LOCATION_LON = "last_location_lon";
+    String CACHED_LAST_ADDRESS = "last_address";
+    String USER_ID = "user_id";
 
     //for location fetching
     int SUCCESS_RESULT = 0;

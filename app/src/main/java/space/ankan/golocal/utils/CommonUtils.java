@@ -2,18 +2,16 @@ package space.ankan.golocal.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
-import com.firebase.ui.auth.BuildConfig;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -82,5 +80,57 @@ public class CommonUtils implements AppConstants {
         edit.putString(CACHED_LAST_LOCATION_LAT, String.valueOf(location.getLatitude()));
         edit.putString(CACHED_LAST_LOCATION_LON, String.valueOf(location.getLongitude()));
         edit.commit();
+    }
+
+    public static void cacheLocationAddress(SharedPreferences.Editor edit, String address) {
+        if (TextUtils.isEmpty(address)) return;
+        edit.putString(CACHED_LAST_ADDRESS, address).commit();
+    }
+
+    public static void removeViews(View... views) {
+        if (views == null || views.length == 0) return;
+        for (View v : views)
+            if (v != null)
+                v.setVisibility(View.GONE);
+    }
+
+    public static void showViews(View... views) {
+        if (views == null || views.length == 0) return;
+        for (View v : views) {
+            if (v != null)
+                v.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void hideViews(View... views) {
+        if (views == null || views.length == 0) return;
+        for (View v : views) {
+            if (v != null)
+                v.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public static void setupTextRemoveIfEmpty(TextView view, String text, View optionalHideView) {
+        if (TextUtils.isEmpty(text)) {
+            removeViews(view, optionalHideView);
+        } else {
+            view.setText(text);
+            showViews(view, optionalHideView);
+        }
+
+    }
+
+    public static void setupTextRemoveIfEmpty(TextView view, String text) {
+        setupTextRemoveIfEmpty(view, text, null);
+
+    }
+
+    public static void setupTextRemoveIfEmpty(TextView view, @StringRes int text) {
+        setupTextRemoveIfEmpty(view, text, null);
+    }
+
+    public static void setupTextRemoveIfEmpty(TextView view, @StringRes int text, View optionalHideView) {
+        view.setText(text);
+        showViews(view, optionalHideView);
     }
 }

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_list"
+    android:clipToPadding="false"
     android:orientation="vertical"
     android:paddingTop="?actionBarSize">
 
@@ -18,9 +18,11 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:minHeight="?actionBarSize"
         android:layout_gravity="bottom"
-        android:elevation="8dp"
+        android:background="#fff"
+        android:elevation="32dp"
+        android:paddingTop="1dp"
+        android:minHeight="?actionBarSize"
         android:orientation="horizontal">
 
         <ImageView
