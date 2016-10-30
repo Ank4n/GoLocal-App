@@ -31,6 +31,9 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,11 +60,12 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     private GeoQuery mQuery;
     private AlertDialog rangePicker;
     private EditText rangeInput;
-    private Double lon, lat;
+    private Double lon = 77.5, lat = 12.9;
     private boolean showingFavourites;
     private KitchenAdapter favouriteAdapter;
     private MenuItem favouriteMenu;
-    private String currentAddressText;
+    private String currentHeaderText;
+    private Set<String> favouriteKitchens;
 
     @BindView(R.id.current_location)
     TextView currentLocation;
@@ -75,10 +79,10 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_kitchen_list, container, false);
+        mRootView = super.inflate(inflater, container, savedInstanceState, R.layout.fragment_kitchen_list);
         ButterKnife.bind(this, mRootView);
         init();
-        dLog(" lat " + lat + " lon " + lon);
+        dLog("starting kitchen list fragment");
         setupRecycler();
         syncWithFirebase();
         setHasOptionsMenu(true);
@@ -88,6 +92,10 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     private void init() {
         lat = CommonUtils.getLastLocationLatitude(getSharedPref());
         lon = CommonUtils.getLastLocationLongitude(getSharedPref());
+        if (lat == null || lon == null) {
+            lon = 77.6036207;
+            lat = 12.9049946;
+        }
         currentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +105,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             }
         });
 
+        favouriteKitchens = new HashSet<>();
     }
 
     @Override
@@ -141,12 +150,14 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_red_300_18dp));
             mRecyclerView.setAdapter(favouriteAdapter);
             CommonUtils.setupTextRemoveIfEmpty(currentLocation, R.string.showing_favourites, addressCard);
+            favouriteAdapter.reformatView();
         } else {
             favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_white_18dp));
             mRecyclerView.setAdapter(adapter);
-            if (TextUtils.isEmpty(this.currentAddressText))
-                this.currentAddressText = getSharedPref().getString(AppConstants.CACHED_LAST_ADDRESS, null);
-            CommonUtils.setupTextRemoveIfEmpty(currentLocation, currentAddressText, addressCard);
+            if (TextUtils.isEmpty(this.currentHeaderText))
+                this.currentHeaderText = getSharedPref().getString(AppConstants.CACHED_LAST_ADDRESS, null);
+            CommonUtils.setupTextRemoveIfEmpty(currentLocation, currentHeaderText, addressCard);
+            adapter.reformatView();
         }
     }
 
@@ -199,44 +210,55 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     }
 
     private void setupRecycler() {
-        if (adapter == null)
+        if (adapter == null) {
             adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
+            adapter.setTwoPaneListener(mTwoPaneListener);
+        }
+        adapter.setFavouriteKitchenIdList(favouriteKitchens);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
         location = ((MainActivity) getActivity()).getLocation();
-
 
     }
 
 
     private void setupFavourites() {
-        if (favouriteAdapter == null)
+        if (favouriteAdapter == null) {
             favouriteAdapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
-        else
+            favouriteAdapter.setTwoPaneListener(mTwoPaneListener);
+            favouriteAdapter.setFavouriteKitchenIdList(favouriteKitchens);
+        } else
             favouriteAdapter.clear();
         Cursor c = DBUtils.queryFavouriteKitchens(getActivity().getContentResolver());
         if (!c.moveToFirst()) return;
 
         do {
-            favouriteAdapter.add(DBUtils.getKitchenFromCursor(c));
+            Kitchen k = DBUtils.getKitchenFromCursor(c);
+            favouriteKitchens.add(k.key);
+            favouriteAdapter.add(k);
         } while (c.moveToNext());
 
     }
 
     public void updateLocation(Location location) {
 
+        dLog("kitchen list updateLocation");
+
         if (this.location != null && location.getLatitude() == this.location.getLatitude() && location.getLongitude() == this.location.getLongitude())
             return;
-        if (this.location != null) return; //FIXME do not refresh too often
-        this.location = location;
-        lon = location.getLongitude();
-        lat = location.getLatitude();
+        if (location != null) {
+            this.location = location;
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+        }
         syncWithFirebase();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        DBUtils.queryFavouriteKitchenIDList(getActivity().getContentResolver(), favouriteKitchens);
+        adapter.reformatView();
         syncWithFirebase();
         if (showingFavourites)
             setupFavourites();
@@ -245,11 +267,12 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
 
     private void syncWithFirebase() {
-        dLog("syncing with firebase");
+        dLog("syncing with firebase kitchen list | lat= " + lat + " lon= " + lon);
 
-        if (adapter == null)
+        if (adapter == null) {
             adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
-
+            adapter.setTwoPaneListener(mTwoPaneListener);
+        }
         if (mQuery != null)
             mQuery.removeAllListeners();
 
@@ -312,10 +335,18 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
     public void updateLocation(String currentAddressText) {
         if (currentLocation == null) return;
-        this.currentAddressText = currentAddressText;
+        this.currentHeaderText = currentAddressText;
         CommonUtils.cacheLocationAddress(getSharedPref().edit(), currentAddressText);
         if (showingFavourites) return;
-        CommonUtils.setupTextRemoveIfEmpty(currentLocation, this.currentAddressText, addressCard);
+        CommonUtils.setupTextRemoveIfEmpty(currentLocation, this.currentHeaderText, addressCard);
 
     }
+
+    public void onError(String errorMessage) {
+        currentHeaderText = errorMessage;
+        CommonUtils.setupTextRemoveIfEmpty(currentLocation, errorMessage, addressCard);
+
+    }
+
+
 }

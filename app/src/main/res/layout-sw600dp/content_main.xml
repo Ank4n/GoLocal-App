@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?actionBarSize"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        android:background="#fff"
+        android:elevation="32dp"
+        android:minHeight="?actionBarSize"
+        android:orientation="vertical"
+        android:paddingTop="0dp">
+
+        <ImageView
+            android:id="@+id/tab0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:scaleType="center"
+            android:src="@drawable/setup_kitchen_black" />
+
+        <ImageView
+            android:id="@+id/tab1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/tab_select"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:scaleType="center"
+            android:src="@drawable/kitchens_nearby_white" />
+
+        <ImageView
+            android:id="@+id/tab2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:scaleType="center"
+            android:src="@drawable/chat_black" />
+
+    </LinearLayout>
+
+    <space.ankan.golocal.core.MyViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <FrameLayout
+        android:id="@+id/detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5" />
+
+</LinearLayout>

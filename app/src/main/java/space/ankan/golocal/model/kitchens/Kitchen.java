@@ -20,6 +20,7 @@ public class Kitchen implements Serializable {
     public String description;
     public double latitude;
     public double longitude;
+    public boolean isSelected; // for internal use only
     //public List<Dish> dishes;
     //public List<Review> reviews;
     public String imageUrl;

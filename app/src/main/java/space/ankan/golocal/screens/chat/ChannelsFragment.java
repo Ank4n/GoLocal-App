@@ -51,7 +51,7 @@ public class ChannelsFragment extends BaseFragment implements ChildEventListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_channels_list, container, false);
+        mRootView = super.inflate(inflater, container, savedInstanceState, R.layout.fragment_channels_list);
         setupRecycler();
         syncWithFirebase();
         return mRootView;
@@ -62,6 +62,7 @@ public class ChannelsFragment extends BaseFragment implements ChildEventListener
         mRecyclerView = (RecyclerView) mRootView;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new ChannelsAdapter(new ArrayList<Channel>(), getActivity());
+        adapter.setTwoPaneListener(mTwoPaneListener);
         mRecyclerView.setAdapter(adapter);
 
     }

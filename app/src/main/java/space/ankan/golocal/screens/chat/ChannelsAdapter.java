@@ -1,8 +1,10 @@
 package space.ankan.golocal.screens.chat;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.TwoPaneListener;
 import space.ankan.golocal.model.channels.Channel;
 
 import java.util.Collections;
@@ -25,10 +28,16 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
 
     private final List<Channel> mValues;
     Context mContext;
+    private TwoPaneListener mTwoPaneListener;
+    private int selected = -1;
 
     public ChannelsAdapter(List<Channel> items, Context c) {
         mValues = items;
         mContext = c;
+    }
+
+    public void setTwoPaneListener(TwoPaneListener twoPaneListener) {
+        mTwoPaneListener = twoPaneListener;
     }
 
     @Override
@@ -39,7 +48,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         final Channel channel = mValues.get(position);
         holder.mName.setText(channel.name);
@@ -50,14 +59,31 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
         else
             holder.mUserImage.setAlpha(0.6f);
 
+        int bgColor = R.color.white;
+        if (holder.mItem.isSelected)
+            bgColor = R.color.item_selected_background;
+
+        holder.mView.setBackgroundColor(ContextCompat.getColor(mContext, bgColor));
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 String id = auth.getCurrentUser().getUid().equals(channel.userId1) ? channel.userId2 : channel.userId1;
-                ChatActivity.createIntent(mContext, channel.channelId, channel.name, id);
+                if (mTwoPaneListener.isTwoPane()) {
+                    mTwoPaneListener.setupChatDetail(channel.channelId, channel.name, id);
+                    configureSelection(position);
+                } else
+                    ChatActivity.createIntent(mContext, channel.channelId, channel.name, id);
             }
         });
+    }
+
+    private void configureSelection(int position) {
+        if (selected != -1)
+            mValues.get(selected).isSelected = false;
+        selected = position;
+        mValues.get(selected).isSelected = true;
+        notifyDataSetChanged();
     }
 
     public void add(Channel channel) {

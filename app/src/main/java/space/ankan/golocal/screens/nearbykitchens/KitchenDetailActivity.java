@@ -71,10 +71,11 @@ public class KitchenDetailActivity extends LoggedInActivity {
             //getSupportActionBar().setTitle(mKitchen.name);
             formatFAB();
 
-            if (TextUtils.isEmpty(mKitchen.imageUrl))
-                Picasso.with(this).load("http://www.ikea.com/ms/media/cho_room/20153/kitchen/20153_cosk07a/20153_cosk07a_01_PH124156.jpg")
+            if (TextUtils.isEmpty(mKitchen.imageUrl)) {
+                Picasso.with(this).load(getString(R.string.kitchen_default_image))
                         .into(mKitchenImage);
-
+                mKitchenImage.setImageAlpha(128);
+            }
             else
                 Picasso.with(this).load(mKitchen.imageUrl).into(mKitchenImage);
 
@@ -83,14 +84,8 @@ public class KitchenDetailActivity extends LoggedInActivity {
 
         if (savedInstanceState == null) {
 
-            Bundle arguments = new Bundle();
-            arguments.putSerializable("kitchen", mKitchen);
-
-            KitchenDetailFragment fragment = new KitchenDetailFragment();
-            fragment.setArguments(arguments);
-
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.kitchen_detail_container, fragment)
+                    .add(R.id.kitchen_detail_container, KitchenDetailFragment.newInstance(mKitchen))
                     .commit();
         }
 

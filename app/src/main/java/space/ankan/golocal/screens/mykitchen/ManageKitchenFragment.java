@@ -65,7 +65,7 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mRootView = inflater.inflate(R.layout.fragment_manage_kitchen, container, false);
+        mRootView = super.inflate(inflater, container, savedInstanceState, R.layout.fragment_manage_kitchen);
         ButterKnife.bind(this, mRootView);
         setupRecycler();
         syncWithFirebase();
@@ -74,6 +74,7 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
 
     private void setupRecycler() {
         adapter = new DishAdapter(getActivity(), new ArrayList<Dish>());
+        adapter.setmTwoPaneListener(mTwoPaneListener);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
     }
@@ -90,7 +91,11 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+        Dish dish = dataSnapshot.getValue(Dish.class);
+        if (dish.key == null)
+            adapter.add(dish);
+        else
+            adapter.replace(dish);
     }
 
     @Override
@@ -106,6 +111,11 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
     @Override
     public void onCancelled(DatabaseError databaseError) {
 
+    }
+
+    public void clearSelection() {
+        if (adapter == null) return;
+        adapter.clearSelection();
     }
 }
 

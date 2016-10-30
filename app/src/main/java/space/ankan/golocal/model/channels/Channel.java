@@ -13,6 +13,7 @@ public class Channel implements Comparable<Channel> {
     public String imageUrl;
     public String userId1;
     public String userId2;
+    public boolean isSelected;
     //public ChatMessage[] messages;
 
 

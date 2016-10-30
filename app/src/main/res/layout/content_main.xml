@@ -7,10 +7,10 @@
     android:orientation="vertical"
     android:paddingTop="?actionBarSize">
 
-    <android.support.v4.view.ViewPager
+    <space.ankan.golocal.core.MyViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="9"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -21,9 +21,9 @@
         android:layout_gravity="bottom"
         android:background="#fff"
         android:elevation="32dp"
-        android:paddingTop="1dp"
         android:minHeight="?actionBarSize"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="1dp">
 
         <ImageView
             android:id="@+id/tab0"

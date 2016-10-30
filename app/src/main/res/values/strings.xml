@@ -43,6 +43,8 @@
     <string name="error_occurred">Some error occured, try again.</string>
     <string name="error_fields_not_filled">Please fill all the fields.</string>
     <string name="chat_with_own_kitchen">You cannot chat with your own kitchen.</string>
+    <string name="dish_saved">Dish saved successfully.</string>
+
     <string name="range_less_than_zero">Please set a range greater than zero</string>
 
     <string name="enable_gps">Please enable gps to get kitchens near your area.</string>
@@ -51,6 +53,7 @@
     <string name="upload_image_error">There was an error while trying to upload image</string>
 
     <string name="kitchen_address_card_title">Address</string>
+    <string name="kitchen_default_image">http://www.ikea.com/ms/media/cho_room/20153/kitchen/20153_cosk07a/20153_cosk07a_01_PH124156.jpg</string>
     <string name="kitchen_rating_card_title">Kitchen Rating</string>
   <string name="user_rating_count">
        (<xliff:g example="35" id="startup">%1$s</xliff:g>)

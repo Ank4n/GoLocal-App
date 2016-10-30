@@ -8,6 +8,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.persistence.DBContract;
@@ -86,6 +91,19 @@ public class DBUtils {
         return c;
     }
 
+    public static void queryFavouriteKitchenIDList(ContentResolver contentResolver, Set<String> keys) {
+        Cursor c = queryFavouriteKitchens(contentResolver);
+        keys.clear();
+
+        if (!c.moveToFirst()) return;
+
+        do {
+            keys.add(c.getString(1));
+        } while (c.moveToNext());
+
+
+    }
+
     public static void persistUserId(Context c, String userId) {
         SharedPreferences sharedPreferences = c.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putString(AppConstants.USER_ID, userId).commit();
@@ -95,4 +113,6 @@ public class DBUtils {
         SharedPreferences sharedPreferences = c.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(AppConstants.USER_ID, null);
     }
+
+
 }

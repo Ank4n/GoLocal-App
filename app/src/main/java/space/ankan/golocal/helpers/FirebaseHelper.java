@@ -1,6 +1,7 @@
 package space.ankan.golocal.helpers;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -123,7 +124,14 @@ public class FirebaseHelper implements AppConstants {
     }
 
     public void push(Dish dish, String kitchenId) {
-        getKitchenReference(kitchenId).child(FIREBASE_DB_KITCHENS_DISHES).push().setValue(dish);
+        DatabaseReference dishRef;
+        if (dish.key == null) {
+            dishRef = getKitchenReference(kitchenId).child(FIREBASE_DB_KITCHENS_DISHES).push();
+            dish.key = dishRef.getKey();
+        } else
+            dishRef = getKitchenReference(kitchenId).child(FIREBASE_DB_KITCHENS_DISHES).child(dish.key);
+
+        dishRef.setValue(dish);
 
     }
 

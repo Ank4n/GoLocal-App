@@ -1,21 +1,25 @@
 package space.ankan.golocal.model.kitchens;
 
+import java.io.Serializable;
+
 /**
  * Created by ankan.
  * TODO: Add a class comment
  */
 
-public class Dish {
+public class Dish implements Serializable {
+    public String key;
     public String name;
     public String description;
     public String imageUrl;
     public int price;
     public boolean nonVeg;
-
+    public boolean isSelected; //for internal use only
     public Dish() {
     }
 
-    public Dish(String name, String description, String imageUrl, int price, boolean nonVeg) {
+    public Dish(String key, String name, String description, String imageUrl, int price, boolean nonVeg) {
+        this.key = key;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;

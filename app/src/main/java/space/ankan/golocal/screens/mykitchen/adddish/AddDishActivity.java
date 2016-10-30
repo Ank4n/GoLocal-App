@@ -3,11 +3,14 @@ package space.ankan.golocal.screens.mykitchen.addDish;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import butterknife.BindView;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.LoggedInActivity;
+import space.ankan.golocal.model.kitchens.Dish;
 
 public class AddDishActivity extends LoggedInActivity {
 
@@ -24,10 +27,19 @@ public class AddDishActivity extends LoggedInActivity {
                 supportFinishAfterTransition();
             }
         });
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, AddDishFragment.newInstance((Dish) getIntent().getSerializableExtra("dish")), "frag")
+                .commit();
+
 
     }
 
     public static void createIntent(Context context) {
+        context.startActivity(new Intent(context, AddDishActivity.class));
+    }
+
+    public static void createIntent(Context context, Dish dish) {
+        //TODO
         context.startActivity(new Intent(context, AddDishActivity.class));
     }
 

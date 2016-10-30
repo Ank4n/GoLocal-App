@@ -1,13 +1,17 @@
 package space.ankan.golocal.screens.nearbykitchens;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -29,6 +34,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -73,11 +79,24 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
     @BindView(R.id.rated_user_count)
     TextView ratedUserCount;
 
+    @Nullable
+    @BindView(R.id.kitchen_image)
+    ImageView kitchenImage;
+
     private GoogleMap mMap;
     private Marker mMarker;
     private boolean alreadyRated;
     private boolean selfRatingInit; //set this flag when user rating is fetched
 
+
+    public static Fragment newInstance(Kitchen kitchen) {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("kitchen", kitchen);
+
+        KitchenDetailFragment fragment = new KitchenDetailFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
 
     public KitchenDetailFragment() {
     }
@@ -119,6 +138,15 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
             Log.e(LOG_CAT, "Null arguments in the fragment");
 
         if (mKitchen == null) return;
+        if (kitchenImage != null) {
+
+            if (TextUtils.isEmpty(mKitchen.imageUrl)) {
+                Picasso.with(getActivity()).load(getString(R.string.kitchen_default_image))
+                        .into(kitchenImage);
+                kitchenImage.setImageAlpha(128);
+            } else
+                Picasso.with(getActivity()).load(mKitchen.imageUrl).into(kitchenImage);
+        }
         kitchenDescription.setText(mKitchen.description);
         kitchenAddress.setText(mKitchen.address);
         setupDishRecycler();

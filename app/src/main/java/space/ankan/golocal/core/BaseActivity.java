@@ -158,6 +158,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
     }
 
     protected void signOut() {
+        getFirebaseHelper().unsubscribe();
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -169,7 +170,6 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
                     }
                 });
 
-        getFirebaseHelper().unsubscribe();
     }
 
     protected FirebaseUser getCurrentUser() {

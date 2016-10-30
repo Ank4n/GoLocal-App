@@ -111,6 +111,7 @@ public class CommonUtils implements AppConstants {
     }
 
     public static void setupTextRemoveIfEmpty(TextView view, String text, View optionalHideView) {
+        if (view == null) return;
         if (TextUtils.isEmpty(text)) {
             removeViews(view, optionalHideView);
         } else {
@@ -130,6 +131,7 @@ public class CommonUtils implements AppConstants {
     }
 
     public static void setupTextRemoveIfEmpty(TextView view, @StringRes int text, View optionalHideView) {
+        if (view == null) return;
         view.setText(text);
         showViews(view, optionalHideView);
     }

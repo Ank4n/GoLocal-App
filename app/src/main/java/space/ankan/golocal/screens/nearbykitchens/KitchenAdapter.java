@@ -13,8 +13,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.TwoPaneListener;
 import space.ankan.golocal.helpers.FirebaseHelper;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.utils.CommonUtils;
@@ -28,11 +30,18 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
     private Context mContext;
     private ArrayList<Kitchen> kitchens;
     FirebaseHelper firebaseHelper;
+    private Set<String> favouriteKitchenIdList;
+    private TwoPaneListener twoPaneListener;
+    private int selected = -1;
 
     public KitchenAdapter(Context context, ArrayList<Kitchen> list) {
         this.mContext = context;
         this.kitchens = list;
         firebaseHelper = new FirebaseHelper();
+    }
+
+    public void setTwoPaneListener(TwoPaneListener twoPaneListener) {
+        this.twoPaneListener = twoPaneListener;
     }
 
     public Kitchen getItem(int position) {
@@ -51,15 +60,26 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
     }
 
     @Override
-    public void onBindViewHolder(final KitchenListItemViewHolder holder, int i) {
+    public void onBindViewHolder(final KitchenListItemViewHolder holder, final int i) {
         final Kitchen kitchen = kitchens.get(i);
         holder.mView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                KitchenDetailActivity.createIntent(mContext, kitchen);
+
+                if (twoPaneListener.isTwoPane()) {
+                    twoPaneListener.setupKitchenDetail(kitchen);
+                    configureSelection(i);
+                } else
+                    KitchenDetailActivity.createIntent(mContext, kitchen);
             }
         });
+
+        int bgColor = R.color.white;
+        if (kitchen.isSelected)
+            bgColor = R.color.item_selected_background;
+
+        holder.mView.setBackgroundColor(ContextCompat.getColor(mContext, bgColor));
 
         if (!TextUtils.isEmpty(kitchen.imageUrl))
             Picasso.with(mContext).load(kitchen.imageUrl).into(holder.mKitchenImage);
@@ -79,16 +99,27 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
     }
 
+    private void configureSelection(int position) {
+        if (selected != -1)
+            kitchens.get(selected).isSelected = false;
+        selected = position;
+        kitchens.get(selected).isSelected = true;
+        notifyDataSetChanged();
+    }
+
     private void favouriteListenerAction(Kitchen kitchen, KitchenListItemViewHolder holder) {
         kitchen.isFavourite = (!kitchen.isFavourite);
-        firebaseHelper.updateFavourite(kitchen);
+        //firebaseHelper.updateFavourite(kitchen);
 
         if (!kitchen.isFavourite) {
             DBUtils.deleteKitchen(mContext.getContentResolver(), kitchen.key);
+            favouriteKitchenIdList.remove(kitchen.key);
             Toast.makeText(mContext, kitchen.name + " deleted from favourites.", Toast.LENGTH_SHORT).show();
         } else {
             DBUtils.insertKitchen(mContext.getContentResolver(), kitchen);
             Toast.makeText(mContext, kitchen.name + " saved to favourites.", Toast.LENGTH_SHORT).show();
+            favouriteKitchenIdList.add(kitchen.key);
+            // addFavKitchen(kitchen.key);
         }
         formatIcon(kitchen, holder);
     }
@@ -112,7 +143,20 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         return getItemCount();
     }
 
+    public void setFavouriteKitchenIdList(Set<String> favouriteKitchenIdList) {
+        this.favouriteKitchenIdList = favouriteKitchenIdList;
+    }
+
+    public void reformatView() {
+
+        for (Kitchen k : kitchens) {
+            k.isFavourite = favouriteKitchenIdList != null && favouriteKitchenIdList.contains(k.key);
+        }
+        notifyDataSetChanged();
+    }
+
     public void add(Kitchen kitchen) {
+        kitchen.isFavourite = (favouriteKitchenIdList != null && favouriteKitchenIdList.contains(kitchen.key));
         this.kitchens.add(kitchen);
         this.notifyDataSetChanged();
     }
@@ -128,5 +172,6 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         this.kitchens.addAll(kitchens);
         this.notifyDataSetChanged();
     }
+
 
 }

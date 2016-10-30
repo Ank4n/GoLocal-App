@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -38,23 +40,28 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.vision.text.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.internal.Utils;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.core.LoggedInActivity;
+import space.ankan.golocal.core.MyViewPager;
+import space.ankan.golocal.core.TwoPaneListener;
+import space.ankan.golocal.model.kitchens.Dish;
+import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.screens.chat.ChannelsFragment;
+import space.ankan.golocal.screens.chat.ChatActivityFragment;
 import space.ankan.golocal.screens.mykitchen.ManageKitchenFragment;
 import space.ankan.golocal.screens.mykitchen.addDish.AddDishActivity;
+import space.ankan.golocal.screens.mykitchen.addDish.AddDishFragment;
+import space.ankan.golocal.screens.nearbykitchens.KitchenDetailFragment;
 import space.ankan.golocal.screens.nearbykitchens.KitchenListFragment;
 import space.ankan.golocal.screens.setupkitchen.SetupKitchenFragment;
 import space.ankan.golocal.services.FetchAddressIntentService;
 import space.ankan.golocal.utils.CommonUtils;
 
-public class MainActivity extends LoggedInActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MainActivity extends LoggedInActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, TwoPaneListener {
 
     public static final int TAB_COUNT = 3;
     private static final int SETUP_KITCHEN_TAB = 0;
@@ -65,6 +72,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
     private static final int GPS_PERMISSION = 1;
     private static final int REQUEST_CHECK_SETTINGS = 11;
+    private static final String DETAIL_FRAG_TAG = "DetailFragment";
 
     private int setupKitchenSelect;
     private int setupKitchenDeselect;
@@ -79,12 +87,14 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private SetupKitchenFragment setupKitchenFragment;
     private ManageKitchenFragment manageKitchenFragment;
     private KitchenListFragment kitchenListFragment;
+    private Fragment lastKitchenDetailFragment, lastChannelDetailFragment;
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
     private String currentAddressText;
     private AddressResultReceiver resultReceiver;
+    private Handler mHandler;
 
     @BindView(R.id.fab)
     FloatingActionButton addDishFab;
@@ -93,7 +103,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private static final String PAGER_STATE = "state";
 
     @BindView(R.id.viewpager)
-    ViewPager mViewPager;
+    MyViewPager mViewPager;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -110,6 +120,10 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     @BindView(R.id.tabLayout)
     View tabLayout;
 
+    @BindView(R.id.detail_container)
+    @Nullable
+    FrameLayout detailContainer;
+
     private ImageView[] tabs;
     private int[] defaultSelectIcons;
     private int[] defaultDeselectIcons;
@@ -117,6 +131,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private int[] ownerDeselectIcons;
     private int[] defaultTitle;
     private int[] ownerTitle;
+    private boolean twoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,16 +139,23 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initImageResources();
+        setupViewMode();
         setupToolbar();
         setupViewPager(savedInstanceState);
         setupFab();
         createLocationRequest();
-        //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        //FIXME add two pane mode
     }
 
+
+    private void setupViewMode() {
+        if (detailContainer != null)
+            twoPane = true;
+        CommonUtils.removeViews(detailContainer);
+        mHandler = new Handler();
+
+    }
 
     private void initImageResources() {
         setupKitchenSelect = R.drawable.setup_kitchen_filled;
@@ -192,6 +214,8 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
             mViewPager.setCurrentItem(savedInstanceState.getInt(PAGER_STATE));
         }
 
+        mViewPager.setPagingEnabled(!twoPane);
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -201,6 +225,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
             @Override
             public void onPageSelected(int position) {
                 formatTabs(position);
+                updateDetailFragment(position);
             }
 
             @Override
@@ -260,10 +285,10 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         }
         if (isUserKitchenOwner()) {
             getSupportActionBar().setTitle(ownerTitle[position]);
-            addDishFab.hide();
+
             if (position == MANAGE_KITCHEN_TAB)
                 addDishFab.show();
-
+            else addDishFab.hide();
 
         } else {
             getSupportActionBar().setTitle(defaultTitle[position]);
@@ -304,7 +329,9 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         addDishFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddDishActivity.createIntent(MainActivity.this);
+                if (!twoPane)
+                    AddDishActivity.createIntent(MainActivity.this);
+                else setupManageDishView(null);
             }
         });
     }
@@ -419,8 +446,10 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
             dLog("starting location updates");
 
-        } else dLog("permission not available");
-
+        } else {
+            dLog("permission not available");
+            kitchenListFragment.onError("Could not fetch your location");
+        }
     }
 
     @Override
@@ -484,6 +513,37 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         return mLastLocation;
     }
 
+    @Override
+    public void setupKitchenDetail(Kitchen kitchen) {
+        if (kitchen == null) return;
+        lastKitchenDetailFragment = KitchenDetailFragment.newInstance(kitchen);
+        addDetailFragment(lastKitchenDetailFragment);
+    }
+
+    @Override
+    public void setupChatDetail(String channelId, String channelName, String userId) {
+        if (TextUtils.isEmpty(channelId)) return;
+        lastChannelDetailFragment = ChatActivityFragment.createInstance(channelId, channelName, userId);
+        addDetailFragment(lastChannelDetailFragment);
+    }
+
+    @Override
+    public void setupManageDishView(Dish dish) {
+        if (dish == null) manageKitchenFragment.clearSelection();
+        addDetailFragment(AddDishFragment.newInstance(dish));
+    }
+
+    @Override
+    public void setupStartKitchenTab() {
+        addDetailFragment(null);
+
+    }
+
+    @Override
+    public boolean isTwoPane() {
+        return twoPane;
+    }
+
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
@@ -508,5 +568,52 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         context.startActivity(new Intent(context, MainActivity.class));
     }
 
+    private void addDetailFragment(Fragment fragment) {
+        if (!twoPane) return;
+        if (fragment == null) {
+            CommonUtils.hideViews(detailContainer);
+            return;
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.detail_container, fragment, DETAIL_FRAG_TAG)
+                .commit();
+        CommonUtils.showViews(detailContainer);
+
+    }
+
+
+    private void updateDetailFragment(int positon) {
+        if (isUserKitchenOwner()) {
+            switch (positon) {
+                case OWNER_KITCHENS_NEARBY_TAB:
+                    addDetailFragment(lastKitchenDetailFragment);
+                    break;
+                case MANAGE_KITCHEN_TAB:
+                    setupManageDishView(null);
+                    break;
+                case CHAT_TAB:
+                    addDetailFragment(lastChannelDetailFragment);
+                    break;
+            }
+            return;
+        }
+        switch (positon) {
+            case SETUP_KITCHEN_TAB:
+                removeDetailContainer();
+                break;
+            case DEFAULT_KITCHENS_NEARBY_TAB:
+                addDetailFragment(lastKitchenDetailFragment);
+                break;
+            case CHAT_TAB:
+                addDetailFragment(lastChannelDetailFragment);
+                break;
+        }
+
+    }
+
+    private void removeDetailContainer() {
+
+        CommonUtils.hideViews(detailContainer);
+    }
 
 }
