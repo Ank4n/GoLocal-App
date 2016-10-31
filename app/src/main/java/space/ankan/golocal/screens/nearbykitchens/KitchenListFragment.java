@@ -4,7 +4,11 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -41,6 +44,7 @@ import space.ankan.golocal.R;
 import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
+import space.ankan.golocal.persistence.DBContract;
 import space.ankan.golocal.screens.MainActivity;
 import space.ankan.golocal.utils.CommonUtils;
 import space.ankan.golocal.utils.DBUtils;
@@ -48,7 +52,7 @@ import space.ankan.golocal.utils.DBUtils;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class KitchenListFragment extends BaseFragment implements GeoQueryEventListener {
+public class KitchenListFragment extends BaseFragment implements GeoQueryEventListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.content_kitchen_list)
     RecyclerView mRecyclerView;
@@ -62,7 +66,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     private EditText rangeInput;
     private Double lon = 77.5, lat = 12.9;
     private boolean showingFavourites;
-    private KitchenAdapter favouriteAdapter;
+    private KitchenCursorAdapter favouriteAdapter;
     private MenuItem favouriteMenu;
     private String currentHeaderText;
     private Set<String> favouriteKitchens;
@@ -87,6 +91,12 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
         syncWithFirebase();
         setHasOptionsMenu(true);
         return mRootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     private void init() {
@@ -150,7 +160,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_red_300_18dp));
             mRecyclerView.setAdapter(favouriteAdapter);
             CommonUtils.setupTextRemoveIfEmpty(currentLocation, R.string.showing_favourites, addressCard);
-            favouriteAdapter.reformatView();
+            //favouriteAdapter.reformatView();
         } else {
             favouriteMenu.setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_white_18dp));
             mRecyclerView.setAdapter(adapter);
@@ -211,10 +221,8 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
     private void setupRecycler() {
         if (adapter == null) {
-            adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
-            adapter.setTwoPaneListener(mTwoPaneListener);
+            adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>(), favouriteKitchens, mTwoPaneListener);
         }
-        adapter.setFavouriteKitchenIdList(favouriteKitchens);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
         location = ((MainActivity) getActivity()).getLocation();
@@ -224,19 +232,17 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
     private void setupFavourites() {
         if (favouriteAdapter == null) {
-            favouriteAdapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
-            favouriteAdapter.setTwoPaneListener(mTwoPaneListener);
-            favouriteAdapter.setFavouriteKitchenIdList(favouriteKitchens);
-        } else
-            favouriteAdapter.clear();
-        Cursor c = DBUtils.queryFavouriteKitchens(getActivity().getContentResolver());
-        if (!c.moveToFirst()) return;
+            favouriteAdapter = new KitchenCursorAdapter(getActivity(), null, favouriteKitchens, mTwoPaneListener);
+        } //else
+        //      Cursor c = DBUtils.queryFavouriteKitchens(getActivity().getContentResolver());
+        //     if (!c.moveToFirst()) return;
 
-        do {
-            Kitchen k = DBUtils.getKitchenFromCursor(c);
-            favouriteKitchens.add(k.key);
-            favouriteAdapter.add(k);
-        } while (c.moveToNext());
+//        do {
+//            Kitchen k = DBUtils.getKitchenFromCursor(c);
+//            favouriteKitchens.add(k.key);
+//            favouriteAdapter.add(k);
+//        } while (c.moveToNext());
+
 
     }
 
@@ -267,10 +273,10 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
 
     private void syncWithFirebase() {
-        dLog("syncing with firebase kitchen list | lat= " + lat + " lon= " + lon);
+        //dLog("syncing with firebase kitchen list | lat= " + lat + " lon= " + lon);
 
         if (adapter == null) {
-            adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>());
+            adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>(), favouriteKitchens, mTwoPaneListener);
             adapter.setTwoPaneListener(mTwoPaneListener);
         }
         if (mQuery != null)
@@ -300,7 +306,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
                     if (kitchen == null) return;
                     kitchen.key = dataSnapshot.getKey();
                     adapter.add(kitchen);
-                    dLog("kitchen key: " + kitchen.key);
+                    //dLog("kitchen key: " + kitchen.key);
                 } catch (DatabaseException e) {
                     Log.e(AppConstants.TAG, "Error retrieving item with key " + dataSnapshot.getKey() + ": " + e.getMessage());
                 }
@@ -349,4 +355,24 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     }
 
 
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+
+        return new CursorLoader(getActivity(), DBContract.KitchenEntry.CONTENT_URI,
+                DBUtils.KITCHEN_PROJECTION, DBContract.KitchenEntry.COLUMN_IS_FAVOURITE + " = ?", new String[]{"1"},
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        setupFavourites();
+        favouriteAdapter.swapCursor(data);
+    }
+
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        setupFavourites();
+        favouriteAdapter.swapCursor(null);
+    }
 }

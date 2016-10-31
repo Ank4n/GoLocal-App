@@ -34,10 +34,12 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
     private TwoPaneListener twoPaneListener;
     private int selected = -1;
 
-    public KitchenAdapter(Context context, ArrayList<Kitchen> list) {
+    public KitchenAdapter(Context context, ArrayList<Kitchen> list, Set<String> favouriteKitchenIdList, TwoPaneListener twoPaneListener) {
         this.mContext = context;
         this.kitchens = list;
         firebaseHelper = new FirebaseHelper();
+        this.favouriteKitchenIdList = favouriteKitchenIdList;
+        this.twoPaneListener = twoPaneListener;
     }
 
     public void setTwoPaneListener(TwoPaneListener twoPaneListener) {

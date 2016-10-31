@@ -28,7 +28,7 @@ import static space.ankan.golocal.core.AppConstants.SHARED_PREF_FILE_NAME;
 
 public class DBUtils {
 
-    private static final String[] KITCHEN_PROJECTION = new String[]{
+    public static final String[] KITCHEN_PROJECTION = new String[]{
             KitchenEntry._ID,
             KitchenEntry.COLUMN_KITCHEN_ID,
             KitchenEntry.COLUMN_TITLE,
