@@ -28,6 +28,8 @@ public interface AppConstants {
     // pick picture from gallery requestCode
     int RC_PHOTO_PICKER = 2;
     String SHARED_PREF_FILE_NAME = "GoLocal";
+    float IMAGE_MAX_SIZE = 320;
+    int PERMISSION_REQUEST_CODE = 1;
 
     //Firebase DB Constants
     String FIREBASE_DB_CHANNELS = "channels";
@@ -56,5 +58,7 @@ public interface AppConstants {
     //Widget update
     String ACTION_DATA_UPDATED =
             "space.ankan.golocal.ACTION_DATA_UPDATED";
+
+
 
 }

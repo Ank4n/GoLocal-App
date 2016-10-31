@@ -3,6 +3,7 @@ package space.ankan.golocal.screens.nearbykitchens;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,7 @@ import space.ankan.golocal.core.LoggedInActivity;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.persistence.DBContract;
 import space.ankan.golocal.screens.chat.ChatActivity;
+import space.ankan.golocal.utils.CommonUtils;
 import space.ankan.golocal.utils.DBUtils;
 
 
@@ -75,9 +77,9 @@ public class KitchenDetailActivity extends LoggedInActivity {
                 Picasso.with(this).load(getString(R.string.kitchen_default_image))
                         .into(mKitchenImage);
                 mKitchenImage.setImageAlpha(128);
+
             } else
                 Picasso.with(this).load(mKitchen.imageUrl).into(mKitchenImage);
-
 
         }
 
@@ -133,6 +135,11 @@ public class KitchenDetailActivity extends LoggedInActivity {
         else
             mFavouriteButton.setImageResource(R.drawable.ic_favorite_border_white);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     public static void createIntent(Context c, Kitchen kitchen) {

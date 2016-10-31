@@ -181,6 +181,11 @@ public class FirebaseHelper implements AppConstants {
     public UploadTask pushProfileImage(Uri imageUri, String userId) {
         // Get a reference to the location where we'll store our photos
         // Get a reference to store file at chat_photos/<FILENAME>
+        if (imageUri == null) {
+            Log.e(AppConstants.TAG, "Error saving image");
+            return null;
+        }
+        Log.i(AppConstants.TAG, "Image URI " + imageUri);
         final StorageReference photoRef = kitchenImagesRef.child(userId);
         // Upload file to Firebase Storage
         return photoRef.putFile(imageUri);

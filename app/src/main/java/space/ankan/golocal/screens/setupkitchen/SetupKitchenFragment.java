@@ -2,13 +2,16 @@ package space.ankan.golocal.screens.setupkitchen;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +32,14 @@ import java.io.InputStream;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import space.ankan.golocal.R;
+import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.screens.MainActivity;
 import space.ankan.golocal.utils.CommonUtils;
 
 import static android.app.Activity.RESULT_OK;
+import static space.ankan.golocal.core.AppConstants.PERMISSION_REQUEST_CODE;
 import static space.ankan.golocal.core.AppConstants.RC_PHOTO_PICKER;
 
 /**
@@ -105,7 +110,8 @@ public class SetupKitchenFragment extends BaseFragment {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonUtils.imagePickerForResult(SetupKitchenFragment.this);
+                if (CommonUtils.hasPermission(SetupKitchenFragment.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    CommonUtils.imagePickerForResult(SetupKitchenFragment.this);
 
             }
         });
@@ -119,6 +125,18 @@ public class SetupKitchenFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.v(AppConstants.TAG, "request code: " + requestCode + " | " + permissions[0] + "was " + grantResults[0]);
+
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v(AppConstants.TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
+            CommonUtils.imagePickerForResult(SetupKitchenFragment.this);
+        } else {
+            Toast.makeText(getActivity(), "You need to allow write permissions to upload image", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -132,12 +150,14 @@ public class SetupKitchenFragment extends BaseFragment {
             }
             Picasso.with(getActivity()).load(selectedImageUri).into(kitchenImage);
 
-            getFirebaseHelper().pushProfileImage(selectedImageUri, getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    imageUrl = taskSnapshot.getDownloadUrl().toString();
-                }
-            });
+            UploadTask task = getFirebaseHelper().pushProfileImage(CommonUtils.compressImage(getActivity(), selectedImageUri), getCurrentUser().getUid());
+            if (task != null)
+                task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        imageUrl = taskSnapshot.getDownloadUrl().toString();
+                    }
+                });
 
         }
     }

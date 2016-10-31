@@ -85,8 +85,10 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
         if (!TextUtils.isEmpty(kitchen.imageUrl))
             Picasso.with(mContext).load(kitchen.imageUrl).into(holder.mKitchenImage);
-        else holder.mKitchenImage.setAlpha(0.4f);
-
+        else {
+            holder.mKitchenImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.manage_black));
+            holder.mKitchenImage.setAlpha(0.4f);
+        }
         formatIcon(kitchen, holder);
         holder.mfavourite.setOnClickListener(new View.OnClickListener() {
             @Override

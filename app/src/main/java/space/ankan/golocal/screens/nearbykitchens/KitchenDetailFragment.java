@@ -243,6 +243,7 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
 
     private void setShareIntent() {
 
+        //FIXME add to Strings.xml
         String shareText = "Hey there, I just found a great kitchen at GoLocal Kitchens. Check it out.. \n" +
                 mKitchen.name + "\n"
                 + "Description: " + mKitchen.description + "\n"

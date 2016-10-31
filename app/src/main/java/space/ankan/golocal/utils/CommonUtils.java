@@ -1,11 +1,19 @@
 package space.ankan.golocal.utils;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.StringRes;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,8 +21,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
+import space.ankan.golocal.Manifest;
 import space.ankan.golocal.core.AppConstants;
 
 /**
@@ -142,4 +155,65 @@ public class CommonUtils implements AppConstants {
                 .setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);
     }
+
+    public static Uri compressImage(Context context, Uri imageUri) {
+        Bitmap realImage = getBitmapFromUri(context.getContentResolver(), imageUri);
+        float ratio = Math.min(
+                AppConstants.IMAGE_MAX_SIZE / realImage.getWidth(),
+                AppConstants.IMAGE_MAX_SIZE / realImage.getHeight());
+        if (ratio > 1) return imageUri;
+
+        int width = Math.round(ratio * realImage.getWidth());
+        int height = Math.round(ratio * realImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, true);
+        Log.i(AppConstants.TAG, "Compressed image from size " + realImage.getAllocationByteCount() + " to " + newBitmap.getAllocationByteCount());
+        return getImageUri(newBitmap);
+    }
+
+    public static Bitmap getBitmapFromUri(ContentResolver contentResolver, Uri uri) {
+
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri);
+            return bitmap;
+        } catch (IOException io) {
+            return null;
+        }
+
+    }
+
+    public static Uri getImageUri(Bitmap inImage) {
+        File tempDir = Environment.getExternalStorageDirectory();
+        tempDir = new File(tempDir.getAbsolutePath() + "/.temp/");
+        tempDir.mkdir();
+        try {
+
+
+            File tempFile = File.createTempFile("Kitchen", ".jpg", tempDir);
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            byte[] bitmapData = bytes.toByteArray();
+
+            //write the bytes in file
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            fos.write(bitmapData);
+            fos.flush();
+            fos.close();
+            return Uri.fromFile(tempFile);
+        } catch (IOException io) {
+            return null;
+        }
+    }
+
+    public static boolean hasPermission(Fragment fragment, String permission) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
+        if (fragment.getActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+
+        fragment.requestPermissions(new String[]{permission}, AppConstants.PERMISSION_REQUEST_CODE);
+        return false;
+    }
+
 }
