@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,11 +41,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Optional;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.model.users.UserReview;
+import space.ankan.golocal.screens.chat.ChatActivity;
 import space.ankan.golocal.screens.mykitchen.DishAdapter;
 
 /**
@@ -270,5 +274,14 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED))
             mMap.setMyLocationEnabled(true);
 
+    }
+
+    @OnClick(R.id.start_chat)
+    @Optional
+    void startChat() {
+        if (getCurrentUser().getUid().equals(mKitchen.userId))
+            Toast.makeText(getActivity(), R.string.chat_with_own_kitchen, Toast.LENGTH_LONG).show();
+        else
+            ChatActivity.createIntent(getActivity(), getSharedPref().getString(mKitchen.userId, null), mKitchen.name, mKitchen.userId);
     }
 }

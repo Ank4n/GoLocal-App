@@ -135,4 +135,11 @@ public class CommonUtils implements AppConstants {
         view.setText(text);
         showViews(view, optionalHideView);
     }
+
+    public static void updateWidgets(Context context) {
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
+    }
 }

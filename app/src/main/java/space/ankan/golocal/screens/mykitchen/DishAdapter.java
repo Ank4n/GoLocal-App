@@ -71,7 +71,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
             public void onClick(View v) {
                 if (horizontal) return;
 
-                if (mTwoPaneListener.isTwoPane()) {
+                if (mTwoPaneListener != null && mTwoPaneListener.isTwoPane()) {
                     mTwoPaneListener.setupManageDishView(item);
                     configureSelection(i);
                 } else
@@ -127,10 +127,11 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
                         break;
                     }
                 }
+                dishes.add(dish);
+                notifyDataSetChanged();
             }
         });
-        this.dishes.add(dish);
-        this.notifyDataSetChanged();
+
     }
 
     public void clear() {

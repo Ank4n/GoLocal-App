@@ -86,6 +86,7 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Dish dish = dataSnapshot.getValue(Dish.class);
+        dish.key = dataSnapshot.getKey();
         adapter.add(dish);
     }
 

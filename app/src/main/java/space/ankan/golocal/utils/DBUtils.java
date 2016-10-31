@@ -29,6 +29,7 @@ import static space.ankan.golocal.core.AppConstants.SHARED_PREF_FILE_NAME;
 public class DBUtils {
 
     private static final String[] KITCHEN_PROJECTION = new String[]{
+            KitchenEntry._ID,
             KitchenEntry.COLUMN_KITCHEN_ID,
             KitchenEntry.COLUMN_TITLE,
             KitchenEntry.COLUMN_USER_ID,
@@ -54,7 +55,6 @@ public class DBUtils {
         contentValues.put(KitchenEntry.COLUMN_RATED_USER_COUNT, kitchen.ratedUserCount);
         contentValues.put(KitchenEntry.COLUMN_OVERALL_RATING, kitchen.overallRating);
         contentValues.put(KitchenEntry.COLUMN_IS_FAVOURITE, 1);
-        //FIXME
         contentValues.put(KitchenEntry.COLUMN_USER_RATING, 2);
         contentValues.put(KitchenEntry.COLUMN_ADDRESS, kitchen.address);
         return contentValues;
@@ -79,15 +79,15 @@ public class DBUtils {
     }
 
     public static Kitchen queryKitchenById(ContentResolver contentResolver, String id) {
-        Cursor c = contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, null, DBContract.KitchenEntry.COLUMN_KITCHEN_ID + " = ?", new String[]{id}, null);
+        Cursor c = contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, KITCHEN_PROJECTION, DBContract.KitchenEntry.COLUMN_KITCHEN_ID + " = ?", new String[]{id}, null);
         if (!c.moveToFirst()) return null;
         return getKitchenFromCursor(c);
 
     }
 
     public static Cursor queryFavouriteKitchens(ContentResolver contentResolver) {
-        Cursor c = contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, null, KitchenEntry.COLUMN_IS_FAVOURITE + " = ?", new String[]{"1"}, null);
-        Log.v("DBProvider", c.getCount() + " favorite kitchens found");
+        Cursor c = contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, KITCHEN_PROJECTION, KitchenEntry.COLUMN_IS_FAVOURITE + " = ?", new String[]{"1"}, null);
+        //Log.v("DBProvider", c.getCount() + " favorite kitchens found");
         return c;
     }
 

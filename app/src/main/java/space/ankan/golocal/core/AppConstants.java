@@ -53,4 +53,8 @@ public interface AppConstants {
     String KEY_CHANNEL_NAME = "channel_name";
     String KEY_USER_ID = "user_id";
 
+    //Widget update
+    String ACTION_DATA_UPDATED =
+            "space.ankan.golocal.ACTION_DATA_UPDATED";
+
 }

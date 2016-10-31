@@ -28,6 +28,7 @@ import space.ankan.golocal.R;
 import space.ankan.golocal.helpers.FirebaseHelper;
 import space.ankan.golocal.model.users.User;
 import space.ankan.golocal.screens.onboarding.SplashActivity;
+import space.ankan.golocal.utils.CommonUtils;
 import space.ankan.golocal.utils.RedirectionUtils;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
@@ -194,9 +195,15 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    protected void updateWidgets() {
+        // Setting the package ensures that only components in our app will receive the broadcast
+        CommonUtils.updateWidgets(this);
+    }
+
     // logging for debug builds
     public static void dLog(String log) {
         if (BuildConfig.DEBUG) return;
         Log.wtf(AppConstants.TAG, log);
     }
+
 }

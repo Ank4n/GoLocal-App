@@ -22,4 +22,6 @@
     <color name="detail_full_background">@color/background_list </color>
     <color name="card_background">@color/white</color>
 
+    <!-- the activated state color -->
+    <color name="activated">#E0E0E0</color>
 </resources>

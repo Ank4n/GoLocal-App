@@ -1,6 +1,7 @@
 package space.ankan.golocal.core;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -17,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import space.ankan.golocal.helpers.FirebaseHelper;
 import space.ankan.golocal.model.users.User;
+
+import static space.ankan.golocal.core.AppConstants.ACTION_DATA_UPDATED;
 
 /**
  * Created by ankan.
@@ -89,6 +92,11 @@ public abstract class BaseFragment extends Fragment {
     protected void saveUserType(String kitchenId) {
         if (getActivity() instanceof BaseActivity)
             ((BaseActivity) getActivity()).saveUserType(kitchenId);
+    }
+
+    protected boolean isTwoPane() {
+        if (mTwoPaneListener == null) return false;
+        return mTwoPaneListener.isTwoPane();
     }
 
 }

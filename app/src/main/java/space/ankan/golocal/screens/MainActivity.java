@@ -276,7 +276,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
 
     private void formatTabs(int position) {
-        CommonUtils.closeKeyBoard(this);
+        //dLog("formatting tabs position: " + position + " | add dish fab shown: " + addDishFab.isShown());
         for (int i = 0; i < TAB_COUNT; i++) {
             if (i == position)
                 selectTab(i);
@@ -286,11 +286,13 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         if (isUserKitchenOwner()) {
             getSupportActionBar().setTitle(ownerTitle[position]);
 
-            if (position == MANAGE_KITCHEN_TAB)
-                addDishFab.show();
-            else addDishFab.hide();
-
+            if (position == MANAGE_KITCHEN_TAB) {
+                CommonUtils.showViews(addDishFab);
+            } else {
+                CommonUtils.hideViews(addDishFab);
+            }
         } else {
+            CommonUtils.closeKeyBoard(this);
             getSupportActionBar().setTitle(defaultTitle[position]);
             addDishFab.hide();
         }
@@ -363,7 +365,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        dLog("google api connected");
+        //dLog("google api connected");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GPS_PERMISSION);
 
@@ -389,7 +391,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        dLog("got result for location settings: success");
+                        //dLog("got result for location settings: success");
 
                         startLocationUpdates();
                         break;
@@ -399,7 +401,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
-                            dLog("got result for location settings: resolution required");
+                            //dLog("got result for location settings: resolution required");
 
                             status.startResolutionForResult(
                                     MainActivity.this,

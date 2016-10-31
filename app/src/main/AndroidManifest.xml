@@ -21,7 +21,7 @@
             android:value="@string/facebook_application_id" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDT75j9Wt9SjqKQlkl-gD8SebHuANjQFMo"/>
+            android:value="AIzaSyDT75j9Wt9SjqKQlkl-gD8SebHuANjQFMo" />
 
         <service
             android:name="services.FetchAddressIntentService"
@@ -30,8 +30,7 @@
         <activity
             android:name=".screens.MainActivity"
             android:label="@string/title_activity_kitchen_list"
-            android:theme="@style/AppTheme.NoActionBar"
-         />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".screens.onboarding.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -63,10 +62,9 @@
             android:name=".services.FetchAddressIntentService"
             android:exported="false"></service>
 
-        <service
-            android:name="services.MessagingService">
+        <service android:name="services.MessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -74,6 +72,24 @@
         <provider
             android:name=".persistence.DBProvider"
             android:authorities="space.ankan.golocal" />
+
+        <receiver
+            android:name=".widget.WidgetProvider"
+            android:label="@string/title_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="space.ankan.golocal.ACTION_DATA_UPDATED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_detail" />
+        </receiver>
+
+        <service
+            android:name=".widget.WidgetRemoteViewsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

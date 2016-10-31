@@ -68,7 +68,7 @@ public class AddDishFragment extends BaseFragment {
                 getFirebaseHelper().push(getDish(), getUser().kitchen);
                 Toast.makeText(getActivity(), R.string.dish_saved, Toast.LENGTH_SHORT).show();
 
-                if (!mTwoPaneListener.isTwoPane())
+                if (!isTwoPane())
                     getActivity().finish();
                 else
                     CommonUtils.closeKeyBoard(getActivity());

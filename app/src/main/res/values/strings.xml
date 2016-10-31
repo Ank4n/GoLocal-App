@@ -58,6 +58,8 @@
   <string name="user_rating_count">
        (<xliff:g example="35" id="startup">%1$s</xliff:g>)
 </string>
+    <string name="title_widget">My Favourite Kitchens</string>
+    <string name="empty_favourite_list">No Favourite Kitchens to show</string>
 
 
 </resources>

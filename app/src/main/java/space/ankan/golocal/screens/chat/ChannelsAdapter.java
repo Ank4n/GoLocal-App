@@ -69,7 +69,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
             public void onClick(View v) {
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 String id = auth.getCurrentUser().getUid().equals(channel.userId1) ? channel.userId2 : channel.userId1;
-                if (mTwoPaneListener.isTwoPane()) {
+                if (mTwoPaneListener != null && mTwoPaneListener.isTwoPane()) {
                     mTwoPaneListener.setupChatDetail(channel.channelId, channel.name, id);
                     configureSelection(position);
                 } else

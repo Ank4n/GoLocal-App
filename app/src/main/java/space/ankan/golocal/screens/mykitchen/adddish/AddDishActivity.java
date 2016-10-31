@@ -39,8 +39,9 @@ public class AddDishActivity extends LoggedInActivity {
     }
 
     public static void createIntent(Context context, Dish dish) {
-        //TODO
-        context.startActivity(new Intent(context, AddDishActivity.class));
+        Intent intent = new Intent(context, AddDishActivity.class);
+        intent.putExtra("dish", dish);
+        context.startActivity(intent);
     }
 
 }

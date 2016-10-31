@@ -75,8 +75,7 @@ public class KitchenDetailActivity extends LoggedInActivity {
                 Picasso.with(this).load(getString(R.string.kitchen_default_image))
                         .into(mKitchenImage);
                 mKitchenImage.setImageAlpha(128);
-            }
-            else
+            } else
                 Picasso.with(this).load(mKitchen.imageUrl).into(mKitchenImage);
 
 
@@ -117,7 +116,7 @@ public class KitchenDetailActivity extends LoggedInActivity {
             Toast.makeText(this, mKitchen.name + " saved to favourites.", Toast.LENGTH_SHORT).show();
         }
         formatFAB();
-
+        updateWidgets();
     }
 
     @OnClick(R.id.start_chat)

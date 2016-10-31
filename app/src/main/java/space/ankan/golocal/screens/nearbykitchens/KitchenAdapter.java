@@ -67,7 +67,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
             @Override
             public void onClick(View v) {
 
-                if (twoPaneListener.isTwoPane()) {
+                if (twoPaneListener != null && twoPaneListener.isTwoPane()) {
                     twoPaneListener.setupKitchenDetail(kitchen);
                     configureSelection(i);
                 } else
@@ -122,6 +122,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
             // addFavKitchen(kitchen.key);
         }
         formatIcon(kitchen, holder);
+        CommonUtils.updateWidgets(mContext);
     }
 
     private void formatIcon(Kitchen kitchen, KitchenListItemViewHolder holder) {
