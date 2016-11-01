@@ -1,7 +1,9 @@
 package space.ankan.golocal.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import space.ankan.golocal.screens.MainActivity;
 
@@ -13,13 +15,19 @@ import space.ankan.golocal.screens.MainActivity;
 public class RedirectionUtils {
 
     public static void redirectFromSplash(Context c, boolean kitchenOwner) {
-
         MainActivity.createIntent(c);
-
-
     }
 
     public static void openNetworkSettings(Context c) {
         c.startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
     }
+
+    public static void onBackPressed(Activity activity) {
+
+        if (activity == null) return;
+        if (activity.isTaskRoot())
+            redirectFromSplash(activity, false);
+        activity.finish();
+    }
+
 }

@@ -1,6 +1,7 @@
 package space.ankan.golocal.screens.chat;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -30,10 +31,12 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
     Context mContext;
     private TwoPaneListener mTwoPaneListener;
     private int selected = -1;
+    private Handler handler;
 
     public ChannelsAdapter(List<Channel> items, Context c) {
         mValues = items;
         mContext = c;
+        handler = new Handler();
     }
 
     public void setTwoPaneListener(TwoPaneListener twoPaneListener) {
@@ -88,13 +91,19 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
 
     public void add(Channel channel) {
         mValues.add(channel);
-        //FIXME this is going to be really slow
-        Collections.sort(mValues);
-        notifyDataSetChanged();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Collections.sort(mValues);
+                notifyDataSetChanged();
+            }
+        });
+
     }
 
     public void modify(Channel channel, String key) {
         for (Channel c : mValues) {
+            if (c.channelId == null) continue;
             if (c.channelId.equals(key)) {
                 c.lastMessage = channel.lastMessage;
                 c.timeStamp = channel.timeStamp;

@@ -40,6 +40,9 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +53,7 @@ import space.ankan.golocal.core.MyViewPager;
 import space.ankan.golocal.core.TwoPaneListener;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.model.kitchens.Kitchen;
+import space.ankan.golocal.model.notifications.Notification;
 import space.ankan.golocal.screens.chat.ChannelsFragment;
 import space.ankan.golocal.screens.chat.ChatActivityFragment;
 import space.ankan.golocal.screens.mykitchen.ManageKitchenFragment;
@@ -60,6 +64,7 @@ import space.ankan.golocal.screens.nearbykitchens.KitchenListFragment;
 import space.ankan.golocal.screens.setupkitchen.SetupKitchenFragment;
 import space.ankan.golocal.services.FetchAddressIntentService;
 import space.ankan.golocal.utils.CommonUtils;
+import space.ankan.golocal.utils.NotificationUtils;
 
 public class MainActivity extends LoggedInActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, TwoPaneListener {
 
@@ -145,6 +150,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         setupFab();
         createLocationRequest();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        syncNotifications();
 
     }
 
@@ -617,6 +623,38 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private void removeDetailContainer() {
 
         CommonUtils.hideViews(detailContainer);
+    }
+
+    private void syncNotifications() {
+        getFirebaseHelper().getCurrentUserNotificationsReference().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Notification notification = dataSnapshot.getValue(Notification.class);
+                dLog("Received notification " + notification.title + " : " + notification.message);
+                NotificationUtils.notifyUser(MainActivity.this, notification);
+                dataSnapshot.getRef().removeValue();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

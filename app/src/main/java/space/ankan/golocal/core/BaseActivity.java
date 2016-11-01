@@ -160,6 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
 
     protected void signOut() {
         getFirebaseHelper().unsubscribe();
+        getSharedPref().edit().clear().commit();
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

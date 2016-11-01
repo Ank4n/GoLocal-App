@@ -30,6 +30,7 @@ import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.channels.Channel;
 import space.ankan.golocal.model.channels.ChatMessage;
+import space.ankan.golocal.utils.NotificationUtils;
 
 import static android.app.Activity.RESULT_OK;
 import static space.ankan.golocal.core.AppConstants.KEY_CHANNEL_ID;
@@ -58,8 +59,10 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
 
     private String channelId;
     private String channelName;
-    private String userId;
+    private String userId; //Id of the target user, current user is chatting to
 
+    private static boolean screenActive;
+    private static String currentActiveChannel;
 
     public ChatActivityFragment() {
     }
@@ -119,8 +122,9 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
 
     }
 
-    //FIXME move this logic to firebase helper
+    //Can move this logic to firebase helper
     private void sendChat(String message) {
+
         ChatMessage chatMessage = new ChatMessage(getCurrentUser().getDisplayName(), message);
         if (TextUtils.isEmpty(channelId)) {
             DatabaseReference newUserChannelRef = getFirebaseHelper().getUserChannels().push();
@@ -145,6 +149,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
             getFirebaseHelper().getUserChannels(userId).child(channelId).updateChildren(map);
         }
 
+        NotificationUtils.pushNotification(chatMessage, userId, channelName, channelId);
     }
 
 
@@ -172,6 +177,19 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        screenActive = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        screenActive = true;
+        currentActiveChannel = channelId;
+    }
+
+    @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
         adapter.add(message);
@@ -196,5 +214,11 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     @Override
     public void onCancelled(DatabaseError databaseError) {
 
+    }
+
+    public static boolean isScreenActive(String channelId) {
+        if (!screenActive) return false;
+        if (!channelId.equals(currentActiveChannel)) return false;
+        return true;
     }
 }

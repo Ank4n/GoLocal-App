@@ -13,13 +13,14 @@ import android.view.View;
 
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseActivity;
+import space.ankan.golocal.utils.NotificationUtils;
+import space.ankan.golocal.utils.RedirectionUtils;
 
 public class ChatActivity extends BaseActivity {
 
     private String channelId;
     private String channelName;
     private String userId;
-
 
 
     @Override
@@ -37,7 +38,7 @@ public class ChatActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                supportFinishAfterTransition();
+                RedirectionUtils.onBackPressed(ChatActivity.this);
             }
         });
 
@@ -45,10 +46,19 @@ public class ChatActivity extends BaseActivity {
     }
 
     public static void createIntent(Context context, String channelId, String channelName, String userId) {
+        context.startActivity(getCreateIntent(context, channelId, channelName, userId));
+    }
+
+    public static Intent getCreateIntent(Context context, String channelId, String channelName, String userId) {
         Intent i = new Intent(context, ChatActivity.class);
         i.putExtra(KEY_CHANNEL_ID, channelId);
         i.putExtra(KEY_CHANNEL_NAME, channelName);
         i.putExtra(KEY_USER_ID, userId);
-        context.startActivity(i);
+        return i;
+    }
+
+    @Override
+    public void onBackPressed() {
+        RedirectionUtils.onBackPressed(this);
     }
 }

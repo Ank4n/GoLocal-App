@@ -210,10 +210,15 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
                     mUserRating.setRating(dataSnapshot.getValue(UserReview.class).rating);
                     oldUserRating = mUserRating.getRating();
                     alreadyRated = true;
-                    mUserRating.setIsIndicator(false);
-                    selfRatingInit = true;
-                }
 
+
+                } else {
+                    mUserRating.setRating(0);
+                    oldUserRating = 0;
+                    alreadyRated = false;
+                }
+                selfRatingInit = true;
+                mUserRating.setIsIndicator(false);
             }
 
             @Override

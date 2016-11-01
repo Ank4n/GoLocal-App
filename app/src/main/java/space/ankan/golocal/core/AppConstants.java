@@ -40,7 +40,7 @@ public interface AppConstants {
     String FIREBASE_DB_KITCHENS_DISHES = "dishes"; // dishes list inside Kitchens
     String FIREBASE_DB_USERS_CHANNELS = "channels"; // channels list inside Users
     String FIREBASE_DB_USER_REVIEWS = "reviews"; // reviews list inside users node
-
+    String FIREBASE_DB_USER_NOTIFICATIONS = "notifications";
 
     //Firebase Storage Constants
     String FIREBASE_STORAGE_KITCHEN_ROOT = "kitchen";

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
+import com.google.android.gms.actions.NoteIntents;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +22,7 @@ import java.util.Map;
 import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.model.kitchens.Kitchen;
+import space.ankan.golocal.model.notifications.Notification;
 import space.ankan.golocal.model.users.User;
 import space.ankan.golocal.model.users.UserReview;
 
@@ -198,6 +200,14 @@ public class FirebaseHelper implements AppConstants {
         return getCurrentUserReference().child(FIREBASE_DB_USER_REVIEWS).child(kitchenId);
     }
 
+    public DatabaseReference getCurrentUserNotificationsReference() {
+        return getCurrentUserReference().child(FIREBASE_DB_USER_NOTIFICATIONS);
+    }
+
+    public DatabaseReference getUserNotificationsReference(String userId) {
+        return getUserReference(userId).child(FIREBASE_DB_USER_NOTIFICATIONS);
+    }
+
     // returns 0 if rating does not exist
     public double pushRating(String kitchenId, float newRating, float oldRating, int ratedUserCount, double overallRating, boolean alreadyRated) {
         UserReview review = new UserReview(kitchenId, newRating);
@@ -223,4 +233,8 @@ public class FirebaseHelper implements AppConstants {
         messaging.unsubscribeFromTopic(getCurrentUserUid());
     }
 
+    public void postNotification(Notification notification, String receiverId) {
+        DatabaseReference userRef = getUserNotificationsReference(receiverId).push();
+        userRef.setValue(notification);
+    }
 }
