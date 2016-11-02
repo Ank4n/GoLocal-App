@@ -7,31 +7,32 @@
     android:layout_marginTop="0.1dp"
     card_view:cardCornerRadius="0dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:background="?attr/selectableItemBackground"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/kitchen_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:contentDescription="@string/cd_kitchen_image"
-            android:layout_margin="8dp"
             android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_margin="8dp"
             android:layout_weight="1"
+            android:contentDescription="@string/cd_kitchen_image"
+            android:gravity="center"
             android:scaleType="fitCenter"
             android:src="@drawable/manage_black" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
             android:layout_weight="3"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
@@ -49,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-               android:textColor="@color/secondary_text"
+                android:textColor="@color/secondary_text"
                 android:textSize="12sp"
                 android:textStyle="normal"
                 android:typeface="normal" />

@@ -15,6 +15,7 @@
         <LinearLayout
             android:id="@+id/upload_kitchen_image"
             android:layout_width="match_parent"
+            android:background="?attr/selectableItemBackground"
             android:layout_height="100dp"
             android:nextFocusForward="@+id/edit_kitchen_name"
             android:orientation="horizontal">

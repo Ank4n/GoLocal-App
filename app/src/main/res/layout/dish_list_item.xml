@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:layout_gravity="start"
         android:gravity="start"
         android:orientation="vertical">
@@ -23,9 +24,9 @@
             <ImageView
                 android:id="@+id/foodType"
                 android:layout_width="20dp"
-                android:contentDescription="@string/cd_food_type_vegetarian"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/image_margin"
+                android:contentDescription="@string/cd_food_type_vegetarian"
                 android:src="@drawable/ic_vegetarian" />
 
             <TextView

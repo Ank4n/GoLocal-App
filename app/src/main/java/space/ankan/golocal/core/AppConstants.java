@@ -59,6 +59,9 @@ public interface AppConstants {
     String ACTION_DATA_UPDATED =
             "space.ankan.golocal.ACTION_DATA_UPDATED";
 
+    //Default LAT and LON
+    Double DEFAULT_LONGITUDE = 77.6036207;
+    Double DEFAULT_LATITUDE = 12.9049946;
 
 
 }

@@ -103,10 +103,7 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     private void init() {
         lat = CommonUtils.getLastLocationLatitude(getSharedPref());
         lon = CommonUtils.getLastLocationLongitude(getSharedPref());
-        if (lat == null || lon == null) {
-            lon = 77.6036207;
-            lat = 12.9049946;
-        }
+
         currentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

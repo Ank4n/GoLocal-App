@@ -72,7 +72,7 @@ public class CommonUtils implements AppConstants {
         try {
             lat = Double.parseDouble(sharedPreferences.getString(CACHED_LAST_LOCATION_LAT, ""));
         } catch (NumberFormatException nfe) {
-            return null;
+            return AppConstants.DEFAULT_LATITUDE;
         }
         return lat;
     }
@@ -82,7 +82,7 @@ public class CommonUtils implements AppConstants {
         try {
             lon = Double.parseDouble(sharedPreferences.getString(CACHED_LAST_LOCATION_LON, ""));
         } catch (NumberFormatException nfe) {
-            return null;
+            return AppConstants.DEFAULT_LONGITUDE;
         }
         return lon;
     }
