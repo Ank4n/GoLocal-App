@@ -83,8 +83,10 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
         holder.mView.setBackgroundColor(ContextCompat.getColor(mContext, bgColor));
 
-        if (!TextUtils.isEmpty(kitchen.imageUrl))
+        if (!TextUtils.isEmpty(kitchen.imageUrl)) {
             Picasso.with(mContext).load(kitchen.imageUrl).into(holder.mKitchenImage);
+            holder.mKitchenImage.setAlpha(1f);
+        }
         else {
             holder.mKitchenImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.manage_black));
             holder.mKitchenImage.setAlpha(0.4f);

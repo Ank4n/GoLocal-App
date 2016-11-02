@@ -25,7 +25,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
     private ArrayList<Dish> dishes;
     private boolean horizontal; //for detail page
     private TwoPaneListener mTwoPaneListener;
-    private int selected;
+    private int selected = -1;
 
     DishAdapter(Context context, ArrayList<Dish> list) {
         this(context, list, false);

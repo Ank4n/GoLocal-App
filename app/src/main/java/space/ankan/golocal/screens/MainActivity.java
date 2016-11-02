@@ -536,7 +536,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
     @Override
     public void setupManageDishView(Dish dish) {
-        if (dish == null) manageKitchenFragment.clearSelection();
+        if (dish == null && twoPane) manageKitchenFragment.clearSelection();
         addDetailFragment(AddDishFragment.newInstance(dish));
     }
 
