@@ -22,7 +22,6 @@ import space.ankan.golocal.utils.CommonUtils;
  */
 public class AddDishFragment extends BaseFragment {
 
-    private View mRootView;
     private Dish dish;
 
     @BindView(R.id.dish_name)
@@ -49,7 +48,9 @@ public class AddDishFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = super.inflate(inflater, container, savedInstanceState, R.layout.fragment_add_dish);
+        View mRootView = super.inflate(inflater, container, savedInstanceState, R.layout.fragment_add_dish);
+        if (mRootView == null) return null;
+
         dish = (Dish) getArguments().getSerializable("dish");
         ButterKnife.bind(this, mRootView);
         fill();

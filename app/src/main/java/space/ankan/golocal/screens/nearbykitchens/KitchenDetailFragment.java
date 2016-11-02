@@ -1,6 +1,5 @@
 package space.ankan.golocal.screens.nearbykitchens;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -87,8 +86,6 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
     @BindView(R.id.kitchen_image)
     ImageView kitchenImage;
 
-    private GoogleMap mMap;
-    private Marker mMarker;
     private boolean alreadyRated;
     private boolean selfRatingInit; //set this flag when user rating is fetched
 
@@ -248,11 +245,7 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
 
     private void setShareIntent() {
 
-        //FIXME add to Strings.xml
-        String shareText = "Hey there, I just found a great kitchen at GoLocal Kitchens. Check it out.. \n" +
-                mKitchen.name + "\n"
-                + "Description: " + mKitchen.description + "\n"
-                + "Address: " + mKitchen.address + "\n";
+        String shareText = getString(R.string.kitchen_share_text, mKitchen.name, mKitchen.description, mKitchen.address);
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
@@ -265,10 +258,9 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
         LatLng latLng = new LatLng(mKitchen.latitude, mKitchen.longitude);
         // Add some markers to the map, and add a data object to each marker.
-        mMarker = mMap.addMarker(new MarkerOptions()
+        Marker mMarker = googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(mKitchen.name));
         mMarker.setTag(0);
@@ -278,7 +270,7 @@ public class KitchenDetailFragment extends BaseFragment implements OnMapReadyCal
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED))
-            mMap.setMyLocationEnabled(true);
+            googleMap.setMyLocationEnabled(true);
 
     }
 

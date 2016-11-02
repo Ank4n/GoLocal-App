@@ -3,8 +3,6 @@ package space.ankan.golocal.screens.setupkitchen;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,10 +22,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,9 +65,7 @@ public class SetupKitchenFragment extends BaseFragment {
     @BindView(R.id.setup_kitchen_action)
     Button completeActionButton;
 
-    private View rootView;
     private String imageUrl;
-    private Uri selectedImageUri;
 
     public SetupKitchenFragment() {
         // Required empty public constructor
@@ -86,8 +78,7 @@ public class SetupKitchenFragment extends BaseFragment {
      * @return A new instance of fragment SetupKitchenFragment.
      */
     public static SetupKitchenFragment newInstance() {
-        SetupKitchenFragment fragment = new SetupKitchenFragment();
-        return fragment;
+        return new SetupKitchenFragment();
     }
 
     @Override
@@ -100,7 +91,7 @@ public class SetupKitchenFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_setup_kitchen, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_setup_kitchen, container, false);
         ButterKnife.bind(this, rootView);
         setupListeners();
         return rootView;
@@ -142,7 +133,7 @@ public class SetupKitchenFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) return;
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            selectedImageUri = data.getData();
+            Uri selectedImageUri = data.getData();
 
             if (selectedImageUri == null) {
                 Toast.makeText(getActivity(), R.string.upload_image_error, Toast.LENGTH_LONG).show();
@@ -155,7 +146,9 @@ public class SetupKitchenFragment extends BaseFragment {
                 task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imageUrl = taskSnapshot.getDownloadUrl().toString();
+                        Uri downloadUri = taskSnapshot.getDownloadUrl();
+                        if (downloadUri != null)
+                            imageUrl = taskSnapshot.getDownloadUrl().toString();
                     }
                 });
 
@@ -174,7 +167,7 @@ public class SetupKitchenFragment extends BaseFragment {
     private void publishKitchen() {
         Location location = ((MainActivity) getActivity()).getLocation();
         if (location == null) {
-            Toast.makeText(getActivity(), R.string.location_error_message, Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), R.string.location_error_message, Toast.LENGTH_LONG).show();
             return;
         }
         Kitchen kitchen = new Kitchen(editKitchenName.getText().toString(), editDescription.getText().toString(), imageUrl, editAddress.getText().toString());
@@ -186,7 +179,7 @@ public class SetupKitchenFragment extends BaseFragment {
         getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
         startActivity(getActivity().getIntent());
         getActivity().finish();
-        Toast.makeText(getActivity(), R.string.kitchen_published_message, Toast.LENGTH_LONG);
+        Toast.makeText(getActivity(), R.string.kitchen_published_message, Toast.LENGTH_LONG).show();
     }
 
     @Override

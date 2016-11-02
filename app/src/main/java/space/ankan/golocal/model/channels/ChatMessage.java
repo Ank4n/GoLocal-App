@@ -2,7 +2,7 @@ package space.ankan.golocal.model.channels;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ *
  */
 
 public class ChatMessage {
@@ -10,6 +10,7 @@ public class ChatMessage {
     public String message;
     public long timeStamp;
 
+    @SuppressWarnings("unused")
     public ChatMessage() {
     }
 

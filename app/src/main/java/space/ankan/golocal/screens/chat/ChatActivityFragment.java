@@ -39,12 +39,12 @@ import static space.ankan.golocal.core.AppConstants.KEY_USER_ID;
 import static space.ankan.golocal.core.AppConstants.RC_PHOTO_PICKER;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Created by Ankan.
+ * Fragment for the active chat conversation
  */
 public class ChatActivityFragment extends BaseFragment implements ChildEventListener {
 
     private ChatAdapter adapter;
-    private View mRootView;
     @BindView(R.id.list)
     RecyclerView mRecyclerView;
 
@@ -80,7 +80,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_chat, container, false);
+        View mRootView = inflater.inflate(R.layout.fragment_chat, container, false);
         ButterKnife.bind(this, mRootView);
         channelId = getArguments().getString(KEY_CHANNEL_ID);
         channelName = getArguments().getString(KEY_CHANNEL_NAME);
@@ -138,7 +138,7 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
             newChannel.name = getCurrentUser().getDisplayName();
             getFirebaseHelper().getUserChannels(userId).child(newUserChannelRef.getKey()).setValue(newChannel);
             syncWithFirebase();
-            getSharedPref().edit().putString(userId, channelId).commit();
+            getSharedPref().edit().putString(userId, channelId).apply();
 
         } else {
             getFirebaseHelper().getChannelReference(channelId).push().setValue(chatMessage);
@@ -161,7 +161,8 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
             getFirebaseHelper().pushImage(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    sendChat(taskSnapshot.getDownloadUrl().toString());
+                    if (taskSnapshot.getDownloadUrl() != null)
+                        sendChat(taskSnapshot.getDownloadUrl().toString());
                 }
             });
 
@@ -217,8 +218,6 @@ public class ChatActivityFragment extends BaseFragment implements ChildEventList
     }
 
     public static boolean isScreenActive(String channelId) {
-        if (!screenActive) return false;
-        if (!channelId.equals(currentActiveChannel)) return false;
-        return true;
+        return (screenActive && channelId.equals(currentActiveChannel));
     }
 }

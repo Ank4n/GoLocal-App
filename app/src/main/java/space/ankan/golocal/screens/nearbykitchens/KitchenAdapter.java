@@ -17,39 +17,38 @@ import java.util.Set;
 
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.TwoPaneListener;
-import space.ankan.golocal.helpers.FirebaseHelper;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.utils.CommonUtils;
 import space.ankan.golocal.utils.DBUtils;
 
 /**
- * Created by anurag on 18-Dec-15.
+ * Created by Ankan.
  */
 public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHolder> {
 
     private Context mContext;
     private ArrayList<Kitchen> kitchens;
-    FirebaseHelper firebaseHelper;
     private Set<String> favouriteKitchenIdList;
     private TwoPaneListener twoPaneListener;
     private int selected = -1;
 
-    public KitchenAdapter(Context context, ArrayList<Kitchen> list, Set<String> favouriteKitchenIdList, TwoPaneListener twoPaneListener) {
+    KitchenAdapter(Context context, ArrayList<Kitchen> list, Set<String> favouriteKitchenIdList, TwoPaneListener twoPaneListener) {
         this.mContext = context;
         this.kitchens = list;
-        firebaseHelper = new FirebaseHelper();
         this.favouriteKitchenIdList = favouriteKitchenIdList;
         this.twoPaneListener = twoPaneListener;
     }
 
-    public void setTwoPaneListener(TwoPaneListener twoPaneListener) {
+    void setTwoPaneListener(TwoPaneListener twoPaneListener) {
         this.twoPaneListener = twoPaneListener;
     }
 
+    @SuppressWarnings("unused")
     public Kitchen getItem(int position) {
         return kitchens.get(position);
     }
 
+    @SuppressWarnings("unused")
     public ArrayList<Kitchen> getItems() {
         return kitchens;
     }
@@ -62,8 +61,9 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
     }
 
     @Override
-    public void onBindViewHolder(final KitchenListItemViewHolder holder, final int i) {
+    public void onBindViewHolder(final KitchenListItemViewHolder holder, int i) {
         final Kitchen kitchen = kitchens.get(i);
+        final int index = i;
         holder.mView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -71,7 +71,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
 
                 if (twoPaneListener != null && twoPaneListener.isTwoPane()) {
                     twoPaneListener.setupKitchenDetail(kitchen);
-                    configureSelection(i);
+                    configureSelection(index);
                 } else
                     KitchenDetailActivity.createIntent(mContext, kitchen);
             }
@@ -130,10 +130,14 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
     }
 
     private void formatIcon(Kitchen kitchen, KitchenListItemViewHolder holder) {
-        if (kitchen.isFavourite)
+        if (kitchen.isFavourite) {
             holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_red_300_18dp));
-        else
+            holder.mfavourite.setContentDescription(mContext.getString(R.string.cd_favourite));
+        }
+        else {
             holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_light));
+            holder.mfavourite.setContentDescription(mContext.getString(R.string.cd_not_favourite));
+        }
 
     }
 
@@ -144,15 +148,17 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         return kitchens.size();
     }
 
+    @SuppressWarnings("unused")
     public int getCount() {
         return getItemCount();
     }
 
+    @SuppressWarnings("unused")
     public void setFavouriteKitchenIdList(Set<String> favouriteKitchenIdList) {
         this.favouriteKitchenIdList = favouriteKitchenIdList;
     }
 
-    public void reformatView() {
+    void reformatView() {
 
         for (Kitchen k : kitchens) {
             k.isFavourite = favouriteKitchenIdList != null && favouriteKitchenIdList.contains(k.key);
@@ -166,11 +172,12 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenListItemViewHold
         this.notifyDataSetChanged();
     }
 
-    public void clear() {
+    void clear() {
         this.kitchens.clear();
         this.notifyDataSetChanged();
     }
 
+    @SuppressWarnings("unused")
     public void addAll(List<Kitchen> kitchens) {
         if (!this.kitchens.isEmpty())
             return;

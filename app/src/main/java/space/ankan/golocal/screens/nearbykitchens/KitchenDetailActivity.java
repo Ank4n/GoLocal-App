@@ -2,8 +2,6 @@ package space.ankan.golocal.screens.nearbykitchens;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,9 +21,7 @@ import butterknife.OnClick;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.LoggedInActivity;
 import space.ankan.golocal.model.kitchens.Kitchen;
-import space.ankan.golocal.persistence.DBContract;
 import space.ankan.golocal.screens.chat.ChatActivity;
-import space.ankan.golocal.utils.CommonUtils;
 import space.ankan.golocal.utils.DBUtils;
 
 
@@ -55,7 +51,8 @@ public class KitchenDetailActivity extends LoggedInActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mKitchen = (Kitchen) getIntent().getSerializableExtra("kitchen");
         Kitchen c = DBUtils.queryKitchenById(getContentResolver(), mKitchen.key);
         if (c != null && c.isFavourite) mKitchen.isFavourite = true;

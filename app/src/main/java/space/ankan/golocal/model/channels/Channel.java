@@ -1,8 +1,9 @@
 package space.ankan.golocal.model.channels;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by ankan.
- * TODO: Add a class comment
  */
 
 public class Channel implements Comparable<Channel> {
@@ -16,7 +17,7 @@ public class Channel implements Comparable<Channel> {
     public boolean isSelected;
     //public ChatMessage[] messages;
 
-
+    @SuppressWarnings("unused")
     public Channel() {
     }
 
@@ -28,13 +29,14 @@ public class Channel implements Comparable<Channel> {
         this.imageUrl = imageUrl;
     }
 
+    @SuppressWarnings("unused")
     public String other(String userId) {
         if (userId.equals(userId1)) return userId2;
         return userId1;
     }
 
     @Override
-    public int compareTo(Channel that) {
+    public int compareTo(@NonNull Channel that) {
         return Long.compare(that.timeStamp, this.timeStamp);
     }
 }

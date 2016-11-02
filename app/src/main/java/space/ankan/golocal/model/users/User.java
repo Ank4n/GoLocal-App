@@ -2,7 +2,6 @@ package space.ankan.golocal.model.users;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
  */
 
 public class User {
@@ -10,6 +9,7 @@ public class User {
     public static final String KITCHEN = "kitchen";
     public String kitchen;
 
+    @SuppressWarnings("unused")
     public static final String USERNAME = "username";
     public String userName;
     //public UserChannel[] userChannels;
@@ -18,9 +18,9 @@ public class User {
     public User(String kitchen, String userName) {
         this.kitchen = kitchen;
         this.userName = userName;
-        //  this.userChannels = userChannels;
     }
 
+    @SuppressWarnings("unused")
     public User() {
     }
 }

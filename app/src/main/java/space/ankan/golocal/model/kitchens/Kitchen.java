@@ -1,16 +1,9 @@
 package space.ankan.golocal.model.kitchens;
 
-import com.firebase.geofire.GeoLocation;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import space.ankan.golocal.model.kitchens.Dish;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
  */
 
 public class Kitchen implements Serializable {

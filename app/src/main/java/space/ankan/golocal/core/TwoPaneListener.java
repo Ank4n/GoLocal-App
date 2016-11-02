@@ -5,7 +5,7 @@ import space.ankan.golocal.model.kitchens.Kitchen;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ * Methods an activity or fragment needs to support to enable two panes on tablet devices
  */
 
 public interface TwoPaneListener {
@@ -16,6 +16,7 @@ public interface TwoPaneListener {
 
     void setupManageDishView(Dish dish);
 
+    @SuppressWarnings("unused")
     void setupStartKitchenTab();
 
     boolean isTwoPane();

@@ -8,16 +8,16 @@ import android.widget.TextView;
 import space.ankan.golocal.R;
 
 /**
- * Created by anurag on 18-Dec-15.
+ * Created by Ankan.
  */
-public class DishListItemViewHolder extends RecyclerView.ViewHolder {
+class DishListItemViewHolder extends RecyclerView.ViewHolder {
 
-    public final View mView;
-    public final TextView mTitle;
-    public final TextView mPrice;
-    public final ImageView foodType;
+    final View mView;
+    final TextView mTitle;
+    final TextView mPrice;
+    final ImageView foodType;
 
-    public DishListItemViewHolder(View view) {
+    DishListItemViewHolder(View view) {
         super(view);
         mView = view;
         mTitle = (TextView) view.findViewById(R.id.dish_name);

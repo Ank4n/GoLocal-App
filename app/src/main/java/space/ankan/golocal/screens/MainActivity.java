@@ -38,7 +38,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -66,6 +65,11 @@ import space.ankan.golocal.services.FetchAddressIntentService;
 import space.ankan.golocal.utils.CommonUtils;
 import space.ankan.golocal.utils.NotificationUtils;
 
+/**
+ * Created by Ankan.
+ * The landing activity for user which contains all the important fragments.
+ */
+
 public class MainActivity extends LoggedInActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, TwoPaneListener {
 
     public static final int TAB_COUNT = 3;
@@ -79,17 +83,6 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private static final int REQUEST_CHECK_SETTINGS = 11;
     private static final String DETAIL_FRAG_TAG = "DetailFragment";
 
-    private int setupKitchenSelect;
-    private int setupKitchenDeselect;
-    private int kitchenNearbySelect;
-    private int kitchenNearbyDeselect;
-    private int chatDeselect;
-    private int chatSelect;
-    private int manageKitchenDeselect;
-    private int manageKitchenSelect;
-
-    private ChannelsFragment channelsFragment;
-    private SetupKitchenFragment setupKitchenFragment;
     private ManageKitchenFragment manageKitchenFragment;
     private KitchenListFragment kitchenListFragment;
     private Fragment lastKitchenDetailFragment, lastChannelDetailFragment;
@@ -97,9 +90,6 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
-    private String currentAddressText;
-    private AddressResultReceiver resultReceiver;
-    private Handler mHandler;
 
     @BindView(R.id.fab)
     FloatingActionButton addDishFab;
@@ -159,19 +149,18 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         if (detailContainer != null)
             twoPane = true;
         CommonUtils.removeViews(detailContainer);
-        mHandler = new Handler();
 
     }
 
     private void initImageResources() {
-        setupKitchenSelect = R.drawable.setup_kitchen_filled;
-        setupKitchenDeselect = R.drawable.setup_kitchen_black;
-        kitchenNearbySelect = R.drawable.kitchens_nearby_white;
-        kitchenNearbyDeselect = R.drawable.kitchens_nearby_black;
-        chatDeselect = R.drawable.chat_black;
-        chatSelect = R.drawable.chat_white;
-        manageKitchenDeselect = R.drawable.manage_black;
-        manageKitchenSelect = R.drawable.manage_white;
+        int setupKitchenSelect = R.drawable.setup_kitchen_filled;
+        int setupKitchenDeselect = R.drawable.setup_kitchen_black;
+        int kitchenNearbySelect = R.drawable.kitchens_nearby_white;
+        int kitchenNearbyDeselect = R.drawable.kitchens_nearby_black;
+        int chatDeselect = R.drawable.chat_black;
+        int chatSelect = R.drawable.chat_white;
+        int manageKitchenDeselect = R.drawable.manage_black;
+        int manageKitchenSelect = R.drawable.manage_white;
         tabs = new ImageView[]{tab0, tab1, tab2};
         defaultSelectIcons = new int[]{setupKitchenSelect, kitchenNearbySelect, chatSelect};
         defaultDeselectIcons = new int[]{setupKitchenDeselect, kitchenNearbyDeselect, chatDeselect};
@@ -183,6 +172,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() == null) return;
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         toolbar.setTitle(getResources().getString(R.string.app_name));
 
@@ -257,20 +247,26 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     private void initializeFragments(FragmentAdapter adapter) {
         adapter.clearFragments();
 
-        channelsFragment = new ChannelsFragment();
+        ChannelsFragment channelsFragment = new ChannelsFragment();
         kitchenListFragment = new KitchenListFragment();
-
+        int i = 0;
         if (isUserKitchenOwner()) {
             manageKitchenFragment = ManageKitchenFragment.newInstance();
             adapter.addFragment(kitchenListFragment);
+            tabs[i++].setContentDescription(getString(R.string.cd_tab_nearby_kitchens));
             adapter.addFragment(manageKitchenFragment);
+            tabs[i++].setContentDescription(getString(R.string.cd_tab_manage_kitchen));
             adapter.addFragment(channelsFragment);
+            tabs[i].setContentDescription(getString(R.string.cd_tab_chats));
 
         } else {
-            setupKitchenFragment = SetupKitchenFragment.newInstance();
+            SetupKitchenFragment setupKitchenFragment = SetupKitchenFragment.newInstance();
             adapter.addFragment(setupKitchenFragment);
+            tabs[i++].setContentDescription(getString(R.string.cd_tab_setup_kitchen));
             adapter.addFragment(kitchenListFragment);
+            tabs[i++].setContentDescription(getString(R.string.cd_tab_nearby_kitchens));
             adapter.addFragment(channelsFragment);
+            tabs[i].setContentDescription(getString(R.string.cd_tab_chats));
         }
 
     }
@@ -282,7 +278,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
 
     private void formatTabs(int position) {
-        //dLog("formatting tabs position: " + position + " | add dish fab shown: " + addDishFab.isShown());
+        //log("formatting tabs position: " + position + " | add dish fab shown: " + addDishFab.isShown());
         for (int i = 0; i < TAB_COUNT; i++) {
             if (i == position)
                 selectTab(i);
@@ -290,7 +286,8 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                 deselectTab(i);
         }
         if (isUserKitchenOwner()) {
-            getSupportActionBar().setTitle(ownerTitle[position]);
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle(ownerTitle[position]);
 
             if (position == MANAGE_KITCHEN_TAB) {
                 CommonUtils.showViews(addDishFab);
@@ -299,7 +296,8 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
             }
         } else {
             CommonUtils.closeKeyBoard(this);
-            getSupportActionBar().setTitle(defaultTitle[position]);
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle(defaultTitle[position]);
             addDishFab.hide();
         }
     }
@@ -371,7 +369,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //dLog("google api connected");
+        //log("google api connected");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GPS_PERMISSION);
 
@@ -390,14 +388,14 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
 
             @Override
-            public void onResult(LocationSettingsResult result) {
+            public void onResult(@NonNull LocationSettingsResult result) {
 
                 final Status status = result.getStatus();
-                final LocationSettingsStates states = result.getLocationSettingsStates();
+                //final LocationSettingsStates states = result.getLocationSettingsStates();
 
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        //dLog("got result for location settings: success");
+                        //log("got result for location settings: success");
 
                         startLocationUpdates();
                         break;
@@ -407,7 +405,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
                         try {
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
-                            //dLog("got result for location settings: resolution required");
+                            //log("got result for location settings: resolution required");
 
                             status.startResolutionForResult(
                                     MainActivity.this,
@@ -452,10 +450,10 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     protected void startLocationUpdates() {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            dLog("starting location updates");
+            log("starting location updates");
 
         } else {
-            dLog("permission not available");
+            log("permission not available");
             kitchenListFragment.onError("Could not fetch your location");
         }
     }
@@ -476,7 +474,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     }
 
     private void createLocationRequest() {
-        dLog("creating location request");
+        log("creating location request");
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -504,13 +502,13 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        // dLog("location changed:[ " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+        // log("location changed:[ " + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
         if (mLastLocation == null) return;
-        CommonUtils.cacheLocation(getSharedPref().edit(), mLastLocation);
+        CommonUtils.cacheLocation(getSharedPref(), mLastLocation);
 
         if (kitchenListFragment != null)
             kitchenListFragment.updateLocation(mLastLocation);
-        resultReceiver = new AddressResultReceiver(new Handler());
+        AddressResultReceiver resultReceiver = new AddressResultReceiver(new Handler());
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(RECEIVER, resultReceiver);
         intent.putExtra(LOCATION_DATA_EXTRA, mLastLocation);
@@ -554,7 +552,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
     }
 
     class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
+        AddressResultReceiver(Handler handler) {
             super(handler);
         }
 
@@ -563,7 +561,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
 
             // Display the address string
             // or an error message sent from the intent service.
-            currentAddressText = resultData.getString(AppConstants.RESULT_DATA_KEY);
+            String currentAddressText = resultData.getString(AppConstants.RESULT_DATA_KEY);
             if (kitchenListFragment != null && !TextUtils.isEmpty(currentAddressText))
                 kitchenListFragment.updateLocation(currentAddressText);
 
@@ -630,7 +628,7 @@ public class MainActivity extends LoggedInActivity implements GoogleApiClient.Co
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Notification notification = dataSnapshot.getValue(Notification.class);
-                dLog("Received notification " + notification.title + " : " + notification.message);
+                log("Received notification " + notification.title + " : " + notification.message);
                 NotificationUtils.notifyUser(MainActivity.this, notification);
                 dataSnapshot.getRef().removeValue();
             }

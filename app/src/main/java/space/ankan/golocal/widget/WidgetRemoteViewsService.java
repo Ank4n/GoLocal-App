@@ -20,7 +20,6 @@ import space.ankan.golocal.utils.DBUtils;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetRemoteViewsService extends RemoteViewsService {
-    public final String LOG_TAG = WidgetRemoteViewsService.class.getSimpleName();
 
     private void dump(String message) {
         Log.wtf("Widget", message);
@@ -76,9 +75,10 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_list_item);
                 Kitchen kitchen = DBUtils.getKitchenFromCursor(data);
+                if (kitchen == null) return null;
+
                 dump("Kitchen found: " + kitchen.name);
 
-                if (kitchen == null) return null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     setRemoteContentDescription(views, kitchen.description);
                 }

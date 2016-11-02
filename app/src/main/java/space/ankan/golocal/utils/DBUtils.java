@@ -8,22 +8,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.kitchens.Kitchen;
 import space.ankan.golocal.persistence.DBContract;
-import space.ankan.golocal.persistence.DBContract.*;
-import space.ankan.golocal.persistence.DBProvider;
+import space.ankan.golocal.persistence.DBContract.KitchenEntry;
 
 import static space.ankan.golocal.core.AppConstants.SHARED_PREF_FILE_NAME;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ * Helper class to help with db operations
  */
 
 public class DBUtils {
@@ -67,28 +63,29 @@ public class DBUtils {
     }
 
     public static Uri insertKitchen(ContentResolver contentResolver, Kitchen kitchen) {
-        Log.v("DBProvider", "inserting kitchen with id " + kitchen.key);
+        if (contentResolver == null) return null;
+        Log.i("DBProvider", "inserting kitchen with id " + kitchen.key);
         return contentResolver.insert(DBContract.KitchenEntry.CONTENT_URI, getContentValuesFromKitchen(kitchen));
 
     }
 
     public static int deleteKitchen(ContentResolver contentResolver, String id) {
-        Log.v("DBProvider", "deleting kitchen with id " + id);
+        if (contentResolver == null) return 0;
+        Log.i("DBProvider", "deleting kitchen with id " + id);
         return contentResolver.delete(DBContract.KitchenEntry.CONTENT_URI, DBContract.KitchenEntry.COLUMN_KITCHEN_ID + " = ?", new String[]{id});
 
     }
 
     public static Kitchen queryKitchenById(ContentResolver contentResolver, String id) {
         Cursor c = contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, KITCHEN_PROJECTION, DBContract.KitchenEntry.COLUMN_KITCHEN_ID + " = ?", new String[]{id}, null);
-        if (!c.moveToFirst()) return null;
+        if (c == null || !c.moveToFirst()) return null;
         return getKitchenFromCursor(c);
 
     }
 
     public static Cursor queryFavouriteKitchens(ContentResolver contentResolver) {
-        Cursor c = contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, KITCHEN_PROJECTION, KitchenEntry.COLUMN_IS_FAVOURITE + " = ?", new String[]{"1"}, null);
+        return contentResolver.query(DBContract.KitchenEntry.CONTENT_URI, KITCHEN_PROJECTION, KitchenEntry.COLUMN_IS_FAVOURITE + " = ?", new String[]{"1"}, null);
         //Log.v("DBProvider", c.getCount() + " favorite kitchens found");
-        return c;
     }
 
     public static void queryFavouriteKitchenIDList(ContentResolver contentResolver, Set<String> keys) {
@@ -104,11 +101,13 @@ public class DBUtils {
 
     }
 
+    @SuppressWarnings("unused")
     public static void persistUserId(Context c, String userId) {
         SharedPreferences sharedPreferences = c.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString(AppConstants.USER_ID, userId).commit();
+        sharedPreferences.edit().putString(AppConstants.USER_ID, userId).apply();
     }
 
+    @SuppressWarnings("unused")
     public static String getUserId(Context c) {
         SharedPreferences sharedPreferences = c.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(AppConstants.USER_ID, null);

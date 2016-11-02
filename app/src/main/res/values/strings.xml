@@ -12,7 +12,8 @@
     <string name="no_internet_title">Are you connected to internet?</string>
     <string name="no_internet_message">App could not connect to internet. You need to be connected to internet to sign in.</string>
 
-    //titles
+    <!--titles-->
+
     <string name="chat_title">My chats</string>
     <string name="manage_title">My Kitchen</string>
     <string name="setup_kitchen_title">Setup Your Kitchen</string>
@@ -40,7 +41,7 @@
     <string name="price_with_rupees_currency">
        Rs. <xliff:g example="35" id="startup">%1$s</xliff:g>!
 </string>
-    <string name="error_occurred">Some error occured, try again.</string>
+    <string name="error_occurred">Some error occurred, try again.</string>
     <string name="error_fields_not_filled">Please fill all the fields.</string>
     <string name="chat_with_own_kitchen">You cannot chat with your own kitchen.</string>
     <string name="dish_saved">Dish saved successfully.</string>
@@ -60,6 +61,31 @@
 </string>
     <string name="title_widget">My Favourite Kitchens</string>
     <string name="empty_favourite_list">No Favourite Kitchens to show</string>
+    <string name="logging_in_text">Logging you in&#8230;</string>
+
+    <string name="kitchen_share_text">Hey there, I just found a great kitchen at GoLocal Kitchens. Check it out.. \n
+    <xliff:g example="Barbeque Nation" id="kitchenName">%1$s</xliff:g>\nDescription: <xliff:g example="Awesome food" id="description">%2$s</xliff:g>\nAddress: <xliff:g example="BTM Layout" id="address">%3$s</xliff:g></string>
+    <string name="button_start_chat_text">CHAT</string>
+    <string name="searching_location_text">Searching for location&#8230;</string>
+    <string name="kitchen_detail_desc">Description</string>
+    <string name="kitchen_detail_user_rating_header">You</string>
+    <string name="kitchen_detail_overall_rating_header">Overall</string>
+
+    <!--Content Descriptions-->
+    <string name="cd_kitchen_image">Kitchen Image</string>
+    <string name="cd_user_image">Message sender\'s image</string>
+    <string name="cd_image_in">Shared image by the user</string>
+    <string name="cd_image_out">Shared image by you</string>
+    <string name="cd_logo">GoLocal logo</string>
+    <string name="cd_tab_setup_kitchen">Setup kitchen tab</string>
+    <string name="cd_tab_chats">Chats tab</string>
+    <string name="cd_tab_manage_kitchen">Manage your kitchen tab</string>
+    <string name="cd_tab_nearby_kitchens">Nearby kitchens tab</string>
+    <string name="cd_food_type_vegetarian">Vegetarian food item</string>
+    <string name="cd_food_type_non_vegetarian">Non-Vegetarian food item</string>
+    <string name="cd_star">Rating stars out of 5</string>
+    <string name="cd_favourite">Kitchen saved as favourite</string>
+    <string name="cd_not_favourite">Kitchen not favourite</string>
 
 
 </resources>

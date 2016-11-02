@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,31 +14,32 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.List;
+
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.TwoPaneListener;
 import space.ankan.golocal.model.channels.Channel;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
- * TODO: Replace the implementation with code for your data type.
+ * Created by ankan.
+ * Adapter class for the channel list recycler view
  */
-public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHolder> {
+class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHolder> {
 
     private final List<Channel> mValues;
-    Context mContext;
+    private Context mContext;
     private TwoPaneListener mTwoPaneListener;
     private int selected = -1;
     private Handler handler;
 
-    public ChannelsAdapter(List<Channel> items, Context c) {
+    ChannelsAdapter(List<Channel> items, Context c) {
         mValues = items;
         mContext = c;
         handler = new Handler();
     }
 
-    public void setTwoPaneListener(TwoPaneListener twoPaneListener) {
+    void setTwoPaneListener(TwoPaneListener twoPaneListener) {
         mTwoPaneListener = twoPaneListener;
     }
 
@@ -51,7 +51,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         final Channel channel = mValues.get(position);
         holder.mName.setText(channel.name);
@@ -67,6 +67,8 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
             bgColor = R.color.item_selected_background;
 
         holder.mView.setBackgroundColor(ContextCompat.getColor(mContext, bgColor));
+        final int index = position;
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +76,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ViewHo
                 String id = auth.getCurrentUser().getUid().equals(channel.userId1) ? channel.userId2 : channel.userId1;
                 if (mTwoPaneListener != null && mTwoPaneListener.isTwoPane()) {
                     mTwoPaneListener.setupChatDetail(channel.channelId, channel.name, id);
-                    configureSelection(position);
+                    configureSelection(index);
                 } else
                     ChatActivity.createIntent(mContext, channel.channelId, channel.name, id);
             }

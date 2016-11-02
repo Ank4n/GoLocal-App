@@ -7,17 +7,16 @@ import android.provider.BaseColumns;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ * Contract rules for the Content Provider
  */
 
 public class DBContract {
 
-    public static final String CONTENT_AUTHORITY = "space.ankan.golocal";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    static final String CONTENT_AUTHORITY = "space.ankan.golocal";
+    static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    public static final String PATH_KITCHENS = "kitchen";
-    public static final String PATH_DISHES = "dish";
-    public static final String PATH_REVIEWS = "review";
+    static final String PATH_KITCHENS = "kitchen";
+    static final String PATH_DISHES = "dish";
 
     public static final class KitchenEntry implements BaseColumns {
 

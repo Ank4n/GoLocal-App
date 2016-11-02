@@ -6,14 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import space.ankan.golocal.R;
 import space.ankan.golocal.helpers.FirebaseHelper;
@@ -28,15 +22,19 @@ import space.ankan.golocal.screens.chat.ChatActivityFragment;
  */
 
 public class NotificationUtils {
-    public static final int TYPE_CHAT_ACTIVITY = 1;
+    private static final int TYPE_CHAT_ACTIVITY = 1;
     private static FirebaseHelper firebaseHelper = new FirebaseHelper();
     private static NotificationManager mNotificationManager;
-    private static AtomicInteger inc = new AtomicInteger(0);
 
 
     public static void pushNotification(ChatMessage message, String receiverId, String channelName, String channelId) {
         FirebaseUser sender = firebaseHelper.getFirebaseAuth().getCurrentUser();
-        Notification notification = new Notification(sender.getUid(), sender.getDisplayName(), message.message, NotificationUtils.TYPE_CHAT_ACTIVITY, channelName, channelId);
+        String senderId = null, displayName = null;
+        if (sender != null) {
+            senderId = sender.getUid();
+            displayName = sender.getDisplayName();
+        }
+        Notification notification = new Notification(senderId, displayName, message.message, NotificationUtils.TYPE_CHAT_ACTIVITY, channelName, channelId);
         firebaseHelper.postNotification(notification, receiverId);
     }
 
@@ -54,8 +52,7 @@ public class NotificationUtils {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        //FIXME create status icon for small logo
-                        .setSmallIcon(R.drawable.ic_small_logo)
+                        .setSmallIcon(R.drawable.ic_status)
                         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification))
                         .setContentTitle(notification.title)
                         .setContentText(notification.message)

@@ -23,12 +23,12 @@ import space.ankan.golocal.utils.DBUtils;
 
 
 /**
- * Created by ankan.
- * TODO: Add a class comment
+ * Created by Ankan.
+ * Recycler View Adapter compatible with Loader
  */
 
 
-public class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemViewHolder> {
+class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemViewHolder> {
 
     private Context mContext;
 
@@ -43,7 +43,7 @@ public class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemVi
     private Set<String> favouriteKitchenIdList;
 
 
-    public KitchenCursorAdapter(Context context, Cursor cursor, Set<String> favouriteKitchenIdList, TwoPaneListener twoPaneListener) {
+    KitchenCursorAdapter(Context context, Cursor cursor, Set<String> favouriteKitchenIdList, TwoPaneListener twoPaneListener) {
         mContext = context;
         mCursor = cursor;
         mDataValid = cursor != null;
@@ -56,6 +56,7 @@ public class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemVi
         this.twoPaneListener = twoPaneListener;
     }
 
+    @SuppressWarnings("unused")
     public Cursor getCursor() {
         return mCursor;
     }
@@ -89,6 +90,7 @@ public class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemVi
         return new KitchenListItemViewHolder(view);
     }
 
+    @SuppressWarnings("unused")
     public void setTwoPaneListener(TwoPaneListener twoPaneListener) {
         this.twoPaneListener = twoPaneListener;
     }
@@ -102,6 +104,7 @@ public class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemVi
             throw new IllegalStateException("couldn't move cursor to position " + position);
         }
         final Kitchen kitchen = DBUtils.getKitchenFromCursor(mCursor);
+        if (kitchen == null) return;
         holder.mView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -156,18 +159,21 @@ public class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemVi
     }
 
     private void formatIcon(Kitchen kitchen, KitchenListItemViewHolder holder) {
-        if (kitchen.isFavourite)
+        if (kitchen.isFavourite) {
             holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_red_300_18dp));
-        else
+            holder.mfavourite.setContentDescription(mContext.getString(R.string.cd_favourite));
+        }else {
             holder.mfavourite.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_favorite_light));
-
+            holder.mfavourite.setContentDescription(mContext.getString(R.string.cd_not_favourite));
+        }
     }
 
     /**
      * Change the underlying cursor to a new cursor. If there is an existing cursor it will be
      * closed.
      */
-    public void changeCursor(Cursor cursor) {
+    @SuppressWarnings("unused")
+    void changeCursor(Cursor cursor) {
         Cursor old = swapCursor(cursor);
         if (old != null) {
             old.close();
@@ -179,7 +185,7 @@ public class KitchenCursorAdapter extends RecyclerView.Adapter<KitchenListItemVi
      * {@link #changeCursor(Cursor)}, the returned old Cursor is <em>not</em>
      * closed.
      */
-    public Cursor swapCursor(Cursor newCursor) {
+    Cursor swapCursor(Cursor newCursor) {
         if (newCursor == mCursor) {
             return null;
         }

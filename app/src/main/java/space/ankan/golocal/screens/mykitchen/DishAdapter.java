@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +15,9 @@ import space.ankan.golocal.R;
 import space.ankan.golocal.core.TwoPaneListener;
 import space.ankan.golocal.model.kitchens.Dish;
 import space.ankan.golocal.screens.mykitchen.addDish.AddDishActivity;
-import space.ankan.golocal.screens.mykitchen.addDish.AddDishFragment;
 
 /**
- * Created by anurag on 18-Dec-15.
+ * Created by Ankan.
  */
 public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
 
@@ -29,7 +27,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
     private TwoPaneListener mTwoPaneListener;
     private int selected;
 
-    public DishAdapter(Context context, ArrayList<Dish> list) {
+    DishAdapter(Context context, ArrayList<Dish> list) {
         this(context, list, false);
     }
 
@@ -39,14 +37,16 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
         this.horizontal = horizontal;
     }
 
-    public void setmTwoPaneListener(TwoPaneListener mTwoPaneListener) {
+    void setmTwoPaneListener(TwoPaneListener mTwoPaneListener) {
         this.mTwoPaneListener = mTwoPaneListener;
     }
 
+    @SuppressWarnings("unused")
     public Dish getItem(int position) {
         return dishes.get(position);
     }
 
+    @SuppressWarnings("unused")
     public ArrayList<Dish> getItems() {
         return dishes;
     }
@@ -63,8 +63,9 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final DishListItemViewHolder holder, final int i) {
+    public void onBindViewHolder(final DishListItemViewHolder holder, int i) {
         final Dish item = dishes.get(i);
+        final int index = i;
         holder.mView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -73,7 +74,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
 
                 if (mTwoPaneListener != null && mTwoPaneListener.isTwoPane()) {
                     mTwoPaneListener.setupManageDishView(item);
-                    configureSelection(i);
+                    configureSelection(index);
                 } else
                     AddDishActivity.createIntent(mContext, item);
             }
@@ -88,7 +89,9 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
         holder.mTitle.setText(item.name);
         holder.mPrice.setText(mContext.getString(R.string.price_with_rupees_currency, String.valueOf(item.price)));
         int foodTypeImage = item.nonVeg ? R.drawable.ic_non_vegetarian : R.drawable.ic_vegetarian;
+        String contentDesc = item.nonVeg ? mContext.getString(R.string.cd_food_type_non_vegetarian) : mContext.getString(R.string.cd_food_type_vegetarian);
         holder.foodType.setImageDrawable(ContextCompat.getDrawable(mContext, foodTypeImage));
+        holder.foodType.setContentDescription(contentDesc);
 
     }
 
@@ -107,6 +110,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
         return dishes.size();
     }
 
+    @SuppressWarnings("unused")
     public int getCount() {
         return getItemCount();
     }
@@ -116,7 +120,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
         this.notifyDataSetChanged();
     }
 
-    public void replace(final Dish dish) {
+    void replace(final Dish dish) {
         Handler handler = new Handler();
         handler.post(new Runnable() {
             @Override
@@ -134,10 +138,12 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
 
     }
 
+    @SuppressWarnings("unused")
     public void clear() {
         this.dishes.clear();
     }
 
+    @SuppressWarnings("unused")
     public void addAll(List<Dish> dishes) {
         if (!this.dishes.isEmpty())
             return;
@@ -145,7 +151,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishListItemViewHolder> {
         this.notifyDataSetChanged();
     }
 
-    public void clearSelection() {
+    void clearSelection() {
         if (selected == -1) return;
         dishes.get(selected).isSelected = false;
         selected = -1;

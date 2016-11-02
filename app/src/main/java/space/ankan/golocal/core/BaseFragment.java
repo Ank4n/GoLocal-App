@@ -1,7 +1,6 @@
 package space.ankan.golocal.core;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -18,8 +17,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import space.ankan.golocal.helpers.FirebaseHelper;
 import space.ankan.golocal.model.users.User;
-
-import static space.ankan.golocal.core.AppConstants.ACTION_DATA_UPDATED;
 
 /**
  * Created by ankan.
@@ -48,6 +45,7 @@ public abstract class BaseFragment extends Fragment {
         return firebaseHelper;
     }
 
+    @SuppressWarnings("unused")
     protected boolean isUserKitchenOwner() {
         if (isUserKitchenOwner == null)
             isUserKitchenOwner = getSharedPref().getString(AppConstants.KITCHEN_ID, null) != null;
@@ -79,10 +77,6 @@ public abstract class BaseFragment extends Fragment {
         return getFirebaseHelper().getFirebaseAuth().getCurrentUser();
     }
 
-    protected void dToast(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
-
     // logging for debugs
     public static void dLog(String log) {
         if (BuildConfig.DEBUG) return;
@@ -95,8 +89,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected boolean isTwoPane() {
-        if (mTwoPaneListener == null) return false;
-        return mTwoPaneListener.isTwoPane();
+        return mTwoPaneListener != null && mTwoPaneListener.isTwoPane();
     }
 
 }

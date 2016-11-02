@@ -2,7 +2,6 @@ package space.ankan.golocal.model.notifications;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
  */
 
 public class Notification {

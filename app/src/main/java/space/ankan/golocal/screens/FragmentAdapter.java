@@ -1,6 +1,5 @@
 package space.ankan.golocal.screens;
 
-import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,10 +10,10 @@ import java.util.List;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ * Fragment adapter to manage fragments(tabs) in Main Activity
  */
 
-public class FragmentAdapter extends FragmentStatePagerAdapter {
+class FragmentAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> mFragments;
 
@@ -23,12 +22,12 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         return super.saveState();
     }
 
-    public FragmentAdapter(FragmentManager fm, int tabCount) {
+    FragmentAdapter(FragmentManager fm, int tabCount) {
         super(fm);
         mFragments = new ArrayList<>(tabCount);
     }
 
-    public void addFragment(Fragment fragment) {
+    void addFragment(Fragment fragment) {
         mFragments.add(fragment);
     }
 
@@ -42,7 +41,7 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         return mFragments.size();
     }
 
-    public void clearFragments() {
+    void clearFragments() {
         mFragments.clear();
     }
 }

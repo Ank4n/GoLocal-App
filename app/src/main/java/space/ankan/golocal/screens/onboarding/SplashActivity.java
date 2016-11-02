@@ -9,10 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.google.firebase.database.FirebaseDatabase;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseActivity;
 import space.ankan.golocal.utils.RedirectionUtils;
@@ -40,9 +36,7 @@ public class SplashActivity extends BaseActivity {
                 if (!getFirebaseHelper().isUserLoggedIn()) {
                     askToSignIn();
                 } else {
-                    RedirectionUtils.redirectFromSplash(
-                            SplashActivity.this,
-                            isUserKitchenOwner());
+                    RedirectionUtils.redirectFromSplash(SplashActivity.this);
                     getFirebaseHelper().subscribe();
                     finish();
                 }
@@ -59,7 +53,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        textView.setText("Logging you in...");
+        textView.setText(R.string.logging_in_text);
         textView.setVisibility(View.VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
         new Handler().postDelayed(new Runnable() {

@@ -21,7 +21,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import space.ankan.golocal.R;
@@ -67,6 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
         return isUserKitchenOwner;
     }
 
+    @SuppressWarnings("unused")
     protected String getUserKitchenId() {
         return getSharedPref().getString(AppConstants.KITCHEN_ID, null);
 
@@ -85,7 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
     }
 
     protected void askToSignIn() {
-        dLog("asking to sign in");
+        log("asking to sign in");
         if (!isNetworkAvailable()) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.no_internet_title)
@@ -126,7 +126,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        dLog("received activity result");
+        log("received activity result");
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // user is signed in!
@@ -135,7 +135,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             String kitchenId = dataSnapshot.getValue(User.class).kitchen;
-                            RedirectionUtils.redirectFromSplash(BaseActivity.this, kitchenId != null);
+                            RedirectionUtils.redirectFromSplash(BaseActivity.this);
                             saveUserType(kitchenId);
                         }
                         //new user
@@ -160,7 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
 
     protected void signOut() {
         getFirebaseHelper().unsubscribe();
-        getSharedPref().edit().clear().commit();
+        getSharedPref().edit().clear().apply();
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -178,14 +178,9 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
         return getFirebaseHelper().getFirebaseAuth().getCurrentUser();
     }
 
-    // toast for only debug builds
-    protected void dToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
     protected void saveUserType(String kitchenId) {
-        dLog("KitchenId: " + kitchenId);
-        getSharedPref().edit().putString(KITCHEN_ID, kitchenId).commit();
+        log("KitchenId: " + kitchenId);
+        getSharedPref().edit().putString(KITCHEN_ID, kitchenId).apply();
 
     }
 
@@ -202,7 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppConst
     }
 
     // logging for debug builds
-    public static void dLog(String log) {
+    public static void log(String log) {
         if (BuildConfig.DEBUG) return;
         Log.wtf(AppConstants.TAG, log);
     }

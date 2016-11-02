@@ -6,7 +6,6 @@ import android.util.Log;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
-import com.google.android.gms.actions.NoteIntents;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -28,22 +27,19 @@ import space.ankan.golocal.model.users.UserReview;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ * Helper class to help with firebase related operations
  */
 
 public class FirebaseHelper implements AppConstants {
 
-    private FirebaseApp app;
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private FirebaseStorage storage;
-    private FirebaseMessaging messaging;
     private static boolean isPersistent;
 
     private DatabaseReference usersRef;
     private DatabaseReference channelsRef;
     private DatabaseReference kitchensRef;
-    private DatabaseReference geoFireRef;
     private GeoFire geoFire;
 
     private StorageReference kitchenImagesRef;
@@ -54,16 +50,18 @@ public class FirebaseHelper implements AppConstants {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             isPersistent = true;
         }
-        app = FirebaseApp.getInstance();
-        database = FirebaseDatabase.getInstance(app);
-        auth = FirebaseAuth.getInstance(app);
-        storage = FirebaseStorage.getInstance(app);
-        messaging = FirebaseMessaging.getInstance();
+        FirebaseApp app = FirebaseApp.getInstance();
+
+        if (app != null) {
+            database = FirebaseDatabase.getInstance(app);
+            auth = FirebaseAuth.getInstance(app);
+            storage = FirebaseStorage.getInstance(app);
+        }
 
         usersRef = database.getReference(FIREBASE_DB_USERS);
         channelsRef = database.getReference(FIREBASE_DB_CHANNELS);
         kitchensRef = database.getReference(FIREBASE_DB_KITCHENS);
-        geoFireRef = database.getReference(FIREBASE_DB_GEOFIRE);
+        DatabaseReference geoFireRef = database.getReference(FIREBASE_DB_GEOFIRE);
         geoFire = new GeoFire(geoFireRef);
 
         kitchenImagesRef = storage.getReference(FIREBASE_STORAGE_KITCHEN_ROOT);
@@ -72,31 +70,37 @@ public class FirebaseHelper implements AppConstants {
 
     }
 
-    public DatabaseReference getUsersReference() {
+    @SuppressWarnings("unused")
+    private DatabaseReference getUsersReference() {
         return usersRef;
     }
 
-    public DatabaseReference getChannelsReference() {
+    @SuppressWarnings("unused")
+    private DatabaseReference getChannelsReference() {
         return channelsRef;
     }
 
-    public DatabaseReference getKitchensReference() {
+    @SuppressWarnings("unused")
+    private DatabaseReference getKitchensReference() {
         return kitchensRef;
     }
 
-    public StorageReference getDishImagesReference() {
+    @SuppressWarnings("unused")
+    private StorageReference getDishImagesReference() {
         return kitchenImagesRef;
     }
 
-    public StorageReference getChatImagesReference() {
+    @SuppressWarnings("unused")
+    private StorageReference getChatImagesReference() {
         return chatImagesRef;
     }
 
-    public DatabaseReference getUserReference(String user) {
+    private DatabaseReference getUserReference(String user) {
         return database.getReference(FIREBASE_DB_USERS + FOLDER_SEPARATOR + user);
     }
 
     public DatabaseReference getCurrentUserReference() {
+        if (auth.getCurrentUser() == null) return null;
         String user = auth.getCurrentUser().getUid();
         return database.getReference(FIREBASE_DB_USERS + FOLDER_SEPARATOR + user);
     }
@@ -118,10 +122,18 @@ public class FirebaseHelper implements AppConstants {
     }
 
     public void enrollNewUser() {
+
+        if (auth.getCurrentUser() == null) {
+            Log.e(AppConstants.TAG, "Error enrolling user, could not sign in");
+            return;
+        }
+
         getCurrentUserReference().setValue(new User(null, auth.getCurrentUser().getDisplayName()));
     }
 
-    public String getCurrentUserUid() {
+    @SuppressWarnings("unused")
+    private String getCurrentUserUid() {
+        if (auth.getCurrentUser() == null) return null;
         return auth.getCurrentUser().getUid();
     }
 
@@ -204,7 +216,7 @@ public class FirebaseHelper implements AppConstants {
         return getCurrentUserReference().child(FIREBASE_DB_USER_NOTIFICATIONS);
     }
 
-    public DatabaseReference getUserNotificationsReference(String userId) {
+    private DatabaseReference getUserNotificationsReference(String userId) {
         return getUserReference(userId).child(FIREBASE_DB_USER_NOTIFICATIONS);
     }
 
@@ -226,11 +238,17 @@ public class FirebaseHelper implements AppConstants {
     }
 
     public void subscribe() {
-        messaging.subscribeToTopic(getCurrentUserUid());
+        //TODO Implement FCM and server for notifications
+        //String userId = getCurrentUserUid();
+        //if (userId == null) return;
+        //messaging.subscribeToTopic(userId);
     }
 
     public void unsubscribe() {
-        messaging.unsubscribeFromTopic(getCurrentUserUid());
+        //Implement FCM and server for notifications
+        //String userId = getCurrentUserUid();
+        //if (userId == null) return;
+        //messaging.unsubscribeFromTopic(userId);
     }
 
     public void postNotification(Notification notification, String receiverId) {

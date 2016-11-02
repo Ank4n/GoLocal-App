@@ -3,18 +3,17 @@ package space.ankan.golocal.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import space.ankan.golocal.screens.MainActivity;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ * Methods to help with navigation in the app..
  */
 
 public class RedirectionUtils {
 
-    public static void redirectFromSplash(Context c, boolean kitchenOwner) {
+    public static void redirectFromSplash(Context c) {
         MainActivity.createIntent(c);
     }
 
@@ -26,7 +25,7 @@ public class RedirectionUtils {
 
         if (activity == null) return;
         if (activity.isTaskRoot())
-            redirectFromSplash(activity, false);
+            redirectFromSplash(activity);
         activity.finish();
     }
 

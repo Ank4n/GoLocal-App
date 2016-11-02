@@ -9,6 +9,7 @@ public class UserReview {
     public String kitchenId;
     public float rating;
 
+    @SuppressWarnings("unused")
     public UserReview() {
     }
 

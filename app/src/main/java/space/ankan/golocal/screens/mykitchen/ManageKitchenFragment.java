@@ -1,7 +1,5 @@
 package space.ankan.golocal.screens.mykitchen;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -23,8 +19,6 @@ import butterknife.ButterKnife;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Dish;
-import space.ankan.golocal.model.kitchens.Kitchen;
-import space.ankan.golocal.screens.nearbykitchens.KitchenAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +32,6 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
     RecyclerView mRecyclerView;
 
     private DishAdapter adapter;
-    private View mRootView;
 
     public ManageKitchenFragment() {
         // Required empty public constructor
@@ -51,8 +44,7 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
      * @return A new instance of fragment ManageKitchenFragment.
      */
     public static ManageKitchenFragment newInstance() {
-        ManageKitchenFragment fragment = new ManageKitchenFragment();
-        return fragment;
+        return new ManageKitchenFragment();
     }
 
     @Override
@@ -65,7 +57,8 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mRootView = super.inflate(inflater, container, savedInstanceState, R.layout.fragment_manage_kitchen);
+        View mRootView = super.inflate(inflater, container, savedInstanceState, R.layout.fragment_manage_kitchen);
+        if (mRootView == null) return null;
         ButterKnife.bind(this, mRootView);
         setupRecycler();
         syncWithFirebase();

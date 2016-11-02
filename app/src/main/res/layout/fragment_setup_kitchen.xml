@@ -16,6 +16,7 @@
             android:id="@+id/upload_kitchen_image"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:nextFocusForward="@+id/edit_kitchen_name"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -29,6 +30,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_margin="8dp"
+                    android:contentDescription="@string/cd_kitchen_image"
                     android:scaleType="fitCenter"
                     android:src="@drawable/manage_black" />
 
@@ -51,41 +53,44 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/edit_kitchen_name"
+            android:id="@id/edit_kitchen_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:allowUndo="true"
             android:hint="@string/hint_kitchen_name"
-            android:inputType="text" />
+            android:inputType="text"
+            android:nextFocusForward="@+id/edit_kitchen_description" />
 
         <EditText
-            android:id="@+id/edit_kitchen_description"
+            android:id="@id/edit_kitchen_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="top"
             android:hint="@string/hint_kitchen_description"
-            android:maxLines="4" />
+            android:maxLines="4"
+            android:nextFocusForward="@+id/edit_kitchen_address" />
 
         <EditText
-            android:id="@+id/edit_kitchen_address"
+            android:id="@id/edit_kitchen_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="top"
             android:hint="@string/hint_kitchen_address"
-            android:maxLines="4" />
+            android:maxLines="4"
+            android:nextFocusForward="@+id/setup_kitchen_action" />
 
         <Button
-            android:id="@+id/setup_kitchen_action"
+            android:id="@id/setup_kitchen_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="64dp"
             android:layout_marginLeft="@dimen/end_margin"
             android:layout_marginRight="@dimen/end_margin"
             android:layout_marginTop="64dp"
-            android:layout_marginBottom="64dp"
             android:background="@color/primary_light"
             android:text="@string/setup_kitchen_action_button"
             android:textColor="@color/primary_text"

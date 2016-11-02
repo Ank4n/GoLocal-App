@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import space.ankan.golocal.R;
 import space.ankan.golocal.core.AppConstants;
 
 import static com.google.android.gms.wearable.DataMap.TAG;
@@ -73,7 +72,7 @@ public class FetchAddressIntentService extends IntentService {
             deliverResultToReceiver(AppConstants.FAILURE_RESULT, errorMessage);
         } else {
             Address address = addresses.get(0);
-            ArrayList<String> addressFragments = new ArrayList<String>();
+            ArrayList<String> addressFragments = new ArrayList<>();
 
             // Fetch the address lines using getAddressLine,
             // join them, and send them to the thread.

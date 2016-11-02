@@ -61,14 +61,7 @@
 
         <service
             android:name=".services.FetchAddressIntentService"
-            android:exported="false"></service>
-
-        <service android:name="services.MessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
+            android:exported="false" />
 
         <provider
             android:name=".persistence.DBProvider"

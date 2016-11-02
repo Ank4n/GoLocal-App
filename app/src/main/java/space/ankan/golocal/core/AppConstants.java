@@ -1,8 +1,8 @@
 package space.ankan.golocal.core;
 
 /**
- * Created by ankan.
- * TODO: Add a class comment
+ * Created by Ankan.
+ * All the constants used across the app goes here
  */
 
 public interface AppConstants {

@@ -8,7 +8,7 @@ import space.ankan.golocal.persistence.DBContract.*;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
+ * SQLite Open Helper subclass to create and update db at version changes
  */
 
 public class DBHelper extends SQLiteOpenHelper {

@@ -1,6 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
@@ -31,6 +30,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:contentDescription="@string/cd_tab_setup_kitchen"
             android:scaleType="center"
             android:src="@drawable/setup_kitchen_black" />
 
@@ -41,6 +41,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@color/tab_select"
+            android:contentDescription="@string/cd_tab_nearby_kitchens"
             android:scaleType="center"
             android:src="@drawable/kitchens_nearby_white" />
 
@@ -50,6 +51,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:contentDescription="@string/cd_tab_chats"
             android:scaleType="center"
             android:src="@drawable/chat_black" />
 

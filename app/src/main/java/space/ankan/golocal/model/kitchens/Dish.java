@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 /**
  * Created by ankan.
- * TODO: Add a class comment
  */
 
 public class Dish implements Serializable {
@@ -15,6 +14,7 @@ public class Dish implements Serializable {
     public int price;
     public boolean nonVeg;
     public boolean isSelected; //for internal use only
+
     public Dish() {
     }
 

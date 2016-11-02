@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
@@ -14,8 +13,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import space.ankan.golocal.model.users.User;
-import space.ankan.golocal.utils.CommonUtils;
-import space.ankan.golocal.utils.RedirectionUtils;
 
 /**
  * Created by ankan.
@@ -48,6 +45,7 @@ public abstract class LoggedInActivity extends BaseActivity {
         });
     }
 
+    @SuppressWarnings("unused")
     protected void checkGpsIsOn(Context context) {
         final LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 

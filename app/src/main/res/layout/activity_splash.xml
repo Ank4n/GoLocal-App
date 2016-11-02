@@ -19,6 +19,7 @@
         android:id="@+id/logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:contentDescription="@string/cd_logo"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
@@ -31,7 +32,6 @@
         android:layout_below="@id/logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/end_margin"
-        android:text="GoLocal Kitchens"
         android:visibility="gone"
         android:textColor="@color/white" />
 </RelativeLayout>

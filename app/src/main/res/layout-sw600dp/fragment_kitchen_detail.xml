@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/detail_full_background"
             android:orientation="vertical">
 
@@ -22,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/image_margin"
+                android:contentDescription="@string/cd_kitchen_image"
                 android:fitsSystemWindows="true"
                 android:maxHeight="400dp"
                 android:scaleType="fitCenter"
@@ -43,7 +44,7 @@
                         android:layout_marginLeft="@dimen/end_margin"
                         android:layout_marginRight="@dimen/end_margin"
                         android:layout_marginTop="@dimen/end_margin"
-                        android:text="Description"
+                        android:text="@string/kitchen_detail_desc"
                         android:textColor="@color/primary_text"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -103,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/small_margin"
                             android:gravity="center"
-                            android:text="You"
+                            android:text="@string/kitchen_detail_user_rating_header"
                             android:textSize="@dimen/text_size_bold"
                             android:textStyle="bold" />
 
@@ -123,7 +124,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="Overall"
+                                android:text="@string/kitchen_detail_overall_rating_header"
                                 android:textSize="@dimen/text_size_bold"
                                 android:textStyle="bold" />
 
@@ -131,9 +132,8 @@
                                 android:id="@+id/rated_user_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/small_margin"
+                                android:layout_marginStart="@dimen/small_margin"
                                 android:gravity="center"
-                                android:text="(10)"
                                 android:textSize="@dimen/text_size_bold"
                                 android:textStyle="italic" />
                         </LinearLayout>
@@ -200,9 +200,9 @@
         android:layout_gravity="bottom|center"
         android:layout_margin="@dimen/fab_margin"
         android:background="@drawable/round_button"
-        android:drawableLeft="@drawable/ic_chat_fab"
-        android:paddingLeft="@dimen/end_margin"
-        android:paddingRight="@dimen/end_margin"
-        android:text="CHAT"
+        android:drawableStart="@drawable/ic_chat_fab"
+        android:paddingEnd="@dimen/end_margin"
+        android:paddingStart="@dimen/end_margin"
+        android:text="@string/button_start_chat_text"
         android:textColor="@color/white" />
 </FrameLayout>

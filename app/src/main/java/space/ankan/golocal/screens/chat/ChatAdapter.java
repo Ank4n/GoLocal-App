@@ -13,32 +13,36 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.AppConstants;
 import space.ankan.golocal.model.channels.ChatMessage;
 
 /**
- * Created by anurag on 18-Dec-15.
+ * Created by Ankan.
  */
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageListItemViewHolder> {
+
+class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageListItemViewHolder> {
 
     private Context mContext;
     private ArrayList<ChatMessage> chats;
     private String userName;
-    SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("H:mm dd/MM");
+    private SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("H:mm dd/MM", Locale.US);
 
-    public ChatAdapter(Context context, ArrayList<ChatMessage> list, String userName) {
+    ChatAdapter(Context context, ArrayList<ChatMessage> list, String userName) {
         this.mContext = context;
         this.chats = list;
         this.userName = userName;
     }
 
 
+    @SuppressWarnings("unused")
     public ChatMessage getItem(int position) {
         return chats.get(position);
     }
 
+    @SuppressWarnings("unused")
     public ArrayList<ChatMessage> getItems() {
         return chats;
     }
@@ -97,7 +101,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
         return chats.size();
     }
 
-    public int getCount() {
+    int getCount() {
         return getItemCount();
     }
 
@@ -106,31 +110,33 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageLis
         this.notifyDataSetChanged();
     }
 
+    @SuppressWarnings("unused")
     public void clear() {
         this.chats.clear();
     }
 
+    @SuppressWarnings("unused")
     public void addAll(List<ChatMessage> messages) {
         this.chats.addAll(messages);
         this.notifyDataSetChanged();
     }
 
-    public class ChatMessageListItemViewHolder extends RecyclerView.ViewHolder {
+    class ChatMessageListItemViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mView;
-        public final View incomingView;
-        public final View outgoingView;
+        final View mView;
+        final View incomingView;
+        final View outgoingView;
 
-        public final TextView mName;
-        public final TextView mMessageIn;
-        public final TextView mTimeIn;
-        public final TextView mMessageOut;
-        public final TextView mTimeOut;
-        public final ImageView mImageOut;
-        public final ImageView mImageIn;
+        final TextView mName;
+        final TextView mMessageIn;
+        final TextView mTimeIn;
+        final TextView mMessageOut;
+        final TextView mTimeOut;
+        final ImageView mImageOut;
+        final ImageView mImageIn;
 
 
-        public ChatMessageListItemViewHolder(View view) {
+        ChatMessageListItemViewHolder(View view) {
             super(view);
             mView = view;
             incomingView = view.findViewById(R.id.chat_incoming);

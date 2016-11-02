@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,16 +26,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import space.ankan.golocal.Manifest;
 import space.ankan.golocal.core.AppConstants;
 
 /**
- * Created by ankan.
- * TODO: Add a class comment
+ * Created by Ankan.
+ * Commonly used helper methods
  */
 
 public class CommonUtils implements AppConstants {
 
+    @SuppressWarnings("unused")
     public static void imagePickerForResult(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
@@ -89,15 +88,16 @@ public class CommonUtils implements AppConstants {
     }
 
 
-    public static void cacheLocation(SharedPreferences.Editor edit, Location location) {
+    public static void cacheLocation(SharedPreferences sharedPreferences, Location location) {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(CACHED_LAST_LOCATION_LAT, String.valueOf(location.getLatitude()));
         edit.putString(CACHED_LAST_LOCATION_LON, String.valueOf(location.getLongitude()));
-        edit.commit();
+        edit.apply();
     }
 
-    public static void cacheLocationAddress(SharedPreferences.Editor edit, String address) {
+    public static void cacheLocationAddress(SharedPreferences sharedPreferences, String address) {
         if (TextUtils.isEmpty(address)) return;
-        edit.putString(CACHED_LAST_ADDRESS, address).commit();
+        sharedPreferences.edit().putString(CACHED_LAST_ADDRESS, address).apply();
     }
 
     public static void removeViews(View... views) {
@@ -134,11 +134,13 @@ public class CommonUtils implements AppConstants {
 
     }
 
+    @SuppressWarnings("unused")
     public static void setupTextRemoveIfEmpty(TextView view, String text) {
         setupTextRemoveIfEmpty(view, text, null);
 
     }
 
+    @SuppressWarnings("unused")
     public static void setupTextRemoveIfEmpty(TextView view, @StringRes int text) {
         setupTextRemoveIfEmpty(view, text, null);
     }
@@ -158,6 +160,8 @@ public class CommonUtils implements AppConstants {
 
     public static Uri compressImage(Context context, Uri imageUri) {
         Bitmap realImage = getBitmapFromUri(context.getContentResolver(), imageUri);
+        if (realImage == null) return null;
+
         float ratio = Math.min(
                 AppConstants.IMAGE_MAX_SIZE / realImage.getWidth(),
                 AppConstants.IMAGE_MAX_SIZE / realImage.getHeight());
@@ -172,18 +176,17 @@ public class CommonUtils implements AppConstants {
         return getImageUri(newBitmap);
     }
 
-    public static Bitmap getBitmapFromUri(ContentResolver contentResolver, Uri uri) {
+    private static Bitmap getBitmapFromUri(ContentResolver contentResolver, Uri uri) {
 
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri);
-            return bitmap;
+            return MediaStore.Images.Media.getBitmap(contentResolver, uri);
         } catch (IOException io) {
             return null;
         }
 
     }
 
-    public static Uri getImageUri(Bitmap inImage) {
+    private static Uri getImageUri(Bitmap inImage) {
         File tempDir = Environment.getExternalStorageDirectory();
         tempDir = new File(tempDir.getAbsolutePath() + "/.temp/");
         tempDir.mkdir();

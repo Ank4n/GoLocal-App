@@ -26,7 +26,6 @@ public class ChannelsFragment extends BaseFragment implements ChildEventListener
 
     private View mRootView;
     private ChannelsAdapter adapter;
-    private RecyclerView mRecyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -37,8 +36,7 @@ public class ChannelsFragment extends BaseFragment implements ChildEventListener
 
     @SuppressWarnings("unused")
     public static ChannelsFragment newInstance(int columnCount) {
-        ChannelsFragment fragment = new ChannelsFragment();
-        return fragment;
+        return new ChannelsFragment();
     }
 
     @Override
@@ -59,7 +57,7 @@ public class ChannelsFragment extends BaseFragment implements ChildEventListener
 
     private void setupRecycler() {
         Context context = mRootView.getContext();
-        mRecyclerView = (RecyclerView) mRootView;
+        RecyclerView mRecyclerView = (RecyclerView) mRootView;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new ChannelsAdapter(new ArrayList<Channel>(), getActivity());
         adapter.setTwoPaneListener(mTwoPaneListener);
