@@ -62,7 +62,7 @@ class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatMessageListItemVi
         ChatMessage item = chats.get(i);
 
         //outgoing message
-        if (userName.equalsIgnoreCase(item.name)) {
+        if (userName == null || userName.equalsIgnoreCase(item.name)) {
             holder.incomingView.setVisibility(View.GONE);
             holder.outgoingView.setVisibility(View.VISIBLE);
 

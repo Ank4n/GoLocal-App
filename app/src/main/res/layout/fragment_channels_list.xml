@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="space.ankan.golocal.screens.chat.ChannelsFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="space.ankan.golocal.screens.chat.ChannelsFragment"
-    tools:listitem="@layout/channel_list_item" />
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:name="space.ankan.golocal.screens.chat.ChannelsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="space.ankan.golocal.screens.chat.ChannelsFragment"
+        tools:listitem="@layout/channel_list_item" />
+
+    <TextView
+        android:id="@+id/empty_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/empty_list_font"
+        android:layout_margin="@dimen/spacing_large"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/no_chats_yet" />
+</FrameLayout>

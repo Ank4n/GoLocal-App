@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +20,7 @@ import butterknife.ButterKnife;
 import space.ankan.golocal.R;
 import space.ankan.golocal.core.BaseFragment;
 import space.ankan.golocal.model.kitchens.Dish;
+import space.ankan.golocal.utils.CommonUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +32,9 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
 
     @BindView(R.id.dish_list)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.empty_message)
+    TextView mEmptyListText;
 
     private DishAdapter adapter;
 
@@ -73,6 +78,8 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
     }
 
     private void syncWithFirebase() {
+        CommonUtils.removeViews(mRecyclerView);
+        CommonUtils.showViews(mEmptyListText);
         getFirebaseHelper().getDishesReference(getUserKitchenId()).addChildEventListener(this);
     }
 
@@ -81,6 +88,8 @@ public class ManageKitchenFragment extends BaseFragment implements ChildEventLis
         Dish dish = dataSnapshot.getValue(Dish.class);
         dish.key = dataSnapshot.getKey();
         adapter.add(dish);
+        CommonUtils.showViews(mRecyclerView);
+        CommonUtils.hideViews(mEmptyListText);
     }
 
     @Override

@@ -35,6 +35,18 @@
         android:paddingBottom="@dimen/spacing_small"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:visibility="gone"
         android:paddingTop="@dimen/spacing_small" />
+
+    <TextView
+        android:id="@+id/empty_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:textSize="@dimen/empty_list_font"
+        android:layout_margin="@dimen/spacing_large"
+        android:gravity="center"
+        android:text="@string/no_dishes_yet"/>
+
 </LinearLayout>
 

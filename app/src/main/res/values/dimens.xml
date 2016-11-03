@@ -28,6 +28,7 @@
     <dimen name="fab_size">16dp</dimen>
     <dimen name="list_item_height">100dp</dimen>
     <dimen name="map_item_height">300dp</dimen>
+    <dimen name="empty_list_font">@dimen/font_medium</dimen>
 
 
 </resources>

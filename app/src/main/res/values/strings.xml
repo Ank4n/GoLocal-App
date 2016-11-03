@@ -75,6 +75,9 @@
     <string name="price_hint">Price</string>
     <string name="is_non_vegetarian_hint">Non-Vegetarian?</string>
     <string name="menu_share_kitchen">Share Kitchen</string>
+    <string name="no_kitchens_found">No Kitchens found nearby. Be the first to publish a kitchen in your area or increase range from the Menu options.</string>
+    <string name="no_dishes_yet">You have not added any dish as yet. Start adding now. </string>
+    <string name="no_chats_yet">You have not chatted with any kitchen or customer yet. Find your favourite kitchen and connect with them instantly.</string>
 
 
     <!--Content Descriptions-->

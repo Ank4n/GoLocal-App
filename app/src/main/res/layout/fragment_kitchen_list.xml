@@ -43,7 +43,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:visibility="gone"
         tools:context="space.ankan.golocal.screens.nearbykitchens.KitchenListFragment" />
 
+    <TextView
+        android:id="@+id/empty_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/empty_list_font"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/spacing_large"
+        android:gravity="center"
+        android:text="@string/no_kitchens_found" />
 
 </LinearLayout>

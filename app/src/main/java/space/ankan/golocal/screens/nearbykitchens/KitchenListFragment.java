@@ -57,6 +57,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
     @BindView(R.id.content_kitchen_list)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.empty_message)
+    TextView mEmptyKitchenText;
+
     private KitchenAdapter adapter;
     private double range = 10; //default
     private Location location;
@@ -271,6 +274,8 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
 
     private void syncWithFirebase() {
         //log("syncing with firebase kitchen list | lat= " + lat + " lon= " + lon);
+        CommonUtils.removeViews(mRecyclerView);
+        CommonUtils.showViews(mEmptyKitchenText);
 
         if (adapter == null) {
             adapter = new KitchenAdapter(getActivity(), new ArrayList<Kitchen>(), favouriteKitchens, mTwoPaneListener);
@@ -280,7 +285,6 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
             mQuery.removeAllListeners();
 
         adapter.clear();
-
         if (lon == null || lat == null)
             Toast.makeText(getActivity(), R.string.enable_gps, Toast.LENGTH_LONG).show();
 
@@ -303,6 +307,9 @@ public class KitchenListFragment extends BaseFragment implements GeoQueryEventLi
                     if (kitchen == null) return;
                     kitchen.key = dataSnapshot.getKey();
                     adapter.add(kitchen);
+                    CommonUtils.removeViews(mEmptyKitchenText);
+                    CommonUtils.showViews(mRecyclerView);
+
                     //log("kitchen key: " + kitchen.key);
                 } catch (DatabaseException e) {
                     Log.e(AppConstants.TAG, "Error retrieving item with key " + dataSnapshot.getKey() + ": " + e.getMessage());
