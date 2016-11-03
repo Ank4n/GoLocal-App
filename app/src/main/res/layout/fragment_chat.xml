@@ -26,6 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:contentDescription="@string/cd_send_picture"
             android:layout_weight="1"
             android:clickable="true"
             android:src="@drawable/ic_add_a_photo_black"
@@ -35,7 +36,7 @@
             android:id="@+id/entered_text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/end_margin"
+            android:layout_marginStart="@dimen/spacing_large"
             android:layout_weight="5"
             android:background="@android:color/transparent"
             android:ems="10"
@@ -53,8 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:padding="12dp"
-                android:layout_weight="1"
+                android:padding="@dimen/spacing_medium_large"
+                android:contentDescription="@string/cd_send_message"
                 android:src="@drawable/ic_send_black_18dp" />
         </FrameLayout>
 

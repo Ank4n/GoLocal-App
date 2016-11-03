@@ -9,7 +9,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/image_margin">
+        android:layout_margin="@dimen/spacing_medium">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,19 +19,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/end_margin"
-                android:layout_marginStart="@dimen/end_margin"
-                android:layout_marginTop="@dimen/end_margin"
+                android:layout_marginEnd="@dimen/spacing_large"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:text="@string/kitchen_detail_desc"
                 android:textColor="@color/primary_text"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_medium"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/kitchen_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/end_margin"
+                android:layout_margin="@dimen/spacing_large"
                 android:textColor="@color/secondary_text" />
         </LinearLayout>
 
@@ -41,8 +41,8 @@
         android:id="@+id/dish_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/end_margin"
-        android:layout_marginTop="@dimen/image_margin"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:layout_marginTop="@dimen/spacing_medium"
         android:textColor="@color/primary_text"
         android:visibility="gone" />
 
@@ -50,7 +50,7 @@
         android:id="@+id/rating_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/image_margin">
+        android:layout_margin="@dimen/spacing_medium">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,30 +60,30 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/end_margin"
-                android:layout_marginRight="@dimen/end_margin"
-                android:layout_marginTop="@dimen/end_margin"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:text="@string/kitchen_rating_card_title"
                 android:textColor="@color/primary_text"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_medium"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/your_rating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/end_margin"
-                android:layout_marginRight="@dimen/end_margin"
-                android:layout_marginTop="@dimen/end_margin"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/spacing_small"
                     android:gravity="center"
                     android:text="@string/kitchen_detail_user_rating_header"
-                    android:textSize="@dimen/text_size_bold"
+                    android:textSize="@dimen/font_medium"
                     android:textStyle="bold" />
 
                 <android.support.v7.widget.AppCompatRatingBar
@@ -96,23 +96,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/end_margin">
+                    android:layout_marginTop="@dimen/spacing_large">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="@string/kitchen_detail_overall_rating_header"
-                        android:textSize="@dimen/text_size_bold"
+                        android:textSize="@dimen/font_medium"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/rated_user_count"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/small_margin"
+                        android:layout_marginStart="@dimen/spacing_small"
                         android:gravity="center"
-                        android:textSize="@dimen/text_size_bold"
+                        android:textSize="@dimen/font_medium"
                         android:textStyle="italic" />
                 </LinearLayout>
 
@@ -134,7 +134,7 @@
         android:id="@+id/address_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/image_margin">
+        android:layout_margin="@dimen/spacing_medium">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -144,19 +144,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/end_margin"
-                android:layout_marginRight="@dimen/end_margin"
-                android:layout_marginTop="@dimen/end_margin"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:text="@string/kitchen_address_card_title"
                 android:textColor="@color/primary_text"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_medium"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/kitchen_address"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/end_margin"
+                android:layout_margin="@dimen/spacing_large"
                 android:textColor="@color/primary_text" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
@@ -166,6 +166,6 @@
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="@dimen/map_item_height"
         android:layout_gravity="center" />
 </LinearLayout>

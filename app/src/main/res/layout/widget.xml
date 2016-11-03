@@ -16,10 +16,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/title_widget"
-            android:padding="8dp"
+            android:padding="@dimen/spacing_medium"
             android:text="@string/title_widget"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="@dimen/font_large"
             android:textStyle="italic|bold" />
     </FrameLayout>
 

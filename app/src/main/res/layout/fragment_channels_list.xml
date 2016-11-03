@@ -6,10 +6,6 @@
     android:name="space.ankan.golocal.screens.chat.ChannelsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="space.ankan.golocal.screens.chat.ChannelsFragment"
     tools:listitem="@layout/channel_list_item" />

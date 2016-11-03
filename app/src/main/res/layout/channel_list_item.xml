@@ -55,7 +55,7 @@
                 android:maxLines="1"
                 android:textAppearance="?attr/textAppearanceListItemSmall"
                 android:textColor="@color/secondary_text"
-                android:textSize="@dimen/text_small" />
+                android:textSize="@dimen/font_small" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

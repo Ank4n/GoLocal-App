@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="@dimen/spacing_small"
             android:background="@color/transparent"
             android:orientation="horizontal">
 
@@ -32,7 +32,7 @@
                 android:paddingTop="@dimen/small_margin"
                 android:text="@string/searching_location_text"
                 android:textColor="@color/secondary_text"
-                android:textSize="16sp"
+                android:textSize="@dimen/font_medium"
                 android:textStyle="normal" />
         </LinearLayout>
 
@@ -43,10 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingBottom="0dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        android:paddingTop="0dp"
         tools:context="space.ankan.golocal.screens.nearbykitchens.KitchenListFragment" />
 
 

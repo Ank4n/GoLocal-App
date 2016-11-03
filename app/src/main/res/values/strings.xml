@@ -70,6 +70,10 @@
     <string name="kitchen_detail_desc">Description</string>
     <string name="kitchen_detail_user_rating_header">You</string>
     <string name="kitchen_detail_overall_rating_header">Overall</string>
+    <string name="kitchen_menu_title">Add your dishes here&#8230;</string>
+    <string name="name_of_the_dish">Name of the dish</string>
+    <string name="price_hint">Price</string>
+    <string name="is_non_vegetarian_hint">Non-Vegetarian?</string>
 
     <!--Content Descriptions-->
     <string name="cd_kitchen_image">Kitchen Image</string>
@@ -86,6 +90,8 @@
     <string name="cd_star">Rating stars out of 5</string>
     <string name="cd_favourite">Kitchen saved as favourite</string>
     <string name="cd_not_favourite">Kitchen not favourite</string>
+    <string name="cd_send_picture">Button to share a picture</string>
+    <string name="cd_send_message">Button to send a message</string>
 
 
 </resources>

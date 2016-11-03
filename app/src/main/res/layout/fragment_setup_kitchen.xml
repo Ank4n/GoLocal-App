@@ -16,7 +16,7 @@
             android:id="@+id/upload_kitchen_image"
             android:layout_width="match_parent"
             android:background="?attr/selectableItemBackground"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/list_item_height"
             android:nextFocusForward="@+id/edit_kitchen_name"
             android:orientation="horizontal">
 
@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
+                    android:layout_margin="@dimen/spacing_medium"
                     android:contentDescription="@string/cd_kitchen_image"
                     android:scaleType="fitCenter"
                     android:src="@drawable/manage_black" />
@@ -57,7 +57,7 @@
             android:id="@id/edit_kitchen_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_large"
             android:allowUndo="true"
             android:hint="@string/hint_kitchen_name"
             android:inputType="text"
@@ -67,7 +67,7 @@
             android:id="@id/edit_kitchen_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_large"
             android:gravity="top"
             android:hint="@string/hint_kitchen_description"
             android:maxLines="4"
@@ -77,7 +77,7 @@
             android:id="@id/edit_kitchen_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_large"
             android:gravity="top"
             android:hint="@string/hint_kitchen_address"
             android:maxLines="4"
@@ -89,13 +89,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginBottom="64dp"
-            android:layout_marginLeft="@dimen/end_margin"
-            android:layout_marginRight="@dimen/end_margin"
-            android:layout_marginTop="64dp"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@color/primary_light"
             android:text="@string/setup_kitchen_action_button"
             android:textColor="@color/primary_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/font_large" />
 
     </LinearLayout>
 

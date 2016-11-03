@@ -104,7 +104,7 @@
                             android:layout_marginBottom="@dimen/small_margin"
                             android:gravity="center"
                             android:text="@string/kitchen_detail_user_rating_header"
-                            android:textSize="@dimen/text_size_bold"
+                            android:textSize="@dimen/font_medium"
                             android:textStyle="bold" />
 
                         <android.support.v7.widget.AppCompatRatingBar
@@ -124,7 +124,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:text="@string/kitchen_detail_overall_rating_header"
-                                android:textSize="@dimen/text_size_bold"
+                                android:textSize="@dimen/font_medium"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -133,7 +133,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="@dimen/small_margin"
                                 android:gravity="center"
-                                android:textSize="@dimen/text_size_bold"
+                                android:textSize="@dimen/font_medium"
                                 android:textStyle="italic" />
                         </LinearLayout>
 

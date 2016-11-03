@@ -6,25 +6,25 @@
     android:background="@drawable/touch_selector_white"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-    android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
-    android:layout_marginTop="1dp"
-    android:layout_marginBottom="1dp">
+    android:paddingLeft="@dimen/spacing_medium"
+    android:paddingRight="@dimen/spacing_medium"
+    android:layout_marginTop="@dimen/spacing_minimum"
+    android:layout_marginBottom="@dimen/spacing_minimum">
 
     <ImageView
         android:id="@+id/widget_kitchen_image"
         android:layout_width="0dp"
         android:contentDescription="@string/cd_kitchen_image"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/spacing_medium"
         android:layout_weight="1"
         android:src="@drawable/manage_black" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_medium"
         android:layout_weight="3"
         android:orientation="vertical">
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textColor="@color/primary_text"
-            android:textSize="16sp"
+            android:textSize="@dimen/font_medium"
             android:textStyle="normal"
             android:typeface="normal" />
 
@@ -44,14 +44,14 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textColor="@color/secondary_text"
-            android:textSize="12sp"
+            android:textSize="@dimen/font_small"
             android:textStyle="normal"
             android:typeface="normal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/spacing_medium"
             android:orientation="horizontal">
 
             <TextView
@@ -59,23 +59,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginEnd="1dp"
+                android:layout_marginEnd="@dimen/spacing_minimum"
                 android:textColor="@color/primary" />
 
             <ImageView
                 android:id="@+id/widget_star"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_width="@dimen/fab_size"
+                android:layout_height="@dimen/fab_size"
+                android:layout_marginEnd="@dimen/spacing_large"
                 android:contentDescription="@string/cd_star"
                 android:src="@drawable/ic_rating_star" />
 
             <ImageView
                 android:id="@+id/widget_favourite"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="16dp"
+                android:layout_width="@dimen/fab_size"
+                android:layout_height="@dimen/fab_size"
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:layout_marginStart="@dimen/spacing_medium"
                 android:contentDescription="@string/cd_favourite"
                 android:src="@drawable/ic_favorite_light" />
         </LinearLayout>
