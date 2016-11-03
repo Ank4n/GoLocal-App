@@ -74,6 +74,8 @@
     <string name="name_of_the_dish">Name of the dish</string>
     <string name="price_hint">Price</string>
     <string name="is_non_vegetarian_hint">Non-Vegetarian?</string>
+    <string name="menu_share_kitchen">Share Kitchen</string>
+
 
     <!--Content Descriptions-->
     <string name="cd_kitchen_image">Kitchen Image</string>
