@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/end_margin"
+        android:layout_marginTop="@dimen/spacing_large"
         android:visibility="gone"
         android:textColor="@color/white" />
 </RelativeLayout>

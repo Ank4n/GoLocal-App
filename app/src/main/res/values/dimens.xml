@@ -2,11 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">12dp</dimen>
     <dimen name="small_margin">4dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="fab_margin_bottom_tab">64dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="end_margin">16dp</dimen>
-    <dimen name="chat_top">8dp</dimen>
     <dimen name="image_margin">8dp</dimen>
     <dimen name="text_right_margin">8dp</dimen>
 
@@ -28,7 +24,6 @@
     <dimen name="font_small_medium">14sp</dimen>
     <dimen name="font_medium">16sp</dimen>
     <dimen name="font_large">20sp</dimen>
-
 
     <dimen name="fab_size">16dp</dimen>
     <dimen name="list_item_height">100dp</dimen>
