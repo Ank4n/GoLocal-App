@@ -24,7 +24,7 @@ public class SplashActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         textView = (TextView) findViewById(R.id.message);
-        Log.wtf("GoLocal", "Splash Activity");
+        //log("Splash Activity");
     }
 
     @Override
