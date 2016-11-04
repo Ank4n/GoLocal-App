@@ -78,7 +78,8 @@
     <string name="no_kitchens_found">No Kitchens found nearby. Be the first to publish a kitchen in your area or increase range from the Menu options.</string>
     <string name="no_dishes_yet">You have not added any dish as yet. Start adding now. </string>
     <string name="no_chats_yet">You have not chatted with any kitchen or customer yet. Find your favourite kitchen and connect with them instantly.</string>
-
+    <string name="allow_write_permission"> You need to allow write permissions to upload image
+   </string>
 
     <!--Content Descriptions-->
     <string name="cd_kitchen_image">Kitchen Image</string>

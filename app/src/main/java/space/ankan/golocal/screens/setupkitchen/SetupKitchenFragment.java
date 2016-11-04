@@ -125,7 +125,7 @@ public class SetupKitchenFragment extends BaseFragment {
             Log.v(AppConstants.TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
             CommonUtils.imagePickerForResult(SetupKitchenFragment.this);
         } else {
-            Toast.makeText(getActivity(), "You need to allow write permissions to upload image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.allow_write_permission, Toast.LENGTH_SHORT).show();
         }
     }
 
